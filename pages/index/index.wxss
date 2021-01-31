@@ -1,0 +1,160 @@
+/**index.wxss**/
+.container{
+  background-color: #F5F8FB;
+}
+
+.indexswiper{
+  width: 90%;
+  margin:20rpx auto;
+  border-radius: 30rpx;
+  height: 200rpx;
+  display: flex;
+  top: 0;
+  overflow: hidden;
+}
+
+.swiperitem{
+  display: flex;
+  justify-content: center;
+  width: 100%;
+}
+
+.swiperitem image{
+  width: 100%;
+}
+
+.userform{
+  width: 90%;
+  margin:10rpx auto;
+  border-radius: 30rpx;
+  height: 180rpx;
+  background-color: #fff;
+  border-top:2px solid #f8f8f8;
+  border-bottom:2px solid #f8f8f8;
+  display: flex;
+  flex-direction: row;
+  overflow: hidden;
+}
+
+.userimage image{
+  width: 150rpx;
+  height: 150rpx;
+}
+
+.userinfo {
+  width: 100%;
+  height: 100%;
+  display: flex;
+  flex-direction: row;
+  justify-content: center;
+  align-items: center;
+}
+
+.user-discribe{
+  width: 50%;
+  display: flex;
+  margin:auto 20rpx;
+}
+
+.miningview{
+  width: 90%;
+  margin:10rpx auto;
+  padding-bottom:10rpx;
+  border-radius: 30rpx;
+  background-color: #fff;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  overflow: hidden;
+}
+
+  .miningbox{
+    width: 100%;
+    display: flex;
+    flex-direction: row;
+    justify-content: space-around;
+    align-items: center;
+  }
+
+    .resimage image{
+      width: 150rpx;
+      height: 150rpx;
+    }
+
+  .buttonbox{
+    width: 100%;
+    margin:30rpx;
+    background-color: #fff;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    overflow: hidden;
+  }
+
+  .buttonview-label{
+    width:100%;
+    height: 80rpx;
+    padding-left: 50rpx;
+    font-size: 35rpx;
+    font-weight: 600;
+    color:#000;
+    display: flex;
+    justify-content: flex-start;
+    align-items: center;
+  }
+
+  .msgbox{
+    width: 100%;
+    height: 80rpx;
+    padding-left: 50rpx;
+    font-size: 30rpx;
+    color:#2DB7F5;
+    display:flex;
+    justify-content: center;
+    align-items: center;
+  }
+
+.button{
+  border-radius: 75rpx;
+  margin:1vmax;
+  height: 150rpx;
+  width: 150rpx;
+  display: flex;
+  overflow: hidden;
+}
+
+.userinfo-avatar {
+  width: 128rpx;
+  height: 128rpx;
+  margin: 20rpx;
+  border-radius: 50%;
+}
+
+.userinfo-username {
+  font-size: 50rpx;
+  color: #000;
+}
+
+.userinfo-nickname {
+  color: #aaa;
+}
+
+.datashow{
+  width: 100%;
+  margin:2vmax 0;
+  color:red;
+  font:2vmax;
+  font-weight: 600;
+}
+
+.dick{
+  height: 5vmax;
+  background:pink;
+  border-radius: 0 20px 20px 0;
+}
+
+.usermotto {
+  margin-top: 200px;
+}

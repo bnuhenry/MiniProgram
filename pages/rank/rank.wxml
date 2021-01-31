@@ -1,0 +1,39 @@
+<!--pages/rank/rank.wxml-->
+<view class="container">
+
+  <view class="userform" wx:for="{{showDataAry}}" wx:key="i" wx:for-item="user">
+    <view class="userinfo">
+      <view class="userimage">
+        <image bindtap="bindViewTap" class="userinfo-avatar" src="{{user.useravatar}}" mode="cover"></image>
+      </view>
+      <text class="userinfo-username">{{user.username}}</text>
+    </view>
+      <view class="user-discribe">
+        <view class="resource">
+          <view class="resimage">
+            <image src="../../images/peanut.png"></image>
+          </view>
+          <view class="resdiscrb">{{user.peaNut}}颗</view>
+        </view>
+        <view class="resource">
+          <view class="resimage">
+            <image src="../../images/xiaocai.png"></image>
+          </view>
+          <view class="resdiscrb">{{user.xiaoCai}}碟</view>
+        </view>
+        <view class="resource">
+          <view class="resimage">
+            <image src="../../images/wine.png"></image>
+          </view>
+          <view class="resdiscrb">{{user.jianNanChun}}瓶</view>
+        </view>
+        <view class="resource">
+          <view class="resimage">
+            <image src="../../images/elite.png"></image>
+          </view>
+          <view class="resdiscrb">{{user.rankName}}</view>
+        </view>
+      </view>
+  </view>
+
+</view>

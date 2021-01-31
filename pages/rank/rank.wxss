@@ -1,0 +1,56 @@
+.container{
+  background-color: #F5F8FB;
+}
+
+.userform{
+  width: 90%;
+  margin:10rpx auto;
+  border-radius: 30rpx;
+  height: 200rpx;
+  background-color: #fff;
+  border-top:2px solid #f8f8f8;
+  border-bottom:2px solid #f8f8f8;
+  display: flex;
+  flex-direction: row;
+  overflow: hidden;
+}
+
+.userimage image{
+  width: 120rpx;
+  height: 120rpx;
+}
+
+.userinfo {
+  width: 30%;
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+}
+
+.userinfo-username {
+  font-size: 30rpx;
+  color: #000;
+}
+
+.user-discribe{
+  width: 70%;
+  display: flex;
+  flex-direction: row;
+  justify-content: space-around;
+}
+
+.resource{
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  font-size: 30rpx;
+  color:#aaa;
+}
+
+.resimage image{
+  width: 75rpx;
+  height: 75rpx;
+}

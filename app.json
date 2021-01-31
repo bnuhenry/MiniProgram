@@ -1,0 +1,44 @@
+{
+  "pages": [
+    "pages/index/index",
+    "pages/rank/rank",
+    "pages/schedule/schedule",
+    "pages/serveinfo/serveinfo"
+  ],
+  "window": {
+    "backgroundTextStyle": "light",
+    "navigationBarBackgroundColor": "#fff",
+    "navigationBarTitleText": "基金会",
+    "navigationBarTextStyle": "black"
+  },
+  "tabBar": {
+    "list": [
+      {
+        "pagePath": "pages/index/index",
+        "text": "首页",
+        "iconPath": "images/heroinfo.png",
+        "selectedIconPath": "images/heroinfo-filling.png"
+      },
+      {
+        "pagePath": "pages/rank/rank",
+        "text": "排名",
+        "iconPath": "images/armory.png",
+        "selectedIconPath": "images/armory-filling.png"
+      },
+      {
+        "pagePath": "pages/schedule/schedule",
+        "text": "日程安排",
+        "iconPath": "images/date.png",
+        "selectedIconPath": "images/date-filling.png"
+      },
+      {
+        "pagePath": "pages/serveinfo/serveinfo",
+        "text": "个人",
+        "iconPath": "images/user.png",
+        "selectedIconPath": "images/user-filling.png"
+      }
+    ]
+  },
+  "style": "v2",
+  "sitemapLocation": "sitemap.json"
+}

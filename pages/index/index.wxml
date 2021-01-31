@@ -1,0 +1,77 @@
+<!--index.wxml-->
+<view class="container">
+    <swiper class="indexswiper" indicator-dots="true" autoplay="true" circular="true" duration="300" indicator-active-color="#fff">
+      <swiper-item class="swiperitem">
+        <image src="http://119.29.170.42/image/20201101212503.png" mode='scaleToFill'></image>
+      </swiper-item>
+      <swiper-item class="swiperitem">
+          <image src="http://119.29.170.42/image/20201101212921.png" mode='scaleToFill'></image>
+      </swiper-item>
+      <swiper-item class="swiperitem">
+        <image src="http://119.29.170.42/image/shouzuo4-1312312.png" mode='scaleToFill'></image>
+      </swiper-item>
+    </swiper>
+    
+<view class="userform">
+  <view class="userinfo">
+    <button wx:if="{{!hasUserInfo && canIUse}}" open-type="getUserInfo" bindgetuserinfo="getUserInfo"> 获取头像昵称 </button>
+    <block wx:else>
+    <view class="userimage">
+      <image bindtap="bindViewTap" class="userinfo-avatar" src="{{userInfo.avatarUrl}}" mode="cover"></image>
+    </view>
+      <text class="userinfo-username">{{userInfo.nickName}}</text>
+      <view class="user-discribe">
+        <text class="userinfo-nickname">基金会干事，反正就是干事的</text>
+      </view>
+    </block>
+  </view>
+</view>
+
+<view class="miningview">
+  <view class="buttonview-label">挖矿专用</view>
+  <view class="buttonbox">
+    <button bindtap="getMining" type="primary" disabled="{{!canDig}}" loading="{{!canDig}}">挖矿</button>
+  </view>
+  <view class="msgbox">{{miningResult}}</view>
+</view>
+
+<view class="miningview">
+  <view class="buttonview-label">资源利用</view>
+  <view class="miningbox">
+    <view class="resource">
+      <view class="resimage">
+        <image src="../../images/peanut.png"></image>
+      </view>
+      <view class="resdiscrb">花生{{peaNut}}颗</view>
+    </view>
+    <view class="resource">
+      <view class="resimage">
+        <image src="../../images/xiaocai.png"></image>
+      </view>
+      <view class="resdiscrb">小菜{{xiaoCai}}碟</view>
+    </view>
+    <view class="resource">
+      <view class="resimage">
+        <image src="../../images/wine.png"></image>
+      </view>
+      <view class="resdiscrb">贱男春{{jianNanChun}}瓶</view>
+    </view>
+  </view>
+  <view class="buttonbox">
+    <button bindtap="getContribution" type="primary">捐献资源获取声望</button>
+  </view>
+  <view class="msgbox">{{contributionResult}}</view>
+</view>
+
+
+  
+
+  <view class="datashow">
+    <!-- <text>{{showDickLength}}</text> -->
+    <view class="dick" style="width:{{dickLength}}%"></view>
+    <!-- <view class="dick" style="returnLength"></view> -->
+  </view>
+  <view class="usermotto">
+    <text class="user-motto">{{motto}}{{userInfo.nickName}}</text>
+  </view>
+</view>

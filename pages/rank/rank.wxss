@@ -1,12 +1,94 @@
-.container{
+:host{
   background-color: #F5F8FB;
 }
 
-.userform{
-  width: 90%;
-  margin:10rpx auto;
+.rankhead{
+  width: 95%;
+  height: 240rpx;
+  margin:5rpx auto;
   border-radius: 30rpx;
-  height: 200rpx;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  background-color: #ffffff;
+}
+
+  .rankhead-slogan{
+    width: 95%;
+    height: 100rpx;
+    font-size: 30rpx;
+    font-weight: 600;
+    color:red;
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    align-items: center;
+    overflow: hidden;
+  }
+
+  .rankhead-buttonbar{
+    width: 95%;
+    height: 90rpx;
+    display: flex;
+    justify-content: space-around;
+    align-items: center;
+  }
+
+    .rankhead-buttonbar-side{
+      width: 40%;
+      height: 80rpx;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+    }
+
+      .rankhead-buttonbar-picker{
+        width: 260rpx;
+        height: 60rpx;
+        font-size: 30rpx;
+        border-radius: 10rpx;
+        font-weight: 600;
+        color:#ffffff;
+        background-color:#07C160;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+      }
+
+      .rankhead-buttonbar-side button{
+        width: 50%;
+        height: 60rpx;
+        font-size: 30rpx;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+      }
+
+  .rankhead-datebar{
+    width: 70%;
+    height: 50rpx;
+    font-size:30rpx;
+    color:#aaaaaa;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+  }
+
+.ranklist{
+  width: 100%;
+  height: 980rpx;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+}
+
+.userform{
+  width: 95%;
+  margin:5rpx auto;
+  border-radius: 30rpx;
+  height: 160rpx;
   background-color: #fff;
   border-top:2px solid #f8f8f8;
   border-bottom:2px solid #f8f8f8;
@@ -16,12 +98,14 @@
 }
 
 .userimage image{
-  width: 120rpx;
-  height: 120rpx;
+  width: 80rpx;
+  height: 80rpx;
+  border-radius: 40rpx;
+  overflow: hidden;
 }
 
 .userinfo {
-  width: 30%;
+  width: 25%;
   height: 100%;
   display: flex;
   flex-direction: column;
@@ -30,12 +114,17 @@
 }
 
 .userinfo-username {
-  font-size: 30rpx;
+  font-size: 25rpx;
   color: #000;
 }
 
+.userinfo-myusername {
+  font-size: 25rpx;
+  color: red;
+}
+
 .user-discribe{
-  width: 70%;
+  width: 75%;
   display: flex;
   flex-direction: row;
   justify-content: space-around;
@@ -45,10 +134,40 @@
   display: flex;
   flex-direction: column;
   justify-content: center;
-  align-items: center;
-  font-size: 30rpx;
-  color:#aaa;
+  align-items: flex-start;
+  font-size: 25rpx;
 }
+
+  .resource-title{
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    color:#aaa;
+  }
+
+  .resource-value{
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    color:blue;
+  }
+
+  .resource-myvalue{
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    color:red;
+  }
+
+  .resource-rank{
+    font-size: 30rpx;
+    color:blue;
+  }
+
+  .resource-myrank{
+    font-size: 30rpx;
+    color:red;
+  }
 
 .resimage image{
   width: 75rpx;

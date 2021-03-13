@@ -1,2 +1,119 @@
-<!--pages/schedule/schedule.wxml-->
-<text>pages/schedule/schedule.wxml</text>
+<view class="optionbar">
+  <view class="optionbar-optionbox">
+    <view class="optionbar-optionbox-option"
+    bindtap="selectOptionMy"
+    style="{{topOptionSelected==0?'border-bottom: 5rpx solid #2DB7F5;':''}}">我    的</view>
+    <view class="optionbar-optionbox-option"
+    bindtap="selectOptionAll"
+    style="{{topOptionSelected==1?'border-bottom: 5rpx solid #2DB7F5;':''}}">全    部</view>
+  </view>
+</view>
+
+<view class="schedule">
+  <view class="datebar">
+    <view class="datebar-sidebar"></view>
+    <view class="datebar-title">
+      <image class="datebar-arrow" bindtap="dateMoveBack" src="../../images/arrow-left-filling.png"></image>
+      <view class="dateshow" bindtap="showDatePicker">{{year}}年{{month+1}}月</view>
+      <image class="datebar-arrow" bindtap="dateMoveForward" src="../../images/arrow-right-filling.png"></image>
+    </view>
+    <view class="datebar-sidebar">
+      <view class="datebar-sidebar-button" bindtap="getToday">今天</view>
+    </view>
+  </view>
+
+  <view class="calendar" bindtouchstart="touchStart" bindtouchend="touchEnd">
+    <view class="weekbar">
+      <view class="weekday">日</view>
+      <view class="weekday">一</view>
+      <view class="weekday">二</view>
+      <view class="weekday">三</view>
+      <view class="weekday">四</view>
+      <view class="weekday">五</view>
+      <view class="weekday">六</view>
+    </view>
+    <view class="daybox">
+      <view class="weekline" wx:for="{{showDateAry}}" wx:key="index" wx:for-index="weekidx" wx:for-item="weekary">
+        <view
+        class="{{selectedIndex==weekidx*7+dayidx?'monthdayselected':'monthday'}}"
+        style="{{dayObj.isToday?'background-color:red;color:#fff':(dayObj.scheduleAry.length>0?'background-color:#2DB7F5;color:#fff':'')}}"
+        id="{{weekidx*7+dayidx}}"
+        wx:for="{{weekary}}"
+        wx:key="index2"
+        wx:for-index="dayidx"
+        wx:for-item="dayObj"
+        bindtap="getSelected">
+        {{dayObj.day}}
+          <image wx:if="{{dayObj.scheduleAry.length>0}}" class="monthday1stimage" src="{{dayObj.scheduleAry[0].avatarUrl}}">
+          </image>
+          <image wx:if="{{dayObj.scheduleAry.length>1}}" class="monthday2ndimage" src="{{dayObj.scheduleAry[1].avatarUrl}}">
+          </image>
+          <image wx:if="{{dayObj.scheduleAry.length>2}}" class="monthday3rdimage" src="{{dayObj.scheduleAry[2].avatarUrl}}">
+          </image>
+          <image wx:if="{{dayObj.scheduleAry.length>3}}" class="monthday4thimage" src="{{dayObj.scheduleAry[3].avatarUrl}}">
+          </image>
+        </view>
+      </view>
+    </view>
+  </view>
+
+</view>
+
+<datepicker 
+wx:if="{{showDatePicker}}"
+yearFromSchedule="{{year}}"
+monthFromSchedule="{{month}}"
+bind:dateFromPicker="getDateFromPicker"
+bind:closeDatePicker="getDatePickerCancel">
+</datepicker>
+
+<scheduleeditor
+wx:if="{{showEditor}}"
+editType="{{editType}}"
+canEdit="{{canEdit}}"
+year="{{year}}"
+month="{{month}}"
+day="{{day}}"
+userId="{{userId}}"
+userName="{{userName}}"
+userAvatar="{{userAvatar}}"
+userFundName="{{userFundName}}"
+scheduleObj="{{scheduleObj}}"
+bind:editFinish="getEditFinish"
+bind:closeEditor="getEditorOff">
+</scheduleeditor>
+
+<view class="detailbar">
+  <view class="detailtopbar">
+    <view class="detail-topbar-side"></view>
+    <view class="detail-topbar-title">
+      日程表详情
+    </view>
+    <view class="detail-topbar-side" bindtap="createSchedule">
+      创建
+    </view>
+  </view> 
+  <!-- <scroll-view></scroll-view> -->
+  <scroll-view scroll-y="true" class="detailbarbox">
+    <view class="detailbarbox-detail"
+    wx:if="{{showScheduleDetail}}"
+    wx:for="{{showScheduleAry}}"
+    wx:key="index"
+    wx:for-index="sidx"
+    wx:for-item="sdetail"
+    data-sid="{{sidx}}"
+    bindtap="changeSchedule">
+      <image class="sdavatar" src="{{sdetail.avatarUrl}}"></image>
+      <view class="sdusername">
+        {{sdetail.name}}
+      </view>
+      <view class="sdmsg">
+        {{sdetail.detail}}
+      </view>
+      <view class="sddate">{{month+1}}月{{day}}日
+      </view>
+    </view>
+  </scroll-view>
+  
+</view>
+

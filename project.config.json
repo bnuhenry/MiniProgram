@@ -1,10 +1,11 @@
 {
   "description": "项目配置文件",
+  "cloudfunctionRoot": "cloud/",
   "packOptions": {
     "ignore": []
   },
   "setting": {
-    "urlCheck": false,
+    "urlCheck": true,
     "es6": true,
     "enhance": false,
     "postcss": true,
@@ -40,8 +41,8 @@
     "minifyWXSS": true
   },
   "compileType": "miniprogram",
-  "libVersion": "2.13.0",
-  "appid": "wxd859fb4e589cd7de",
+  "libVersion": "2.15.0",
+  "appid": "wx09b784f966dd567c",
   "projectname": "QKFund",
   "debugOptions": {
     "hidedInDevtools": []
@@ -50,6 +51,7 @@
   "isGameTourist": false,
   "simulatorType": "wechat",
   "simulatorPluginLibVersion": {},
+  "cloudfunctionTemplateRoot": "cloudfunctionTemplate",
   "condition": {
     "search": {
       "list": []

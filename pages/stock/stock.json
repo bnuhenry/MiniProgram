@@ -1,0 +1,7 @@
+{
+  "usingComponents": {
+    "stockpicker":"/component/stockpicker/stockpicker",
+    "stockuserpicker":"/component/stockuserpicker/stockuserpicker",
+    "stockDealRecords":"/component/stockDealRecords/stockDealRecords"
+  }
+}

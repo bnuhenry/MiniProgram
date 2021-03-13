@@ -1,0 +1,129 @@
+/* component/stockDealRecords/stockDealRecords.wxss */
+:host{
+  width: 100%;
+  height: 100%;
+}
+
+.background{
+  position: fixed;
+  top:0;
+  width: 100%;
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  background: rgba(6,24,31,0.3);
+  z-index:3;
+}
+
+.rest{
+  position: fixed;
+  top:0;
+  left: 0;
+  width: 100%;
+  height: 20%;
+}
+
+.stockdealrecords{
+  position: fixed;
+  width: 100%;
+  height: 80%;
+  left: 0;
+  bottom: 0;
+  display: flex;
+  border-radius: 30rpx 30rpx 0 0;
+  flex-direction: column;
+  justify-content: flex-start;
+  align-items: center;
+  background-color: #ffffff;
+  transition:0.5s;
+  -webkit-transition: 0.5s;
+  transform:translateY(100%);
+  overflow: hidden;
+  z-index:4;
+}
+
+  .stockdealrecords-title{
+    width: 95%;
+    height: 15%;
+    color:#2DB7F5;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+  }
+
+    .stockdealrecords-title-side{
+      width: 15%;
+      height: 100%;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+    }
+
+    .stockdealrecords-title-middle{
+      width: 70%;
+      height: 100%;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+    }
+
+    .stockdealrecords-title-image{
+      width: 100rpx;
+      height: 100rpx;
+      border-radius: 50rpx;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      overflow: hidden;
+    }
+
+  .stockdealrecords-stocklist{
+    width: 100%;
+    height: 700rpx;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+  }
+
+    .stockdealrecords-stocklist-listitem{
+      width: 90%;
+      height: 60rpx;
+      margin: 15rpx auto;
+      padding: 5rpx 10rpx;
+      font-size: 25rpx;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      border-bottom: 2rpx solid #eeeeee;
+    }
+
+    .stockdealrecords-stocklist-buy{
+      width: 50%;
+      height: 60rpx;
+      color:#FF3232;
+      display: flex;
+      justify-content: flex-start;
+      align-items: center;
+    }
+
+    .stockdealrecords-stocklist-sell{
+      width: 50%;
+      height: 60rpx;
+      color:blue;
+      display: flex;
+      justify-content: flex-start;
+      align-items: center;
+    }
+
+    .stockdealrecords-stocklist-date{
+      width: 50%;
+      height: 60rpx;
+      display: flex;
+      color:#aaaaaa;
+      justify-content: flex-end;
+      align-items: center;
+    }
+

@@ -1,0 +1,115 @@
+:host{
+  width: 100%;
+  height: 100%;
+}
+
+.background{
+  position: fixed;
+  top:0;
+  width: 100%;
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  background: rgba(6,24,31,0.3);
+  z-index:3;
+}
+
+.rest{
+  position: fixed;
+  top:0;
+  left: 0;
+  width: 100%;
+  height: 30%;
+}
+
+.stockuser{
+  position: fixed;
+  width: 100%;
+  height: 70%;
+  left: 0;
+  bottom: 0;
+  display: flex;
+  border-radius: 30rpx 30rpx 0 0;
+  flex-direction: column;
+  justify-content: flex-start;
+  align-items: center;
+  background-color: #ffffff;
+  transition:0.5s;
+  -webkit-transition: 0.5s;
+  transform:translateY(100%);
+  overflow: hidden;
+  z-index:4;
+}
+
+  .stockuser-title{
+    width: 95%;
+    height: 15%;
+    color:#2DB7F5;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+  }
+
+    .stockuser-title-side{
+      width: 15%;
+      height: 100%;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+    }
+
+    .stockuser-title-middle{
+      width: 70%;
+      height: 100%;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+    }
+
+  .stockuser-userlist{
+    width: 100%;
+    height: 80%;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+  }
+
+    .stockuser-userlist-listitem{
+      width: 80%;
+      height: 60rpx;
+      margin: 15rpx auto;
+      padding: 5rpx 10rpx;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      border-bottom: 2rpx solid #eeeeee;
+    }
+
+      .stockuser-userlist-listitem-avatar{
+        width: 60rpx;
+        height: 60rpx;
+        border-radius: 30rpx;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+      }
+
+      .stockuser-userlist-listitem-name{
+        width: 50%;
+        height: 50rpx;
+        color:#666666;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+      }
+
+      .stockuser-userlist-listitem-rankname{
+        width: 30%;
+        height: 50rpx;
+        color:blue;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+      }

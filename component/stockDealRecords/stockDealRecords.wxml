@@ -1,0 +1,26 @@
+<!--component/stockDealRecords/stockDealRecords.wxml-->
+<view class="background">
+  <view class="rest" bindtap="cancel"></view>
+  <view class="stockdealrecords" style="{{stockDealRecordsStyle}}">
+    <view class="stockdealrecords-title">
+      <view class="stockdealrecords-title-side">
+        <image class="stockdealrecords-title-image" src="{{userAvatar}}"></image>
+      </view>
+      <view class="stockdealrecords-title-middle">{{userName}}</view>
+      <view class="stockdealrecords-title-side" bindtap="cancel">取消</view>
+    </view>
+    <scroll-view scroll-y="true" class="stockdealrecords-stocklist">
+      <view class="stockdealrecords-stocklist-listitem"
+      wx:for="{{showDealRecordsAry}}"
+      wx:key="i"
+      wx:for-item="stock"
+      wx:for-index="uid">
+      <view class="{{stock.buy?'stockdealrecords-stocklist-buy':'stockdealrecords-stocklist-sell'}}">
+        {{stock.name}}{{stock.price}}元{{stock.buy?'买入':'卖出'}}{{stock.amountAbs}}股
+      </view>
+      <view class="stockdealrecords-stocklist-date">{{stock.dealTime}}</view>
+      </view>
+    </scroll-view>
+  </view>
+</view>
+

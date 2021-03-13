@@ -1,0 +1,47 @@
+<!--pages/rankhistory/rankhistory.wxml-->
+<view class="histogramheader">
+  <view class="hitogramheader-titlebar">
+    排名历史动画展示
+  </view>
+  <view class="hitogramheader-buttonbar">
+    <view class="hitogramheader-buttonbar-side">
+      <button class="hitogramheader-buttonbar-playbutton" disabled="{{replayDisable}}" bindtap="playTheHistoryAnimation">播放历史排名</button>
+    </view>
+    <view class="hitogramheader-buttonbar-side">
+      <button class="hitogramheader-buttonbar-playbutton" disabled="{{stopPlayDisable}}" bindtap="stopPlayHistoryAnimation">停止播放</button>
+    </view>
+  </view>
+  <view class="hitogramheader-datebar">
+    {{rankHistoryDate}} 
+  </view>
+</view>
+<scroll-view scroll-y="true" scroll-x="true" enable-flex="true" class="histogramRank">
+  <view class="histogramRank-userlist"
+    wx:for="{{showDataAry}}"
+    wx:key="uid"
+    wx:for-item="user"
+    wx:for-index="i">
+    <!-- <view class="histogramRank-userlist-histogram" style="{{user.style}}"> -->
+    <view class="histogramRank-userlist-histogram" style="{{user.style}}" animation="{{user.tiktok}}">
+      <image class="histogramRank-userlist-avatar"  src="{{user.avatarUrl}}"></image>
+      <view class="histogramRank-userlist-yields" style="{{user.yields>0?'color:#FF3232':'color:#00E600'}}">{{user.yieldsStr}}</view>
+      <image wx:if="{{user.isMyAccount}}" class="histogramRank-userlist-myaccount" src="../../images/manager-red.png"></image>
+      <view wx:if="{{user.isNewFish}}" class="histogramRank-userlist-newfish">新进韭菜</view>
+    </view>
+  </view>
+</scroll-view>
+
+<scroll-view scroll-x="true" enable-flex="true" class="histogramPosition">
+  <view class="histogramPosition-userlist"
+    wx:for="{{userPositionHistoryAry}}"
+    wx:key="uid"
+    wx:for-item="user"
+    wx:for-index="i">
+      <view class="histogramPosition-userlist-histogram">
+        <view class="histogramPosition-userlist-histogrambar" animation="{{user.histoAni}}">
+          {{user.positionStr}}
+        </view>
+        <image class="histogramPosition-userlist-avatar"  src="{{user.avatarUrl}}"></image>
+      </view>
+  </view>
+</scroll-view>

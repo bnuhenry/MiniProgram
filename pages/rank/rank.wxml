@@ -1,39 +1,64 @@
-<!--pages/rank/rank.wxml-->
-<view class="container">
 
-  <view class="userform" wx:for="{{showDataAry}}" wx:key="i" wx:for-item="user">
+<view class="rankhead">
+  <view class="rankhead-slogan">{{fundSlogan}}</view>
+  <view class="rankhead-buttonbar">
+    <view class="rankhead-buttonbar-side">
+      <picker mode="selector" bindchange="bindRankHisDateChange" value="{{index}}" range="{{fundRankHistoryDateAry}}">
+        <view class="rankhead-buttonbar-picker" bindtap="checkRankHistory">历史排名</view>
+      </picker>
+    </view>
+    <view class="rankhead-buttonbar-side">
+      <button type="primary" disabled="{{refreshRankDisable}}" bindtap="refreshStockRank">刷新排名</button>
+    </view>
+  </view>
+  <view class="rankhead-datebar">排名时间：{{rankListDate}}</view>
+</view>
+<scroll-view scroll-y="true" class="ranklist">
+  <view class="userform"
+    wx:for="{{showDataAry}}"
+    wx:key="uid"
+    wx:for-item="user"
+    wx:for-index="i"
+    data-uid="{{i}}"
+    bindtap="checkThisStockAccount">
     <view class="userinfo">
       <view class="userimage">
-        <image bindtap="bindViewTap" class="userinfo-avatar" src="{{user.useravatar}}" mode="cover"></image>
+        <image class="userinfo-avatar" src="{{user.avatarUrl}}" mode="cover"></image>
       </view>
-      <text class="userinfo-username">{{user.username}}</text>
+      <text class="{{user.isMyAccount?'userinfo-myusername':'userinfo-username'}}">{{user.name}}</text>
     </view>
       <view class="user-discribe">
         <view class="resource">
-          <view class="resimage">
-            <image src="../../images/peanut.png"></image>
-          </view>
-          <view class="resdiscrb">{{user.peaNut}}颗</view>
+          <view class="resource-title">持仓市值</view>
+          <view class="{{user.isMyAccount?'resource-myvalue':'resource-value'}}">{{user.stockValueStr}}</view>
+          <view class="resource-title">总市值</view>
+          <view class="{{user.isMyAccount?'resource-myvalue':'resource-value'}}">{{user.totalValue}}</view>
+        </view>
+        <view class="resource">
+          <view class="resource-title">目前仓位</view>
+          <view class="{{user.isMyAccount?'resource-myvalue':'resource-value'}}">{{user.position}}</view>
+          <view class="resource-title">会内位阶</view>
+          <view class="{{user.isMyAccount?'resource-myvalue':'resource-value'}}">{{user.rankName}}</view>
+        </view>
+        <view class="resource">
+          <view class="resource-title"><text class="{{user.win?'long':'short'}}">账户收益</text></view>
+          <view class="resource-value"><text class="{{user.win?'long':'short'}}">{{user.yieldsStr}}</text></view>
         </view>
         <view class="resource">
           <view class="resimage">
-            <image src="../../images/xiaocai.png"></image>
+            <image src="../../images/manager-{{user.isMyAccount?'red':'blue'}}.png"></image>
           </view>
-          <view class="resdiscrb">{{user.xiaoCai}}碟</view>
-        </view>
-        <view class="resource">
-          <view class="resimage">
-            <image src="../../images/wine.png"></image>
-          </view>
-          <view class="resdiscrb">{{user.jianNanChun}}瓶</view>
-        </view>
-        <view class="resource">
-          <view class="resimage">
-            <image src="../../images/elite.png"></image>
-          </view>
-          <view class="resdiscrb">{{user.rankName}}</view>
+          <view class="{{user.isMyAccount?'resource-myrank':'resource-rank'}}">第{{i+1}}名</view>
         </view>
       </view>
   </view>
+</scroll-view>
 
-</view>
+<!-- <picker wx:if="{{showHistoryDatePicker}}" mode="selector" bindchange="bindRankHisDateChange" value="{{index}}" range="{{fundRankHistoryDateAry}}">
+  <view class="picker">
+    日程日期: {{selectedDate}}
+  </view>
+</picker> -->
+
+  
+

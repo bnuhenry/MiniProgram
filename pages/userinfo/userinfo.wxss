@@ -1,0 +1,222 @@
+:host {
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  justify-items: center;
+  background-color: #F5F8FB;
+} 
+
+.fundUserInfo{
+  width: 95%;
+  height: 230rpx;
+  margin:10rpx auto;
+  border-radius: 30rpx;
+  background-color: #fff;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  overflow: hidden;
+}
+
+  .fundUserInfo-label{
+    width: 100%;
+    height: 60rpx;
+    padding-left:60rpx;
+    padding-top:20rpx;
+    color:#aaaaaa;
+    font-weight: 600;
+    display: flex;
+    align-items: center;
+  }
+
+  .fundUserInfo-contribution{
+    width: 100%;
+    height: 60rpx;
+    padding-left:30rpx;
+    display: flex;
+    align-items: center;
+  }
+
+    .fundUserInfo-contribution-title{
+      width: 70%;
+      height: 60rpx;
+      display: flex;
+      justify-content: flex-start;
+      align-items: center;
+    }
+
+      .fundUserInfo-contribution-image{
+        width: 60rpx;
+        height: 50rpx;
+      }
+
+      .fundUserInfo-contribution-titlecontent{
+        height: 60rpx;
+        padding-left: 20rpx;
+        color:#aaaaaa;
+        display: flex;
+        justify-content: flex-start;
+        align-items: center;
+      }
+
+        .fundUserInfo-contribution-rankname{
+          color:blue
+        }
+
+        .fundUserInfo-contribution-contribution{
+          width: 30%;
+          height: 60rpx;
+          display: flex;
+          color:blue;
+          justify-content: flex-start;
+          align-items: center;
+        }
+
+  .fundUserInfo-upgrade{
+    width: 100%;
+    height: 100rpx;
+    padding-left:30rpx;
+  }
+    .fundUserInfo-upgrade-title{
+      width: 100%;
+      height: 50rpx;
+      display: flex;
+      align-items: center;
+    }
+
+      .fundUserInfo-upgrade-image{
+        width: 60rpx;
+        height: 50rpx;
+      }
+
+      .fundUserInfo-contribution-titlecontent{
+        width: 100%;
+        height: 50rpx;
+        padding-left: 20rpx;
+        display: flex;
+        color:#aaaaaa;
+        align-items: center;
+      }
+
+    .fundUserInfo-upgrade-rankbar{
+      width: 100%;
+      height: 50rpx;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+    }
+
+      .fundUserInfo-upgrade-ratebar{
+        width: 60%;
+        height: 30rpx;
+        border-radius: 15rpx;
+        background-color: #E5E5E5;
+        display: flex;
+        align-items: center;
+        overflow: hidden;
+      }
+      
+        .fundUserInfo-upgrade-rate{
+          height: 30rpx;
+          border-radius: 15rpx;
+          /* background-color:gold; */
+          background-color: #2DB7F5;
+        }
+
+.operateBox{
+  width: 95%;
+  /* height: 300rpx; */
+  margin:10rpx auto;
+  border-radius: 30rpx;
+  background-color: #fff;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  overflow: hidden;
+}
+
+  .operateBox-label{
+    width: 100%;
+    height: 60rpx;
+    padding-left:60rpx;
+    padding-top:20rpx;
+    color:#aaaaaa;
+    font-weight: 600;
+    display: flex;
+    align-items: center;
+  }
+
+  .operateBox-button{
+    width: 50%;
+    height: 60rpx;
+    margin:15rpx auto;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+  }
+
+.inputBox{
+  width: 90%;
+  height: 300rpx;
+  margin:10rpx auto;
+  padding-bottom:10rpx;
+  border-radius: 30rpx;
+  background-color: #fff;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  overflow: hidden;
+}
+
+  .inputBox-label{
+    width: 70%;
+    height: 50rpx;
+    display: flex;
+    margin: 15rpx auto;
+    color:blue;
+  }
+
+  .inputBox-input{
+    width: 70%;
+    height: 50rpx;
+    margin: 15rpx;
+    border-bottom: 2rpx solid #aaaaaa;
+  }
+
+  .inputBox-button{
+    width: 100%;
+    height: 60rpx;
+    margin:10rpx auto;
+    display: flex;
+    justify-content: space-around;
+    align-items: center;
+  }
+
+    .inputBox-button-side{
+      width: 40%;
+      height: 60rpx;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+    }
+
+      .inputBox-button-side button{
+        width: 80%;
+        height: 60rpx;
+        font-size: 25rpx;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+      }
+
+  .inputBox-msg{
+    width: 70%;
+    height: 50rpx;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    color: red;
+  }

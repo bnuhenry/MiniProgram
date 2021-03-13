@@ -1,0 +1,186 @@
+/* pages/rankhistory/rankhistory.wxss */
+:host{
+  width: 100%;
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+}
+
+.histogramheader{
+  width: 95%;
+  height: 15%;
+  margin-bottom: 10rpx;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+}
+
+  .hitogramheader-titlebar{
+    width: 95%;
+    height: 33%;
+    color:#1976D2;
+    font-weight: 600;
+    font-size:30rpx;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+  }
+
+  .hitogramheader-datebar{
+    width: 95%;
+    height: 33%;
+    color:#888888;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+  }
+
+  .hitogramheader-buttonbar{
+    width: 95%;
+    height: 33%;
+    display: flex;
+    justify-content: space-around;
+    align-items: center;
+  }
+
+    .hitogramheader-buttonbar-side{
+      width: 40%;
+      height: 100%;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+    }
+
+    .hitogramheader-buttonbar-playbutton{
+      width: 100%;
+      height: 90%;
+      border-radius: 30rpx;
+      padding:0;
+      margin:0 10rpx;
+      font-size: 25rpx;
+      color:#ffffff;
+      background-color: #FF9800;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+    }
+
+.histogramRank{
+  width: 90%;
+  height: 65%;
+  margin-left: 20rpx;
+  border-left: 3rpx solid #aaaaaa;
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+}
+
+  .histogramRank-userlist{
+    width: 80%;
+    height: 60rpx;
+    margin:10rpx 0;
+    display: flex;
+    justify-content: flex-start;
+    align-items: center;
+  }
+
+    .histogramRank-userlist-histogram{
+      position: relative;
+      height: 60rpx;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+    }
+
+    .histogramRank-userlist-avatar{
+      position: absolute;
+      right:-70rpx;
+      width: 60rpx;
+      height: 60rpx;
+      border-radius: 30rpx;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+    }
+
+    .histogramRank-userlist-yields{
+      position: absolute;
+      right:-200rpx;
+      width: 120rpx;
+      height: 60rpx;
+      display: flex;
+      justify-content: flex-start;
+      align-items: center;
+    }
+
+    .histogramRank-userlist-myaccount{
+      position: absolute;
+      right:-260rpx;
+      width: 50rpx;
+      height: 50rpx;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+    }
+
+    .histogramRank-userlist-newfish{
+      position: absolute;
+      right:-400rpx;
+      width: 140rpx;
+      height: 50rpx;
+      font-weight: 600;
+      color:red;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+    }
+
+.histogramPosition{
+  width: 90%;
+  height: 15%;
+  margin-left: 10rpx;
+  border-top: 3rpx solid #aaaaaa;
+  display: flex;
+  flex-direction: row;
+  justify-content: space-around;
+  overflow: hidden;
+}
+
+  .histogramPosition-userlist{
+    height: 100%;
+    width: 60rpx;
+    display: flex;
+    justify-content: center;
+    align-items: flex-start;
+  }
+
+  .histogramPosition-userlist-histogram{
+    position: relative;
+    height: 60%;
+    width: 60rpx;
+    display: flex;
+    justify-content: center;
+    align-items: flex-end;
+  }
+
+    .histogramPosition-userlist-histogrambar{
+      height: 60%;
+      width: 60rpx;
+      color:#ffffff;
+      font-size: 25rpx;
+      display: flex;
+      justify-content: center;
+      align-items: flex-start;
+      background-color: #2DB7F5;
+    }
+
+    .histogramPosition-userlist-avatar{
+      position: absolute;
+      bottom:-55rpx;
+      width: 50rpx;
+      height: 50rpx;
+      border-radius: 25rpx;
+    }

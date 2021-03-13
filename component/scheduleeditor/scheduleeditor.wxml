@@ -1,0 +1,58 @@
+<view class="background">
+  <view class="rest" bindtap="cancel"></view>
+  <view class="editor" style="{{scheduleEditorStyle}}">
+  <view class="editor-topbar">
+    <view class="editor-topbar-side">
+      <view class="editor-topbar-button" bindtap="cancel">取消</view>
+      <view class="editor-topbar-button"></view>
+    </view>
+    <view class="editor-topbar-title">
+      日程编辑
+    </view>
+    <view class="editor-topbar-side">
+      <view class="editor-topbar-button"></view>
+      <view class="editor-topbar-button" wx:if="{{editType==1}}" bindtap="createNewSchedule">确定</view>
+      <view class="editor-topbar-button" wx:if="{{editType==2&&canEdit}}" bindtap="editSchedule">保存</view>
+      <view class="editor-topbar-button" wx:if="{{editType==2&&!canEdit}}" bindtap="cancel">收起</view>
+    </view>
+  </view>
+
+  <view class="basic-info">
+    <view class="userinfo">
+      <image class="userimage" src="{{userAvatar}}"></image>
+      <view class="username">{{userName}}</view>
+    </view>
+    <view class="dateinfo">
+      <picker mode="date" value="{{date}}" disabled="{{!canEdit&&editType==2}}" start="2019-01-01" end="2031-01-01" bindchange="bindDateChange">
+        <view class="picker">
+          日程日期: {{selectedDate}}
+        </view>
+      </picker>
+    </view>
+  </view>
+
+  <view class="detail-input">
+    <view class="detail-input-title">日程详情</view>
+    <view class="detail-input-box">
+      <input placeholder="请输入日程详情" disabled="{{!canEdit&&editType==2}}" value="{{scheduleDetail}}" bindchange="bindDetailInput"/>
+    </view>
+  </view>
+
+  <view class="edit-msg-bar">{{editMsg}}</view>
+
+  <view class="button-box">
+    <view class="button-box-side">
+      <button wx:if="{{editType==1}}" type="primary" bindtap="cancel">取    消</button>
+      <button wx:if="{{editType==2}}" disabled="{{!canEdit}}" type="warn" bindtap="deleteSchedule">删除记录</button>
+    </view>
+    <view class="button-box-side">
+      <button wx:if="{{editType==1}}" type="primary" bindtap="createNewSchedule">确认上传</button>
+      <button wx:if="{{editType==2}}" disabled="{{!canEdit}}" type="primary" bindtap="editSchedule">保存修改</button>
+    </view>
+  </view>
+
+  <view wx:if="{{showRenewDate}}" class="renewtimebar">更新时间:{{renewDateToStr}}</view>
+</view>
+</view>
+
+

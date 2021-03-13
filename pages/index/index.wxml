@@ -1,77 +1,114 @@
 <!--index.wxml-->
 <view class="container">
-    <swiper class="indexswiper" indicator-dots="true" autoplay="true" circular="true" duration="300" indicator-active-color="#fff">
-      <swiper-item class="swiperitem">
-        <image src="http://119.29.170.42/image/20201101212503.png" mode='scaleToFill'></image>
-      </swiper-item>
-      <swiper-item class="swiperitem">
-          <image src="http://119.29.170.42/image/20201101212921.png" mode='scaleToFill'></image>
-      </swiper-item>
-      <swiper-item class="swiperitem">
-        <image src="http://119.29.170.42/image/shouzuo4-1312312.png" mode='scaleToFill'></image>
-      </swiper-item>
-    </swiper>
-    
-<view class="userform">
-  <view class="userinfo">
-    <button wx:if="{{!hasUserInfo && canIUse}}" open-type="getUserInfo" bindgetuserinfo="getUserInfo"> 获取头像昵称 </button>
-    <block wx:else>
-    <view class="userimage">
-      <image bindtap="bindViewTap" class="userinfo-avatar" src="{{userInfo.avatarUrl}}" mode="cover"></image>
-    </view>
-      <text class="userinfo-username">{{userInfo.nickName}}</text>
-      <view class="user-discribe">
-        <text class="userinfo-nickname">基金会干事，反正就是干事的</text>
+  <swiper class="indexswiper" indicator-dots="true" autoplay="true" circular="true" duration="300" indicator-active-color="#fff">
+    <swiper-item class="swiperitem">
+      <image src="../../images/swiper1.jpg" mode='widthFix'></image>
+    </swiper-item>
+    <swiper-item class="swiperitem">
+        <image src="../../images/swiper2.jpg" mode='widthFix'></image>
+    </swiper-item>
+    <swiper-item class="swiperitem">
+      <view class="fangzhen">
+        <view class="title">本会最新方针政策:</view>
+        <view class="word">{{fundSlogan}}</view>
+        <view class="username">本方针由{{fundSloganCreator}}制定</view>
+        <view class="avatar">
+          <image class="avatar-image" src="{{fundSloganCreatorAvatar}}"></image>
+        </view>
       </view>
-    </block>
+    </swiper-item>
+  </swiper>
+
+  <view class="userform">
+    <userInfo fundUserInfo="{{fundUserInfo}}"></userInfo>
+  </view>
+
+  <view class="miningview">
+    <view class="buttonview-label">
+      <view class="buttonview-label-signtitle">每日签到，随机派送礼品</view>
+    </view>
+    <view class="buttonview-index">
+      <view class="buttonview-indexbar">
+        <view class="buttonview-indexbar-index">
+          <text class="{{SHIndexUp?'long':'short'}}">上证指数</text>
+        </view>
+        <view class="buttonview-indexbar-index">
+          <text class="{{SHIndexUp?'long':'short'}}">{{SHStockIndex}}</text>
+        </view>
+      </view>
+      <view class="buttonview-indexbar">
+        <view class="buttonview-indexbar-index">
+          <text class="{{SZIndexUp?'long':'short'}}">深证成指</text>
+        </view>
+        <view class="buttonview-indexbar-index">
+          <text class="{{SZIndexUp?'long':'short'}}">{{SZStockIndex}}</text>
+        </view>
+      </view>
+      <view class="buttonview-indexbar">
+        <view class="buttonview-indexbar-index">
+          <text class="{{CYBIndexUp?'long':'short'}}">创业板指</text>
+        </view>
+        <view class="buttonview-indexbar-index">
+          <text class="{{CYBIndexUp?'long':'short'}}">{{CYBStockIndex}}</text>
+        </view>
+      </view>
+    </view>
+    <view class="buttonbox">
+      <button bindtap="getMining" type="primary" disabled="{{!canSign}}">{{signUpMsg}}</button>
+    </view>
+    <view class="msgbox">{{miningResult}}</view>
+  </view>
+
+  <view class="miningview">
+    <view class="buttonview-label">
+      <view class="buttonview-label-restitle">资源</view>
+      <swiper class="buttonview-label-swiper" autoplay="true" circular="true" duration="500" interval="3000" vertical="true">
+        <block wx:for="{{resRewardRecordAry}}" wx:key="key" wx:for-item ="item" wx:for-index ="i">
+          <swiper-item class="buttonview-label-swiperitem">
+            <view class="buttonview-label-swiperitem-msg">{{item.msg}}</view>
+            <image class="buttonview-label-swiperitem-avatar" src="{{item.avatarUrl}}"/>
+          </swiper-item>
+        </block>
+      </swiper>
+    </view>
+    <view class="miningbox">
+      <view class="miningbox-resource">
+        <view class="miningbox-resimage">
+          <image src="../../images/peanut.png"></image>
+        </view>
+        <view class="miningbox-resdiscrb">花生<text class="blue">{{peaNut}}</text>包</view>
+      </view>
+      <view class="miningbox-resource">
+        <view class="miningbox-resimage">
+          <image src="../../images/xiaocai.png"></image>
+        </view>
+        <view class="miningbox-resdiscrb">小菜<text class="blue">{{xiaoCai}}</text>碟</view>
+      </view>
+      <view class="miningbox-resource">
+        <view class="miningbox-resimage">
+          <image src="../../images/wine.png"></image>
+        </view>
+        <view class="miningbox-resdiscrb">贱男春<text class="blue">{{jianNanChun}}</text>瓶</view>
+      </view>
+    </view>
+    <view class="buttonbox">
+      <button bindtap="getContributionBoard" type="primary">捐献资源</button>
+    </view>
+    <view class="msgbox">{{contributionResult}}</view>
   </view>
 </view>
 
-<view class="miningview">
-  <view class="buttonview-label">挖矿专用</view>
-  <view class="buttonbox">
-    <button bindtap="getMining" type="primary" disabled="{{!canDig}}" loading="{{!canDig}}">挖矿</button>
-  </view>
-  <view class="msgbox">{{miningResult}}</view>
-</view>
-
-<view class="miningview">
-  <view class="buttonview-label">资源利用</view>
-  <view class="miningbox">
-    <view class="resource">
-      <view class="resimage">
-        <image src="../../images/peanut.png"></image>
-      </view>
-      <view class="resdiscrb">花生{{peaNut}}颗</view>
-    </view>
-    <view class="resource">
-      <view class="resimage">
-        <image src="../../images/xiaocai.png"></image>
-      </view>
-      <view class="resdiscrb">小菜{{xiaoCai}}碟</view>
-    </view>
-    <view class="resource">
-      <view class="resimage">
-        <image src="../../images/wine.png"></image>
-      </view>
-      <view class="resdiscrb">贱男春{{jianNanChun}}瓶</view>
-    </view>
-  </view>
-  <view class="buttonbox">
-    <button bindtap="getContribution" type="primary">捐献资源获取声望</button>
-  </view>
-  <view class="msgbox">{{contributionResult}}</view>
-</view>
+<rsSlider
+  wx:if="{{contriSliderShow}}"
+  bind:sliderShow="getSliderShow"
+  bind:contriResult="getContriResult"
+  bind:contriResultBool="getContriResultBool"
+  bind:otherFundUserAry="getOtherFundUserAry"
+  peaNutMax="{{peaNut}}"
+  xiaoCaiMax="{{xiaoCai}}"
+  jianNanChunMax="{{jianNanChun}}"
+  otherFundUsersAry="{{otherFundUsersAry}}"
+  contriTypeFromPage='1'>
+</rsSlider>
 
 
-  
-
-  <view class="datashow">
-    <!-- <text>{{showDickLength}}</text> -->
-    <view class="dick" style="width:{{dickLength}}%"></view>
-    <!-- <view class="dick" style="returnLength"></view> -->
-  </view>
-  <view class="usermotto">
-    <text class="user-motto">{{motto}}{{userInfo.nickName}}</text>
-  </view>
-</view>

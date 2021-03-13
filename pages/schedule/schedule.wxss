@@ -1,1 +1,279 @@
-/* pages/schedule/schedule.wxss */
+:host{
+  width: 100%;
+  height: 100%;
+  position: fixed;
+}
+
+.optionbar{
+  width: 100%;
+  height: 10%;
+  display: flex;
+  justify-content: center;
+}
+
+  .optionbar-optionbox{
+    width: 50%;
+    height: 100%;
+    display: flex;
+    justify-content: space-between;
+    /* align-items: center; */
+  }
+
+    .optionbar-optionbox-option{
+      width: 40%;
+      height: 80%;
+      display: flex;
+      color:#2DB7F5;
+      font-weight: 600;
+      justify-content: center;
+      align-items: center;
+    }
+
+.schedule{
+  width: 100%;
+  height: 60%;
+  background-color: #fff;
+}
+
+  .datebar{
+    width: 100%;
+    height: 15%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+  }
+
+    .datebar-title{
+      width: 45%;
+      height: 70%;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+    }
+
+      .datebar-arrow{
+        width: 45rpx;
+        height: 35rpx;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+      }
+
+      .dateshow{
+        width: 80%;
+        height: 100%;
+        display: flex;
+        font-size:35rpx;
+        justify-content: center;
+        align-items: center;
+      }
+
+      .datebar-sidebar{
+        width: 20%;
+        height: 70%;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+      }
+
+        .datebar-sidebar-button{
+          width: 50%;
+          height: 100%;
+          display: flex;
+          font-size: 30rpx;
+          color:red;
+          font-weight: 600;
+          justify-content: center;
+          align-items: center;
+        }
+
+  .calendar{
+    width: 100%;
+    height: 85%;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+  }
+
+    .weekbar{
+      width: 90%;
+      height: 15%;
+      border-bottom: 1rpx solid #eee;
+      display: flex;
+      justify-content: space-around;
+      align-items: center;
+    }
+
+      .weekday{
+        font:30rpx;
+        color:#aaa;
+      }
+
+    .daybox{
+      width: 90%;
+      height: 85%;
+      display: flex;
+      flex-direction: column;
+      justify-content: space-around;
+      align-items: center;
+      border-bottom: 2rpx solid #eee;
+    }
+
+      .weekline{
+        width: 100%;
+        height: 12%;
+        display: flex;
+        justify-content: space-around;
+        align-items: center;
+      }
+
+        .monthday{
+          position: relative;
+          width: 12%;
+          height: 100%;
+          display: flex;
+          justify-content: center;
+          align-items: center;
+        }
+
+          .monthday1stimage{
+            position: absolute;
+            width: 26rpx;
+            height: 26rpx;
+            border-radius: 13rpx;
+            top: 0;
+            right: 0;
+            display: flex;
+            overflow: hidden;
+          }
+
+          .monthday2ndimage{
+            position: absolute;
+            width: 26rpx;
+            height: 26rpx;
+            border-radius: 13rpx;
+            top: 0;
+            left: 0;
+            display: flex;
+            overflow: hidden;
+          }
+
+          .monthday3rdimage{
+            position: absolute;
+            width: 26rpx;
+            height: 26rpx;
+            border-radius: 13rpx;
+            bottom: 0;
+            left: 0;
+            display: flex;
+            overflow: hidden;
+          }
+
+          .monthday4thimage{
+            position: absolute;
+            width: 26rpx;
+            height: 26rpx;
+            border-radius: 13rpx;
+            bottom: 0;
+            right: 0;
+            display: flex;
+            overflow: hidden;
+          }
+
+        .monthdayselected{
+          position: relative;
+          width: 12%;
+          height: 100%;
+          display: flex;
+          justify-content: center;
+          align-items: center;
+          background-color:yellow;
+        }
+
+.detailbar{
+  width: 100%;
+  height: 30%;
+}
+
+  .detailtopbar{
+    width: 100%;
+    height: 20%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+  }
+
+    .detail-topbar-title{
+      width: 50%;
+      height: 100%;
+      display: flex;
+      color:#aaa;
+      border-bottom: 1rpx solid #eee;
+      justify-content: center;
+      align-items: center;
+    }
+
+    .detail-topbar-side{
+      width: 25%;
+      height: 100%;
+      display: flex;
+      color:#2DB7F5;
+      justify-content: center;
+      align-items: center;
+    }
+
+  .detailbarbox{
+    width: 100%;
+    height: 270rpx;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+  }
+
+    .detailbarbox-detail{
+      width: 100%;
+      height: 80rpx;
+      padding:20rpx;
+      display: flex;
+      align-items: center;
+    }
+
+    .sdavatar{
+      width: 80rpx;
+      height: 80rpx;
+      border-radius: 40rpx;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      overflow: hidden;
+    }
+
+    .sdusername{
+      width: 20%;
+      height: 100%;
+      display: flex;
+      justify-content: flex-start;
+      align-items: center;
+    }
+
+    .sdmsg{
+      width: 50%;
+      height: 100%;
+      display: flex;
+      flex-wrap: wrap;
+      padding:0 20rpx;
+      justify-content: flex-start;
+      align-items: center;
+      overflow:scroll;
+      /* display:inline-block; */
+    }
+
+    .sddate{
+      width: 20%;
+      height: 100%;
+      display: flex;
+      justify-content: flex-start;
+      align-items: center;
+    }

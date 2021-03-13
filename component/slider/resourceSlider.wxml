@@ -1,0 +1,65 @@
+<view class="background">
+  <view class="rest" bindtap="cancel"></view>
+  <view class="slider" style="{{sliderStyle}}">
+    <view class="header">
+      <view class="header-toptitle">
+        <view class="header-toptitle-side"></view>
+        <view class="header-toptitle-middle">{{contriTitle}}</view>
+        <view class="header-toptitle-side" bindtap="cancel">取消</view>
+      </view>
+      <view class="header-optionbox">
+        <view class="{{contriType==2?'header-optionbox-option-selected':'header-optionbox-option'}}" bindtap="contriToOtherFundUser">
+          捐赠给{{resGiveToUserName}}
+          <view class="header-optionbox-userinfo">
+            <image class="header-optionbox-userimg" src="{{resGiveToUserObj.avatarUrl}}"></image>
+          </view>
+        </view>
+        <view class="{{contriType==1?'header-optionbox-option-selected':'header-optionbox-option'}}" bindtap="contriToFund">捐赠给基金会</view>
+      </view>
+    </view>
+    <view class="section">
+      <view class="sectiontitle">
+        <text class="section-title">捐献花生数量</text>
+        <image src="../../images/peanut.png"></image>
+      </view>
+      <view class="body-view">
+        <slider bindchange="peanutChange" min="0" max="{{peaNutMax}}" show-value/>
+      </view>
+    </view>
+    <view class="section">
+      <view class="sectiontitle">
+        <text class="section-title">捐献小菜数量</text>
+        <image src="../../images/xiaocai.png"></image>
+      </view>
+      <view class="body-view">
+        <slider bindchange="xiaocaiChange" min="0" max="{{xiaoCaiMax}}" show-value/>
+      </view>
+    </view>
+    <view class="section">
+      <view class="sectiontitle">
+        <text class="section-title">捐献贱男春数量</text>
+      <image src="../../images/wine.png"></image>
+    </view>
+      <view class="body-view">
+        <slider bindchange="wine_jncChange" min="0" max="{{jianNanChunMax}}" show-value/>
+      </view>
+    </view>
+    <view class="buttonbox">
+      <button class="buttonboxbutton" bindtap="cancel" type="default">取消</button>
+      <button class="buttonboxbutton" type="primary" disabled="{{contriDisable}}" bindtap="getContribution">确认捐出</button>
+      <button class="buttonboxbutton" type="primary" disabled="{{allInDisable}}" bindtap="getAllIn">全部捐出</button>
+    </view>
+  </view>
+</view>
+
+<funduserpicker 
+wx:if="{{showFundUserPicker}}" 
+checkUserType="fund"
+otherFundUsersAry="{{otherFundUsersAry}}"
+bind:otherFundUserAry="getOtherFundUserAry"
+bind:otherUserObj="getOtherUserObj"
+bind:switchOff="getFundUserPickerOff">
+</funduserpicker>
+
+
+

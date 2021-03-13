@@ -1,0 +1,159 @@
+<view class="background">
+  <view class="rest" bindtap="cancel"></view>
+  <view class="stockbar" style="{{stockPickerStyle}}">
+    <view class="stockbar-title">
+      <view class="stockbar-title-name">{{stockObj.name}}</view>
+      <view class="stockbar-title-stockid">{{stockObj.symbol}}</view>
+      <view class="stockbar-title-cancel" bindtap="cancel">收起</view>
+    </view>
+    <view class="stockbar-detail">
+      <view class="stockbar-detail-main">
+        <view class="stockbar-detail-left">
+          <view class="stockbar-detail-price">现价：{{stockObj.price}}</view>
+          <view class="stockbar-detail-price">今开：{{stockObj.open}}</view>
+          <view class="stockbar-detail-price">昨收：{{stockObj.yestclose}}</view>
+          <view class="stockbar-detail-price">涨幅：<view class="{{stockObj.percent>0?'indexLong':'indexShort'}}">{{increaseRate}}</view></view>
+          <view class="stockbar-detail-price">持仓：<view class="{{bonds>0?'indexLong':''}}">{{bonds}}</view></view>
+        </view>
+        <view class="stockbar-detail-middle">
+          <view class="stockbar-detail-price" data-id="s5" bindtap="clickPriceTrade"><text class="indexShort">卖五：{{stockObj.ask5}}</text></view>
+          <view class="stockbar-detail-price" data-id="s4" bindtap="clickPriceTrade"><text class="indexShort">卖四：{{stockObj.ask4}}</text></view>
+          <view class="stockbar-detail-price" data-id="s3" bindtap="clickPriceTrade"><text class="indexShort">卖三：{{stockObj.ask3}}</text></view>
+          <view class="stockbar-detail-price" data-id="s2" bindtap="clickPriceTrade"><text class="indexShort">卖二：{{stockObj.ask2}}</text></view>
+          <view class="stockbar-detail-price" data-id="s1" bindtap="clickPriceTrade"><text class="indexShort">卖一：{{stockObj.ask1}}</text></view>
+        </view>
+        <view class="stockbar-detail-right">
+          <view class="stockbar-detail-price" data-id="s5" bindtap="clickPriceTrade"><text class="indexShort">{{sell_5_amount}}</text></view>
+          <view class="stockbar-detail-price" data-id="s4" bindtap="clickPriceTrade"><text class="indexShort">{{sell_4_amount}}</text></view>
+          <view class="stockbar-detail-price" data-id="s3" bindtap="clickPriceTrade"><text class="indexShort">{{sell_3_amount}}</text></view>
+          <view class="stockbar-detail-price" data-id="s2" bindtap="clickPriceTrade"><text class="indexShort">{{sell_2_amount}}</text></view>
+          <view class="stockbar-detail-price" data-id="s1" bindtap="clickPriceTrade"><text class="indexShort">{{sell_1_amount}}</text></view>
+        </view>
+      </view>
+      <view class="stockbar-detail-main">
+        <view class="stockbar-detail-left">
+          <view class="stockbar-detail-price">最高：{{stockObj.high}}</view>
+          <view class="stockbar-detail-price">最低：{{stockObj.low}}</view>
+          <view class="stockbar-detail-price">总手：{{dealHandAmount}}</view>
+          <view class="stockbar-detail-price">成交：{{turnOver}}</view>
+          <view class="stockbar-detail-price">已关注：{{stockFocusedMsg}}</view>
+        </view>
+        <view class="stockbar-detail-middle">
+          <view class="stockbar-detail-price" data-id="b1" bindtap="clickPriceTrade"><text class="indexLong">买一：{{stockObj.bid1}}</text></view>
+          <view class="stockbar-detail-price" data-id="b2" bindtap="clickPriceTrade"><text class="indexLong">买二：{{stockObj.bid2}}</text></view>
+          <view class="stockbar-detail-price" data-id="b3" bindtap="clickPriceTrade"><text class="indexLong">买三：{{stockObj.bid3}}</text></view>
+          <view class="stockbar-detail-price" data-id="b4" bindtap="clickPriceTrade"><text class="indexLong">买四：{{stockObj.bid4}}</text></view>
+          <view class="stockbar-detail-price" data-id="b5" bindtap="clickPriceTrade"><text class="indexLong">买五：{{stockObj.bid5}}</text></view>
+        </view>
+        <view class="stockbar-detail-right">
+          <view class="stockbar-detail-price" data-id="b1" bindtap="clickPriceTrade"><text class="indexLong">{{buy_1_amount}}</text></view>
+          <view class="stockbar-detail-price" data-id="b2" bindtap="clickPriceTrade"><text class="indexLong">{{buy_2_amount}}</text></view>
+          <view class="stockbar-detail-price" data-id="b3" bindtap="clickPriceTrade"><text class="indexLong">{{buy_3_amount}}</text></view>
+          <view class="stockbar-detail-price" data-id="b4" bindtap="clickPriceTrade"><text class="indexLong">{{buy_4_amount}}</text></view>
+          <view class="stockbar-detail-price" data-id="b5" bindtap="clickPriceTrade"><text class="indexLong">{{buy_5_amount}}</text></view>
+        </view>
+      </view>
+    </view>
+    <view class="stockbar-inputbar" wx:if="{{isMyStockAccount}}">
+      <view class="stockbar-inputstockid">
+        <picker class="stockbar-picker" bindchange="bindHousePickerChange" value="{{index}}" range="{{exchangeHouseAry}}">{{exchangeHouse}}</picker>
+        <input class="stockbar-input" type="number" placeholder="请输入股票代码" value="{{inputStockId}}" bindchange="bindStockIdInput"/>
+      </view>
+      <view class="stockbar-buttonbox">
+        <button type="primary" disabled="{{!canTrade}}" bindtap="clickWantToTrade">点击交易</button>
+        <button type="primary" bindtap="getSingleStockDetail">获取股票信息</button>
+        <button wx:if="{{!stockFocused}}" type="primary" disabled="{{!canFocus||focusLoading}}" loading="{{focusLoading}}" bindtap="clickFocusStock">点击关注</button>
+        <button wx:if="{{stockFocused}}" type="warn" disabled="{{!canFocus||focusLoading}}" loading="{{focusLoading}}" bindtap="clickCancelFocus">取消关注</button>
+      </view>
+    </view>
+  </view>
+
+</view>
+
+<view class="stocktrade" wx:if="{{showStockTradeBar!=0}}">
+  <view class="stocktrade-restup" bindtap="cancelStockTradeBar"></view>
+  <view class="stocktrade-buy" wx:if="{{showStockTradeBar==1}}">
+    <view class="stocktrade-title">
+      <view class="stocktrade-title-side"></view>
+      <view class="stocktrade-title-type">买入股票</view>
+      <view class="stocktrade-title-side" bindtap="cancelStockTradeBar">取消</view>
+    </view>
+    <view class="stocktrade-body">
+      <view class="stocktrade-body-line">
+        <view class="stocktrade-body-line-label">证券代码</view>
+        <view class="stocktrade-body-line-data">{{stockObj.name}}</view>
+      </view>
+      <view class="stocktrade-body-line">
+        <view class="stocktrade-body-line-label">证券名称</view>
+        <view class="stocktrade-body-line-data">{{stockObj.symbol}}</view>
+      </view>
+      <view class="stocktrade-body-line">
+        <view class="stocktrade-body-line-label">买入价格</view>
+        <view class="stocktrade-body-line-data">
+          <input class="stockbar-body-priceinput" type="digit" value="{{buy_price}}" bindchange="bindBuyPriceInput"/>
+        </view>
+      </view>
+      <view class="stocktrade-body-line">
+        <view class="stocktrade-body-line-label">可买(股)</view>
+        <view class="stocktrade-body-line-data">{{howManyCanBuy}}</view>
+      </view>
+      <view class="stocktrade-body-line">
+        <view class="stocktrade-body-line-label">买入数量</view>
+        <view class="stocktrade-body-line-data">
+          <input class="stockbar-body-amountinput" type="number" value="{{buy_amount}}" bindchange="bindBuyAmountInput"/>
+        </view>
+      </view>
+    </view>
+    <view class="stocktrade-buttonbar">
+      <view class="stocktrade-buttonbar-msg">{{stockTradeMsg}}</view>
+      <view class="stocktrade-buttonbar-buttonbox">
+        <button disabled="{{bonds==0}}" bindtap="clickWantToSell"><text class="stocktrade-button-wanttosell">我要卖出</text></button>
+        <button type="primary" disabled="{{tradeButtonDisable}}" bindtap="clickBuyStock">买入</button>
+      </view>
+    </view>
+  </view>
+
+  <view class="stocktrade-sell" wx:if="{{showStockTradeBar==2}}">
+    <view class="stocktrade-title">
+      <view class="stocktrade-title-side"></view>
+      <view class="stocktrade-title-type">卖出股票</view>
+      <view class="stocktrade-title-side" bindtap="cancelStockTradeBar">取消</view>
+    </view>
+    <view class="stocktrade-body">
+      <view class="stocktrade-body-line">
+        <view class="stocktrade-body-line-label">证券代码</view>
+        <view class="stocktrade-body-line-data">{{stockObj.name}}</view>
+      </view>
+      <view class="stocktrade-body-line">
+        <view class="stocktrade-body-line-label">证券名称</view>
+        <view class="stocktrade-body-line-data">{{stockObj.symbol}}</view>
+      </view>
+      <view class="stocktrade-body-line">
+        <view class="stocktrade-body-line-label">卖出价格</view>
+        <view class="stocktrade-body-line-data">
+          <input class="stockbar-body-priceinput" type="digit" value="{{sell_price}}" bindchange="bindSellPriceInput"/>
+        </view>
+      </view>
+      <view class="stocktrade-body-line">
+        <view class="stocktrade-body-line-label">可卖(股)</view>
+        <view class="stocktrade-body-line-data">{{howManyCanSell}}</view>
+      </view>
+      <view class="stocktrade-body-line">
+        <view class="stocktrade-body-line-label">卖出数量</view>
+        <view class="stocktrade-body-line-data">
+          <input class="stockbar-body-amountinput" type="number" value="{{sell_amount}}" bindchange="bindSellAmountInput"/>
+        </view>
+      </view>
+    </view>
+    <view class="stocktrade-buttonbar">
+      <view class="stocktrade-buttonbar-msg">{{stockTradeMsg}}</view>
+      <view class="stocktrade-buttonbar-buttonbox">
+        <button bindtap="clickWantToBuy"><text class="stocktrade-button-wanttobuy">我要买入</text></button>
+        <button type="primary" disabled="{{tradeButtonDisable||howManyCanSell==0}}" bindtap="clickSellStock">卖出</button>
+      </view>
+    </view>
+  </view>
+  <view class="stocktrade-restdown" bindtap="cancelStockTradeBar"></view>
+</view>
+
+

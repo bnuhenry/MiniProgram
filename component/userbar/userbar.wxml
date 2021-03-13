@@ -1,0 +1,18 @@
+
+  <view class="userinfo">
+    <!-- <button wx:if="{{!hasFundUserInfo}}" open-type="getUserInfo" bindgetuserinfo="getUserInfo"> 获取头像昵称 </button> -->
+    <button wx:if="{{(!hasFundUserInfo)&&canCreateNewFundUser}}" bindtap="createNewFundUser"> 创建基金会用户 </button>
+    <block wx:if="{{hasFundUserInfo}}">
+      <view class="userimage">
+        <image class="userinfo-avatar" src="{{fundUserInfo.avatarUrl}}" mode="cover" bindtap="renewFundUserAvatar"></image>
+        <view class="userimage-button" bindtap="renewFundUserAvatar">更新头像</view>
+      </view>
+      <view class="usertitle">
+        <view class="userinfo-username">{{fundUserInfo.name}}</view>
+        <view class="userrank">{{rankTitle}}</view>
+      </view>
+      <view class="user-discribe">
+        <text class="userinfo-nickname">{{rankTitleDiscrb}}</text>
+      </view>
+    </block>
+  </view>

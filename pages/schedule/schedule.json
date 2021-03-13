@@ -1,3 +1,6 @@
 {
-  "usingComponents": {}
+  "usingComponents": {
+    "datepicker":"/component/datepicker/datepicker",
+    "scheduleeditor":"/component/scheduleeditor/scheduleeditor"
+  }
 }

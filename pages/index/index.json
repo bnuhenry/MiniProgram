@@ -1,3 +1,6 @@
 {
-  "usingComponents": {}
+  "usingComponents": {
+    "rsSlider":"/component/slider/resourceSlider",
+    "userInfo":"/component/userinfo/userinfo"
+  }
 }

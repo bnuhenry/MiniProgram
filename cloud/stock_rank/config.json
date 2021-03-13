@@ -1,0 +1,13 @@
+{
+  "permissions": {
+    "openapi": [
+    ]
+  },
+  "triggers": [
+    {
+      "name": "makeStockRankList",
+      "type": "timer",
+      "config": "0 30 15 * * MON-FRI *"
+    }
+  ]
+}

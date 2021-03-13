@@ -1,0 +1,356 @@
+:host{
+  width: 100%;
+  height: 100%;
+}
+
+.background{
+  position: fixed;
+  top:0;
+  width: 100%;
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-end;
+  align-items: center;
+  background: rgba(6,24,31,0.3);
+}
+
+.stocktrade{
+  position: fixed;
+  top:0;
+  width: 100%;
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-end;
+  align-items: center;
+  background: rgba(6,24,31,0.3);
+  z-index:2;
+}
+
+.indexLong{
+  color:#FF3232
+}
+
+.indexShort{
+  color:#00E600
+}
+
+.rest{
+  position: fixed;
+  top:0;
+  width: 100%;
+  height: 20%;
+}
+
+.stockbar{
+  position: fixed;
+  bottom:0;
+  left: 0;
+  width: 100%;
+  height: 80%;
+  border-radius: 30rpx 30rpx 0 0;
+  background-color: #fff;
+  border-top:2px solid #f8f8f8;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  transition:0.5s;
+  -webkit-transition: 0.5s;
+  transform:translateY(100%);
+  overflow: hidden;
+  z-index: 1;
+}
+
+  .stockbar-title{
+    width: 100%;
+    height: 10%;
+    font:35rpx;
+    display: flex;
+    border-bottom:2px solid #f8f8f8;
+  }
+
+      .stockbar-title-name{
+        width: 30%;
+        height: 100rpx;
+        font:35rpx;
+        padding-left: 50rpx;
+        display: flex;
+        justify-content: flex-start;
+        align-items: center;
+      }
+
+      .stockbar-title-stockid{
+        width: 40%;
+        height: 100rpx;
+        font:35rpx;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+      }
+
+      .stockbar-title-cancel{
+        width: 30%;
+        height: 100rpx;
+        font:35rpx;
+        padding-right: 50rpx;
+        color:#2DB7F5;
+        display: flex;
+        justify-content: flex-end;
+        align-items: center;
+      }
+
+  .stockbar-detail{
+    width: 100%;
+    height: 60%;
+    font:35rpx;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+  }
+
+    .stockbar-detail-main{
+      width: 100%;
+      height: 50%;
+      font:35rpx;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+    }
+
+      .stockbar-detail-left{
+        width: 40%;
+        height: 100%;
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+        padding-left: 30rpx;
+      }
+
+      .stockbar-detail-middle{
+        width: 35%;
+        height: 100%;
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+        padding-left: 20rpx;
+      }
+
+      .stockbar-detail-right{
+        width: 25%;
+        height: 100%;
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+        padding-left: 10rpx;
+      }
+
+        .stockbar-detail-price{
+          width: 100%;
+          display: flex;
+        }
+
+  .stockbar-inputbar{
+    width: 90%;
+    height: 30%;
+    font:35rpx;
+    display: flex;
+    justify-content: center;
+    flex-direction: column;
+  }
+
+    .stockbar-inputstockid{
+      width: 100%;
+      height: 30%;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      background-color: #eeeeee;
+    }
+
+      .stockbar-picker{
+        width: 25%;
+        display: flex;
+        color:blue;
+        justify-content: flex-end;
+        align-items: center;
+      }
+
+      .stockbar-input{
+        width: 50%;
+        margin:30rpx auto;
+        background-color: #ffffff;
+      }
+
+    .stockbar-buttonbox{
+      margin-top:15rpx;
+      display:flex ;
+      justify-content: space-between;
+      align-items: center;
+    }
+
+      .stockbar-buttonbox button{
+        width: 30%;
+        height: 80rpx;
+        margin:0 15rpx;
+        font-size: 25rpx;
+        padding:0;
+        flex-wrap: nowrap;
+        display:flex;
+        justify-content: center;
+        align-items: center;
+      }
+
+  .stocktrade-restup{
+    width: 100%;
+    height: 30%;
+    z-index:3;
+  }
+
+  .stocktrade-buy{
+    width: 70%;
+    height: 50%;
+    border-radius: 30rpx;
+    display: flex;
+    color:#FF3232;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    overflow: hidden;
+    background-color: #ffffff;
+    z-index:3;
+  }
+
+  .stocktrade-sell{
+    /* position: fixed;
+    top:30%; */
+    width: 70%;
+    height: 50%;
+    border-radius: 30rpx;
+    display: flex;
+    color:blue;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    overflow: hidden;
+    background-color: #ffffff;
+    z-index:3;
+  }
+
+  .stocktrade-restdown{
+    width: 100%;
+    height: 20%;
+    z-index:3;
+  }
+
+    .stocktrade-title{
+      width: 100%;
+      height: 20%;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+    }
+
+      .stocktrade-title-type{
+        width: 50%;
+        height: 100%;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+      }
+
+      .stocktrade-title-side{
+        width: 25%;
+        height: 100%;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        color:#2DB7F5;
+      }
+
+    .stocktrade-body{
+      width: 100%;
+      height: 50%;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      align-items: center;
+    }
+
+      .stocktrade-body-line{
+        width: 100%;
+        height: 20%;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+      }
+
+        .stocktrade-body-line-label{
+          width: 50%;
+          height: 100%;
+          display: flex;
+          justify-content: center;
+          align-items: center;
+        }
+
+        .stocktrade-body-line-data{
+          width: 50%;
+          height: 100%;
+          display: flex;
+          justify-content: flex-start;
+          align-items: center;
+        }
+
+          .stockbar-body-priceinput{
+            width: 60%;
+            background-color: #eeeeee;
+          }
+
+          .stockbar-body-amountinput{
+            width: 60%;
+            background-color: #eeeeee;
+          }
+
+    .stocktrade-buttonbar{
+      width: 100%;
+      height: 30%;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      align-items: center;
+    }
+
+      .stocktrade-buttonbar-msg{
+        width: 80%;
+        height: 50rpx;
+        font-size: 25rpx;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+      }
+
+      .stocktrade-buttonbar-buttonbox{
+        width: 100%;
+        height: 80rpx;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+      }
+
+        .stocktrade-buttonbar-buttonbox button{
+          width: 40%;
+          height: 60rpx;
+          font-size: 25rpx;
+          display: flex;
+          justify-content: center;
+          align-items: center;
+        }
+
+        .stocktrade-button-wanttobuy{
+          color:#FF3232;
+        }
+
+        .stocktrade-button-wanttosell{
+          color:blue;
+        }

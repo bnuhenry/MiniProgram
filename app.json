@@ -1,9 +1,10 @@
 {
   "pages": [
     "pages/index/index",
-    "pages/rank/rank",
+    "pages/stock/stock",
     "pages/schedule/schedule",
-    "pages/serveinfo/serveinfo"
+    "pages/userinfo/userinfo",
+    "pages/rank/rank"
   ],
   "window": {
     "backgroundTextStyle": "light",
@@ -20,10 +21,10 @@
         "selectedIconPath": "images/heroinfo-filling.png"
       },
       {
-        "pagePath": "pages/rank/rank",
-        "text": "排名",
-        "iconPath": "images/armory.png",
-        "selectedIconPath": "images/armory-filling.png"
+        "pagePath": "pages/stock/stock",
+        "text": "模拟盘",
+        "iconPath": "images/stock.png",
+        "selectedIconPath": "images/stock-filling.png"
       },
       {
         "pagePath": "pages/schedule/schedule",
@@ -32,7 +33,7 @@
         "selectedIconPath": "images/date-filling.png"
       },
       {
-        "pagePath": "pages/serveinfo/serveinfo",
+        "pagePath": "pages/userinfo/userinfo",
         "text": "个人",
         "iconPath": "images/user.png",
         "selectedIconPath": "images/user-filling.png"

@@ -210,7 +210,7 @@
 
   .stocktrade-buy{
     width: 70%;
-    height: 50%;
+    height: 60%;
     border-radius: 30rpx;
     display: flex;
     color:#FF3232;
@@ -223,10 +223,8 @@
   }
 
   .stocktrade-sell{
-    /* position: fixed;
-    top:30%; */
     width: 70%;
-    height: 50%;
+    height: 60%;
     border-radius: 30rpx;
     display: flex;
     color:blue;
@@ -240,7 +238,7 @@
 
   .stocktrade-restdown{
     width: 100%;
-    height: 20%;
+    height: 10%;
     z-index:3;
   }
 
@@ -325,6 +323,7 @@
         width: 80%;
         height: 50rpx;
         font-size: 25rpx;
+        color:red;
         display: flex;
         justify-content: center;
         align-items: center;
@@ -339,9 +338,63 @@
       }
 
         .stocktrade-buttonbar-buttonbox button{
-          width: 40%;
+          width: 30%;
+          height: 60rpx;
+        }
+
+        .stocktrade-buttonbar-buybutton{
+          width: 30%;
           height: 60rpx;
           font-size: 25rpx;
+          font-weight: 600;
+          padding:0;
+          color:#ffffff;
+          background-color:#FF3232;
+          display: flex;
+          justify-content: center;
+          align-items: center;
+        }
+
+        .stocktrade-buttonbar-sellbutton{
+          width: 30%;
+          height: 60rpx;
+          font-size: 25rpx;
+          font-weight: 600;
+          padding:0;
+          color:#ffffff;
+          background-color:blue;
+          display: flex;
+          justify-content: center;
+          align-items: center;
+        }
+
+        .stocktrade-buttonbar-swipedeal{
+          width: 30%;
+          height: 60rpx;
+          font-size: 25rpx;
+          font-weight: 600;
+          padding:0;
+          display: flex;
+          justify-content: center;
+          align-items: center;
+        }
+
+      .stocktrade-buttonbar-buttonbox2{
+        width: 100%;
+        height: 80rpx;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+      }
+        
+        .stocktrade-buttonbar-allclear{
+          width: 60%;
+          height: 60rpx;
+          font-size: 25rpx;
+          font-weight: 600;
+          color:#ffffff;
+          background-color: blue;
+          padding:0;
           display: flex;
           justify-content: center;
           align-items: center;

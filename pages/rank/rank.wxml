@@ -3,18 +3,20 @@
   <view class="rankhead-slogan">{{fundSlogan}}</view>
   <view class="rankhead-buttonbar">
     <view class="rankhead-buttonbar-side">
-      <picker mode="selector" bindchange="bindRankHisDateChange" value="{{index}}" range="{{fundRankHistoryDateAry}}">
-        <view class="rankhead-buttonbar-picker" bindtap="checkRankHistory">历史排名</view>
-      </picker>
+      <!-- <picker mode="selector" bindchange="bindRankHisDateChange" value="{{index}}" range="{{fundRankHistoryDateAry}}"> -->
+        <view class="rankhead-buttonbar-picker" bindtap="clickCheckRankHistogram">历史排名</view>
+      <!-- </picker> -->
     </view>
     <view class="rankhead-buttonbar-side">
       <button type="primary" disabled="{{refreshRankDisable}}" bindtap="refreshStockRank">刷新排名</button>
     </view>
   </view>
-  <view class="rankhead-datebar">排名时间：{{rankListDate}}</view>
+  <picker class="rankhead-datebar" mode="selector" bindchange="bindRankHisDateChange" value="{{index}}" range="{{fundRankHistoryDateAry}}">
+    <view bindtap="checkRankHistory">排名时间：{{rankListDate}}</view>
+  </picker>
 </view>
-<scroll-view scroll-y="true" class="ranklist">
-  <view class="userform"
+<scroll-view scroll-y="true" enable-flex="true" class="ranklist">
+  <view class="ranklist-userinfo"
     wx:for="{{showDataAry}}"
     wx:key="uid"
     wx:for-item="user"

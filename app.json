@@ -4,7 +4,8 @@
     "pages/stock/stock",
     "pages/schedule/schedule",
     "pages/userinfo/userinfo",
-    "pages/rank/rank"
+    "pages/rank/rank",
+    "pages/rankhistory/rankhistory"
   ],
   "window": {
     "backgroundTextStyle": "light",
@@ -17,8 +18,8 @@
       {
         "pagePath": "pages/index/index",
         "text": "首页",
-        "iconPath": "images/heroinfo.png",
-        "selectedIconPath": "images/heroinfo-filling.png"
+        "iconPath": "images/home.png",
+        "selectedIconPath": "images/home-filling.png"
       },
       {
         "pagePath": "pages/stock/stock",

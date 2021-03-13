@@ -36,7 +36,7 @@
       <view class="weekline" wx:for="{{showDateAry}}" wx:key="index" wx:for-index="weekidx" wx:for-item="weekary">
         <view
         class="{{selectedIndex==weekidx*7+dayidx?'monthdayselected':'monthday'}}"
-        style="{{dayObj.isToday?'background-color:red;color:#fff':(dayObj.scheduleAry.length>0?'background-color:#2DB7F5;color:#fff':'')}}"
+        style="{{dayObj.isToday?'background-color:#E64A19;color:#fff':(dayObj.scheduleAry.length>0?'background-color:#2196F3;color:#fff':'')}}"
         id="{{weekidx*7+dayidx}}"
         wx:for="{{weekary}}"
         wx:key="index2"
@@ -94,7 +94,7 @@ bind:closeEditor="getEditorOff">
     </view>
   </view> 
   <!-- <scroll-view></scroll-view> -->
-  <scroll-view scroll-y="true" class="detailbarbox">
+  <scroll-view scroll-y="true" enable-flex="true" class="detailbarbox">
     <view class="detailbarbox-detail"
     wx:if="{{showScheduleDetail}}"
     wx:for="{{showScheduleAry}}"

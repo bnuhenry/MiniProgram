@@ -1,12 +1,12 @@
 <view class="userform">
-  <userInfo fundUserInfo="{{fundUserInfo}}"></userInfo>
+  <userbar fundUserInfo="{{fundUserInfo}}"></userbar>
 </view>
 <view class="fundUserInfo">
-  <view class="fundUserInfo-label">位阶晋升</view>
+  <view class="fundUserInfo-label">位阶晋升    {{fundName}}</view>
   <view class="fundUserInfo-contribution">
     <view class="fundUserInfo-contribution-title">
       <image class="fundUserInfo-contribution-image" src="../../images/contribution.png"></image>
-      <view class="fundUserInfo-contribution-titlecontent">你在本基金会的声望值为:</view>
+      <view class="fundUserInfo-contribution-titlecontent">你在{{fundName}}的声望值为:</view>
     </view>
     <view class="fundUserInfo-contribution-contribution">{{contribution}}</view>
   </view>

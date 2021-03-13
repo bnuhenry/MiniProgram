@@ -1,4 +1,6 @@
 // component/stockDealRecords/stockDealRecords.js
+const getStockInfoFromNetEase = require("../../utils/stockApi.js")
+
 Component({
   /**
    * 组件的属性列表
@@ -57,43 +59,40 @@ Component({
       })
       let stockObj = {};
       const stockDealRecordsAry = this.data.stockDealRecordsAry;
-      const showDealRecordsAry = [];
-      const url = 'https://api.money.126.net/data/feed/'+array;
-      wx.request({
-        url: url,
-        success:res=>{
-          wx.hideLoading();
-          if(res.data.split('"').length>1){
-            stockObj = JSON.parse(res.data.split('_ntes_quote_callback(')[1].split(');')[0]);
-            for(let i = 0;i<stockDealRecordsAry.length;i++){
-              stockDealRecordsAry[i].name = stockObj[stockDealRecordsAry[i].id].name
-              stockDealRecordsAry[i].dealTime = this.getDealTime(stockDealRecordsAry[i].time);
-              stockDealRecordsAry[i].amountAbs = Math.abs(stockDealRecordsAry[i].amount);
-            }
-            stockDealRecordsAry.sort((a,b)=>b.time-a.time);
-            this.setData({
-              showDealRecordsAry:stockDealRecordsAry
-            })
-          }else{
-            console.log('网易股票数据接口返回空值');
+      getStockInfoFromNetEase.getChinaStockInfo(array).then(res=>{
+        if(res){
+          stockObj = res;
+          for(let i = 0;i<stockDealRecordsAry.length;i++){
+            stockDealRecordsAry[i].name = stockObj[stockDealRecordsAry[i].id].name
+            stockDealRecordsAry[i].dealTime = this.getDealTime(stockDealRecordsAry[i].time);
+            stockDealRecordsAry[i].amountAbs = Math.abs(stockDealRecordsAry[i].amount);
           }
-        },
-        fail:res=>{
-          wx.hideLoading();
-          console.log(res);
+          stockDealRecordsAry.sort((a,b)=>b.time-a.time);
+          this.setData({
+            showDealRecordsAry:stockDealRecordsAry
+          })
+        }else{
+          console.log('网易股票数据接口返回空值');
         }
+        wx.hideLoading();
       })
     },
 
     //获取时间戳生成日期
     getDealTime:function(time){
+      const thisYear = new Date().getFullYear();
       const date = new Date(time);
+      let Year = date.getFullYear();
+      let YearStr = '';
       let Month = date.getMonth();
       let Day = date.getDate();
       let Hours = date.getHours();
       let Minutes = date.getMinutes();
       let Seconds = date.getSeconds();
-      if(Month<8){
+      if(thisYear!=Year){
+        YearStr = Year + '年';
+      }
+      if(Month<=8){
         Month = '0'+(Month+1)
       }else{
         Month += 1;
@@ -110,8 +109,7 @@ Component({
       if(Seconds<10){
         Seconds = '0' + Seconds;
       }
-      // return date.getFullYear() +'年'+(date.getMonth()+1)+'月'+date.getDate()+'日'+date.getHours()+':'+date.getMinutes()+':'+date.getSeconds();
-      return date.getFullYear() +'年'+Month+'月'+Day+'日'+Hours+':'+Minutes+':'+Seconds;
+      return YearStr+Month+'月'+Day+'日'+Hours+':'+Minutes+':'+Seconds;
     },
 
     //点击取消组件显示

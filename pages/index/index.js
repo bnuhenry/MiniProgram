@@ -1,6 +1,7 @@
 //index.js
 //获取应用实例
 const app = getApp()
+const getStockInfoFromNetEase = require("../../utils/stockApi.js")
 
 Page({
   data: {
@@ -18,9 +19,11 @@ Page({
     contributionResult:'',
     contriResultBool:false,
     contriSliderShow:false,
+    contriButtonDisable:true,
     fundSlogan:'',
     fundSloganCreator:'',
     fundSloganCreatorAvatar:'',
+    fundName:'',
     resRewardRecordAry:[],
     SHStockIndex:0,
     SHIndexUp:false,
@@ -41,10 +44,13 @@ Page({
         oneFiveSevenThree:app.globalData.fundUserInfo.wine_1573,
         lastSignUpTime:app.globalData.fundUserInfo.last_signin_time,
         fundUserInfo:app.globalData.fundUserInfo,
+        contriButtonDisable:app.globalData.fundUserInfo.fund == 'other',
       })
       this.getSignEnable();
-      this.getOtherFundUsers();
       this.getQKFundSlogan();
+      if(app.globalData.fundUserInfo.fund != 'other'){
+        this.getOtherFundUsers();
+      }
     }else{
       // 由于 getUserInfo 是网络请求，可能会在 Page.onLoad 之后才返回
       // 所以此处加入 callback 以防止这种情况
@@ -57,10 +63,13 @@ Page({
           oneFiveSevenThree:app.globalData.fundUserInfo.wine_1573,
           lastSignUpTime:app.globalData.fundUserInfo.last_signin_time,
           fundUserInfo:app.globalData.fundUserInfo,
+          contriButtonDisable:app.globalData.fundUserInfo.fund == 'other',
         })
         this.getSignEnable();
-        this.getOtherFundUsers();
         this.getQKFundSlogan();
+        if(app.globalData.fundUserInfo.fund != 'other'){
+          this.getOtherFundUsers();
+        }
       }
     }
   },
@@ -115,74 +124,38 @@ Page({
     wx.showLoading({
       title: '签到中',
     })
-    this.updateToCloud(peanut,xiaocai,wine_jnc);
+    this.updateSignInfoToCloud(peanut,xiaocai,wine_jnc);
   },
 
-  //把签到的结果上传至服务器
-  updateToCloud:function(peanut,xiaocai,wine_jnc){
-    const DB = wx.cloud.database();
-    const _ = DB.command;
-    if(peanut==0&&xiaocai==0&&wine_jnc==0){
-      //花生小菜酒全部为0的情况下只更新签到时间戳
-      DB.collection("account").doc(app.globalData.userId).update({
-        data:{
-          last_signin_time:Date.now()
-        },
-        success:res=>{
-          wx.hideLoading();
-          if(res.stats.updated>0){
-            console.log("签到成功");
-            this.renewLocalData(0,0,0);
-          }else{
-            console.log("签到失败")
-            this.setData({
-              canSign:true
-            })
-            this.showToastMsg("签到失败");
-          }
-        },
-        fail:res=>{
-          this.setData({
-            canSign:true
-          })
-          wx.hideLoading();
-          this.showToastMsg("更新云数据失败");
-          console.log("更新云数据失败")
-        }
-      })
-    }else{
-      //如果花生小菜酒只要有一样数据不为0则上传更新资源数量
-      DB.collection("account").doc(app.globalData.userId).update({
-        data:{
-          peanut:_.inc(peanut),
-          xiaocai:_.inc(xiaocai),
-          wine_jnc:_.inc(wine_jnc),
-          last_signin_time:Date.now()
-        },
-        success:res=>{
-          wx.hideLoading();
-          if(res.stats.updated>0){
-            console.log("添加资源成功");
-            this.renewLocalData(peanut,xiaocai,wine_jnc);
-          }else{
-            this.setData({
-              canSign:true
-            })
-            this.showToastMsg("签到失败");
-            console.log("添加资源失败")
-          }
-        },
-        fail:res=>{
-          this.setData({
-            canSign:true
-          })
-          wx.hideLoading();
-          this.showToastMsg("更新云数据失败");
-          console.log("更新云数据失败");
-        }
-      })
-    }
-   
+  //签到调用云函数以处理并发
+  updateSignInfoToCloud:function(peanut,xiaocai,wine_jnc){
+    wx.cloud.callFunction({
+      name:'login',
+      data: {
+        action: 'signUp',
+        userId:app.globalData.userId,
+        lastSignUpTime:this.data.lastSignUpTime,
+        peanut:peanut,
+        xiaocai:xiaocai,
+        wine_jnc:wine_jnc
+      },
+      success:res=>{
+        wx.hideLoading();
+        console.log(res)
+        app.getFundUserInfo();
+        this.renewLocalData(peanut,xiaocai,wine_jnc);
+      },
+      fail:res=>{
+        wx.hideLoading();
+        console.log(res);
+        wx.showToast({
+          title: '签到失败',
+          icon:'error',
+          duration:2000
+        })
+        app.getFundUserInfo();
+      }
+    })
   },
 
   //通知组件方法
@@ -214,13 +187,7 @@ Page({
       if(wine_jnc>0){
         miningResult = miningResult+'贱男春'+wine_jnc+'瓶';
       };
-      const newpeanut = this.data.peaNut + peanut;
-      const newxiaocai = this.data.xiaoCai + xiaocai;
-      const newwine_jnc = this.data.jianNanChun + wine_jnc;
       this.setData({
-        peaNut:newpeanut,
-        xiaoCai:newxiaocai,
-        jianNanChun:newwine_jnc,
         canSign:false,
         signUpMsg:'今日已签到',
         miningResult:miningResult
@@ -235,7 +202,7 @@ Page({
     wx.cloud.callFunction({
       name:'login',
       data: {
-        action: 'fundslogan',
+        action: 'slogan',
         fund:app.globalData.fundUserInfo.fund
       },
       complete:res=>{
@@ -244,6 +211,7 @@ Page({
             fundSlogan:res.result.list[0].words,
             fundSloganCreator:res.result.list[0].name,
             fundSloganCreatorAvatar:res.result.list[0].avatarUrl,
+            fundName:res.result.list[0].fund_name,
           })
           app.globalData.fundSloganInfo = res.result.list[0];
         }else{
@@ -327,24 +295,18 @@ Page({
   //获取三大股票指数
   getStockIndex:function(){
     let stockObj = {};
-    wx.request({
-      url: 'https://api.money.126.net/data/feed/0000001,1399001,1399006',
-      success:res=>{
-        if(res.data.split('"').length>1){
-          stockObj = JSON.parse(res.data.split('_ntes_quote_callback(')[1].split(');')[0]);
-          this.setData({
-            SHStockIndex:Number(stockObj['0000001'].price).toFixed(2),
-            SHIndexUp:stockObj['0000001'].percent>0?true:false,
-            SZStockIndex:Number(stockObj['1399001'].price).toFixed(2),
-            SZIndexUp:stockObj['1399001'].percent>0?true:false,
-            CYBStockIndex:Number(stockObj['1399006'].price).toFixed(2),
-            CYBIndexUp:stockObj['1399006'].percent>0?true:false,
-          })
-        }
-      },
-      fail:res=>{
-        console.log(res);
-      }
+    //A股大三指数上证指数，深证成指，创业板指
+    const stockIndexArray = ['0000001','1399001','1399006'];
+    getStockInfoFromNetEase.getChinaStockInfo(stockIndexArray).then(res=>{
+      stockObj = res;
+      this.setData({
+        SHStockIndex:Number(stockObj['0000001'].price).toFixed(2),
+        SHIndexUp:stockObj['0000001'].percent>0?true:false,
+        SZStockIndex:Number(stockObj['1399001'].price).toFixed(2),
+        SZIndexUp:stockObj['1399001'].percent>0?true:false,
+        CYBStockIndex:Number(stockObj['1399006'].price).toFixed(2),
+        CYBIndexUp:stockObj['1399006'].percent>0?true:false,
+      })
     })
   },
 

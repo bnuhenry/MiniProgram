@@ -1,6 +1,6 @@
 {
   "component": true,
   "usingComponents": {
-    "funduserpicker":"/component/stockuserpicker/stockuserpicker"
+    "funduserpicker":"/component/otheruserpicker/otheruserpicker"
   }
 }

@@ -107,8 +107,14 @@
     <view class="stocktrade-buttonbar">
       <view class="stocktrade-buttonbar-msg">{{stockTradeMsg}}</view>
       <view class="stocktrade-buttonbar-buttonbox">
-        <button disabled="{{bonds==0}}" bindtap="clickWantToSell"><text class="stocktrade-button-wanttosell">我要卖出</text></button>
-        <button type="primary" disabled="{{tradeButtonDisable}}" bindtap="clickBuyStock">买入</button>
+        <button class="stocktrade-buttonbar-swipedeal" disabled="{{bonds==0}}" bindtap="clickWantToSell">
+          <text class="stocktrade-button-wanttosell">我要卖出</text>
+        </button>
+        <button class="stocktrade-buttonbar-buybutton" disabled="{{tradeButtonDisable}}" bindtap="clickBuyStock">买入</button>
+        <button class="stocktrade-buttonbar-buybutton" disabled="{{tradeButtonDisable}}" bindtap="clickAllInBuyStock">全仓买入</button>
+      </view>
+      <view class="stocktrade-buttonbar-buttonbox2">
+        <button class="stocktrade-buttonbar-allclear" disabled="{{tradeButtonDisable||!canBondsAllClear}}" bindtap="clickAllClearBondsStock">账户下持仓全部卖出</button>
       </view>
     </view>
   </view>
@@ -148,8 +154,12 @@
     <view class="stocktrade-buttonbar">
       <view class="stocktrade-buttonbar-msg">{{stockTradeMsg}}</view>
       <view class="stocktrade-buttonbar-buttonbox">
-        <button bindtap="clickWantToBuy"><text class="stocktrade-button-wanttobuy">我要买入</text></button>
-        <button type="primary" disabled="{{tradeButtonDisable||howManyCanSell==0}}" bindtap="clickSellStock">卖出</button>
+        <button class="stocktrade-buttonbar-swipedeal" bindtap="clickWantToBuy"><text class="stocktrade-button-wanttobuy">我要买入</text></button>
+        <button class="stocktrade-buttonbar-sellbutton" disabled="{{tradeButtonDisable||howManyCanSell==0}}" bindtap="clickSellStock">卖出</button>
+        <button class="stocktrade-buttonbar-sellbutton" disabled="{{tradeButtonDisable||howManyCanSell==0}}" bindtap="clickAllInSellStock">全部卖出</button>
+      </view>
+      <view class="stocktrade-buttonbar-buttonbox2">
+        <button class="stocktrade-buttonbar-allclear" disabled="{{tradeButtonDisable||!canBondsAllClear}}" bindtap="clickAllClearBondsStock">账户下持仓全部卖出</button>
       </view>
     </view>
   </view>

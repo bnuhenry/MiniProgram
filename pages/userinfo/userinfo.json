@@ -1,5 +1,5 @@
 {
   "usingComponents": {
-    "userInfo":"/component/userinfo/userinfo"
+    "userbar":"/component/userbar/userbar"
   }
 }

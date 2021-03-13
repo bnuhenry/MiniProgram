@@ -50,6 +50,8 @@
     .editor-topbar-title{
       width: 30%;
       height: 100%;
+      color:#303F9F;
+      font-weight: 600;
       display: flex;
       justify-content: center;
       align-items: center;
@@ -90,6 +92,7 @@
       .dateinfo{
         width: 50%;
         height: 100%;
+        color:#888888;
         display: flex;
         justify-content: center;
         align-items: center;
@@ -125,6 +128,7 @@
       .detail-input-title{
         width: 90%;
         height: 40%;
+        color:#3F51B5;
         display: flex;
         justify-content: flex-start;
         align-items: center;

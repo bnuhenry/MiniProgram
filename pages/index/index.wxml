@@ -9,7 +9,7 @@
     </swiper-item>
     <swiper-item class="swiperitem">
       <view class="fangzhen">
-        <view class="title">本会最新方针政策:</view>
+        <view class="title">{{fundName}}最新方针政策:</view>
         <view class="word">{{fundSlogan}}</view>
         <view class="username">本方针由{{fundSloganCreator}}制定</view>
         <view class="avatar">
@@ -20,7 +20,7 @@
   </swiper>
 
   <view class="userform">
-    <userInfo fundUserInfo="{{fundUserInfo}}"></userInfo>
+    <userbar fundUserInfo="{{fundUserInfo}}"></userbar>
   </view>
 
   <view class="miningview">
@@ -73,26 +73,20 @@
     </view>
     <view class="miningbox">
       <view class="miningbox-resource">
-        <view class="miningbox-resimage">
-          <image src="../../images/peanut.png"></image>
-        </view>
-        <view class="miningbox-resdiscrb">花生<text class="blue">{{peaNut}}</text>包</view>
+        <image class="miningbox-resimage" src="../../images/peanut.png"></image>
+        <view class="miningbox-resource-resdiscrb">花生<text class="blue">{{peaNut}}</text>包</view>
       </view>
       <view class="miningbox-resource">
-        <view class="miningbox-resimage">
-          <image src="../../images/xiaocai.png"></image>
-        </view>
-        <view class="miningbox-resdiscrb">小菜<text class="blue">{{xiaoCai}}</text>碟</view>
+        <image class="miningbox-resimage" src="../../images/xiaocai.png"></image>
+        <view class="miningbox-resource-resdiscrb">小菜<text class="blue">{{xiaoCai}}</text>碟</view>
       </view>
       <view class="miningbox-resource">
-        <view class="miningbox-resimage">
-          <image src="../../images/wine.png"></image>
-        </view>
-        <view class="miningbox-resdiscrb">贱男春<text class="blue">{{jianNanChun}}</text>瓶</view>
+        <image class="miningbox-resimage" src="../../images/wine_jnc.png"></image>
+        <view class="miningbox-resource-resdiscrb">贱男春<text class="blue">{{jianNanChun}}</text>瓶</view>
       </view>
     </view>
     <view class="buttonbox">
-      <button bindtap="getContributionBoard" type="primary">捐献资源</button>
+      <button bindtap="getContributionBoard" disabled="{{contriButtonDisable}}" type="primary">捐献资源</button>
     </view>
     <view class="msgbox">{{contributionResult}}</view>
   </view>
@@ -104,6 +98,7 @@
   bind:contriResult="getContriResult"
   bind:contriResultBool="getContriResultBool"
   bind:otherFundUserAry="getOtherFundUserAry"
+  fundName="{{fundName}}"
   peaNutMax="{{peaNut}}"
   xiaoCaiMax="{{xiaoCai}}"
   jianNanChunMax="{{jianNanChun}}"

@@ -114,16 +114,19 @@
       align-items: center;
     }
 
+      .miningbox-resource-resdiscrb{
+        font-size: 30rpx;
+        color:#888888;
+      }
+
       .miningbox-resimage{
+        width: 100rpx;
+        height: 100rpx;
+        border-radius: 50rpx;
         display: flex;
         justify-content: center;
         align-items: center;
       }
-
-        .miningbox-resimage image{
-          width: 100rpx;
-          height: 100rpx;
-        }
 
   .buttonbox{
     width: 100%;

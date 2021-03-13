@@ -11,6 +11,9 @@ Component({
     otherFundUsersAry:{
       type:Array
     },
+    fundName:{
+      type:String
+    },
     peaNutMax:{
       type:Number
     },
@@ -130,7 +133,7 @@ Component({
               this.setData({
                 contributionResult:'已经全部捐出'
               });
-              this.updateContributorResData(peanut,xiaocai,wine_jnc);
+              this.updateContributionResultToCloud(peanut,xiaocai,wine_jnc);
               console.log('全部捐出！');
             } else if (res.cancel) {
               console.log('我再想想')
@@ -165,7 +168,7 @@ Component({
           content: content,
           success:res=> {
             if (res.confirm) {
-              this.updateContributorResData(peanut,xiaocai,wine_jnc);
+              this.updateContributionResultToCloud(peanut,xiaocai,wine_jnc);
               console.log('已经捐出！');
             } else if (res.cancel) {
               console.log('我再想想')
@@ -177,114 +180,184 @@ Component({
       }
     },
 
-    //捐赠者云端更新扣除捐赠物资，根据捐赠类型决定转换成声望还是捐赠对象物资
-    updateContributorResData:function(peanut,xiaocai,wine_jnc){
-      let score = 0;
-      const peanutscore = 1;
-      const xiaocaiscore = 3;
-      const wine_jncscore = 5;
-      if(this.data.contriType==1){
-        score = peanut*peanutscore + xiaocai*xiaocaiscore + wine_jnc*wine_jncscore;
-      }
+    //云端更新捐赠物资调用云函数处理并发
+    updateContributionResultToCloud:function(peanut,xiaocai,wine_jnc){
       wx.showLoading({
-        title: '加载中',
+        title: '捐赠中',
       })
-      const DB = wx.cloud.database();
-      const _ = DB.command;
-      DB.collection("account").doc(app.globalData.userId).update({
-        data:{
-          peanut:_.inc(-peanut),
-          xiaocai:_.inc(-xiaocai),
-          wine_jnc:_.inc(-wine_jnc),
-          contribution:_.inc(score)
-        },
-        success:res=>{
-          wx.hideLoading();
-          if(res.stats.updated>0){
-            console.log("捐献成功");
-            this.setData({
-              contributionResult:'已经捐出'
-            });
-            if(this.data.contriType==2){
-              this.updateUserObjResData(peanut,xiaocai,wine_jnc);
-            }else{
-              wx.showToast({
-                title: '捐赠成功',
-                icon: 'success',
-                duration: 2000
-              })
-            }
-            this.triggerEvent('contriResult',this.data.contributionResult);
-            this.triggerEvent('contriResultBool',true);
-          }else{
-            this.setData({
-              contributionResult:'捐献失败'
-            });
-            wx.showToast({
-              title: '捐献失败',
-              icon: 'error',
-              duration: 2000
-            })
-            console.log("捐献失败")
-            this.triggerEvent('contriResultBool',false);
-          }
-        },
-        fail:res=>{
-          wx.hideLoading();
-          this.setData({
-            contributionResult:'更新云数据失败'
-          });
-          wx.showToast({
-            title: '更新数据失败',
-            icon: 'error',
-            duration: 2000
-          })
-          console.log("更新云数据失败")
-          this.triggerEvent('contriResultBool',false);
-        }
-      })
-    },
-
-    //更新云端捐赠用户对象物资
-    updateUserObjResData:function(peanut,xiaocai,wine_jnc){
-      wx.showLoading({
-        title: '加载中',
-      })
-      const DB = wx.cloud.database();
-      const _ = DB.command;
       wx.cloud.callFunction({
         name:'login',
-        data: {
-          action: 'contriToOtherFundUser',
-          userId:this.data.resGiveToUserObj._id,
-          fromuserId:app.globalData.userId,
+        data:{
+          action:'contribution',
           peanut:peanut,
           xiaocai:xiaocai,
-          wine_jnc:wine_jnc
+          wine_jnc:wine_jnc,
+          contriType:this.data.contriType,
+          toUserId:this.data.resGiveToUserObj._id,
+          fromUserId:app.globalData.userId,
+          peanut_max:this.data.peaNutMax,
+          xiaocai_max:this.data.xiaoCaiMax,
+          wine_jnc_max:this.data.jianNanChunMax,
         },
-        complete:res=>{
+        success:res=>{
           if(res.result.stats.updated>0){
             wx.hideLoading();
+            let title = '捐赠成功';
+            if(this.data.contriType == 2){
+              title = '已送给'+this.data.resGiveToUserObj.name;
+            }
+            this.setData({
+              contributionResult:title
+            });
             wx.showToast({
-              title: '已送给'+this.data.resGiveToUserObj.name,
+              title: title,
               icon: 'success',
               duration: 2000
             })
-            console.log('捐赠给'+this.data.resGiveToUserObj.name+'成功');
+            this.triggerEvent('contriResult',this.data.contributionResult);
+            this.triggerEvent('contriResultBool',true);
+            console.log(title);
           }else{
             wx.hideLoading();
             wx.showToast({
-              title: '赠送失败',
+              title: '捐赠失败',
               icon: 'error',
               duration: 2000
             })
-            console.log('赠送失败');
+            this.setData({
+              contributionResult:'捐赠失败'
+            });
+            this.triggerEvent('contriResultBool',false);
+            console.log('捐赠失败');
           }
+        },
+        fail:res=>{
+          wx.showToast({
+            title: '数据错误',
+            icon: 'error',
+            duration: 2000
+          })
+          this.setData({
+            contributionResult:'数据错误，请重试'
+          });
+          this.triggerEvent('contriResult',this.data.contributionResult);
+          this.triggerEvent('contriResultBool',true);
+          console.log(res);
         }
       })
     },
 
-    //传入参数获取此账户信息发送股票账户信息请求
+    //捐赠者云端更新扣除捐赠物资，根据捐赠类型决定转换成声望还是捐赠对象物资,下版本废弃*************************
+    // updateContributorResData:function(peanut,xiaocai,wine_jnc){
+    //   wx.showLoading({
+    //     title: '加载中',
+    //   })
+    //   let score = 0;
+    //   const peanutscore = 1;
+    //   const xiaocaiscore = 3;
+    //   const wine_jncscore = 5;
+    //   if(this.data.contriType==1){
+    //     score = peanut*peanutscore + xiaocai*xiaocaiscore + wine_jnc*wine_jncscore;
+    //   }
+    //   const DB = wx.cloud.database();
+    //   const _ = DB.command;
+    //   DB.collection("account").doc(app.globalData.userId).update({
+    //     data:{
+    //       peanut:_.inc(-peanut),
+    //       xiaocai:_.inc(-xiaocai),
+    //       wine_jnc:_.inc(-wine_jnc),
+    //       contribution:_.inc(score)
+    //     },
+    //     success:res=>{
+    //       wx.hideLoading();
+    //       if(res.stats.updated>0){
+    //         console.log("捐献成功");
+    //         this.setData({
+    //           contributionResult:'已经捐出'
+    //         });
+    //         if(this.data.contriType==2){
+    //           this.updateUserObjResData(peanut,xiaocai,wine_jnc);
+    //         }else{
+    //           wx.showToast({
+    //             title: '捐赠成功',
+    //             icon: 'success',
+    //             duration: 2000
+    //           })
+    //         }
+    //         this.triggerEvent('contriResult',this.data.contributionResult);
+    //         this.triggerEvent('contriResultBool',true);
+    //       }else{
+    //         this.setData({
+    //           contributionResult:'捐献失败'
+    //         });
+    //         wx.showToast({
+    //           title: '捐献失败',
+    //           icon: 'error',
+    //           duration: 2000
+    //         })
+    //         console.log("捐献失败")
+    //         this.triggerEvent('contriResultBool',false);
+    //       }
+    //     },
+    //     fail:res=>{
+    //       wx.hideLoading();
+    //       this.setData({
+    //         contributionResult:'更新云数据失败'
+    //       });
+    //       wx.showToast({
+    //         title: '更新数据失败',
+    //         icon: 'error',
+    //         duration: 2000
+    //       })
+    //       console.log("更新云数据失败")
+    //       this.triggerEvent('contriResultBool',false);
+    //     }
+    //   })
+    // },
+
+    // //更新云端捐赠用户对象物资
+    // updateUserObjResData:function(peanut,xiaocai,wine_jnc){
+    //   wx.showLoading({
+    //     title: '加载中',
+    //   })
+    //   const DB = wx.cloud.database();
+    //   const _ = DB.command;
+    //   console.log(this.data.peaNutMax)
+    //   console.log(this.data.xiaoCaiMax)
+    //   console.log(this.data.jianNanChunMax)
+    //   wx.cloud.callFunction({
+    //     name:'login',
+    //     data: {
+    //       action: 'contriToOtherFundUser',
+    //       userId:this.data.resGiveToUserObj._id,
+    //       fromuserId:app.globalData.userId,
+    //       peanut:peanut,
+    //       xiaocai:xiaocai,
+    //       wine_jnc:wine_jnc,
+    //     },
+    //     complete:res=>{
+    //       if(res.result.stats.updated>0){
+    //         wx.hideLoading();
+    //         wx.showToast({
+    //           title: '已送给'+this.data.resGiveToUserObj.name,
+    //           icon: 'success',
+    //           duration: 2000
+    //         })
+    //         console.log('捐赠给'+this.data.resGiveToUserObj.name+'成功');
+    //       }else{
+    //         wx.hideLoading();
+    //         wx.showToast({
+    //           title: '赠送失败',
+    //           icon: 'error',
+    //           duration: 2000
+    //         })
+    //         console.log('赠送失败');
+    //       }
+    //     }
+    //   })
+    // },
+
+    //传入参数获取此捐赠对象账户信息
     getOtherUserObj:function(e){
       const userObj = e.detail;
       this.setData({
@@ -299,7 +372,7 @@ Component({
       this.triggerEvent('otherFundUserAry',e.detail)
     },
 
-    //接受其他模拟盘用户组件回传关闭参数
+    //接受其他用户选择组件回传关闭参数
     getFundUserPickerOff:function(e){
       this.setData({
         showFundUserPicker:e.detail

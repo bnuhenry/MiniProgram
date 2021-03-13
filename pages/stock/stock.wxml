@@ -3,13 +3,13 @@
     <image class="userinfo-avatar" src="{{userAvatar}}" mode="cover"></image>
     <view class="userinfo-username">{{userName}}</view>
   </view>
-  <view class="stockaccount">
+  <view class="stockaccount-value">
     <view class="stockaccount-title">股票持仓</view>
     <view class="stockaccount-title">可用资金：<text class="stockaccount-cash">{{accountCash}}</text></view>
     <view class="stockaccount-title">股票市值：<text class="stockaccount-cash">{{accountStockValue}}</text></view>
     <view class="stockaccount-title">合计市值：<text class="stockaccount-cash">{{accountCash+accountStockValue}}</text></view>
   </view>
-  <view class="stockaccount">
+  <view class="stockaccount-analyse">
     <view class="stockaccount-title">收益分析</view>
     <view class="stockaccount-title">仓位：<text class="stockaccount-cash">{{accountPosition}}</text></view>
     <view class="stockaccount-title">收益率：<text class="{{accountWin?'long':'short'}}">{{accountYields}}</text></view>
@@ -40,7 +40,7 @@
     <view class="focus-stock-price">最高</view>
     <view class="focus-stock-price">最低</view>
   </view>
-  <scroll-view scroll-y="true" style="height: 600rpx;" class="focus-detail" scroll-y="true">
+  <scroll-view scroll-y="true" enable-flex="true" class="focus-detail">
     <view class="{{stock.percent>0?'focus-stock-up':'focus-stock-down'}}"
       wx:for="{{focusStockObj}}"
       wx:key="i"
@@ -63,12 +63,12 @@
   <view class="focus-label">
     <view class="focus-stock-name">代码</view>
     <view class="focus-stock-price">名称</view>
-    <view class="focus-stock-price">收益</view>
-    <view class="focus-stock-price">现价/成本</view>
+    <view class="focus-stock-yields">收益</view>
+    <view class="focus-stock-capital">现价/成本</view>
     <view class="focus-stock-bonds">持仓/可卖</view>
     <view class="focus-stock-benefit">市值/盈亏</view>
   </view>
-  <scroll-view scroll-y="true" class="focus-detail">
+  <scroll-view scroll-y="true" enable-flex="true" class="focus-detail">
     <view class="{{stock.win?'focus-stock-up':'focus-stock-down'}}"
       wx:for="{{bondsStockObj}}"
       wx:key="i"
@@ -78,8 +78,8 @@
       bindtap="clickFocusStock">
       <view class="focus-stock-name">{{stock.symbol}}</view>
       <view class="focus-stock-price">{{stock.name}}</view>
-      <view class="focus-stock-price">{{stock.benefitRate}}</view>
-      <view class="focus-stock-price">{{stock.price}}/{{stock.cost}}</view>
+      <view class="focus-stock-yields">{{stock.benefitRate}}</view>
+      <view class="focus-stock-capital">{{stock.price}}/{{stock.cost}}</view>
       <view class="focus-stock-bonds">{{stock.bonds}}/{{stock.canSell}}</view>
       <view class="focus-stock-benefit">{{stock.value}}/{{stock.benefit}}</view>
     </view>
@@ -107,7 +107,9 @@
     <view class="stock-buttonbox-button">
       <button wx:if="{{hasstockaccount}}" type="primary" bindtap="clickCheckOtherStockUser">查询他人账户</button>
     </view>
-    <view class="stock-buttonbox-button"></view>
+    <view class="stock-buttonbox-button">
+      <!-- <button wx:if="{{hasstockaccount}}" type="default" bindtap="testCloudFunction">测试云函数</button> -->
+    </view>
   </view>
 </view>
 
@@ -120,7 +122,9 @@ stockRequestIdFromFocus="{{stockRequestId}}"
 focusStockIdAry="{{focusStockIdAry}}"
 isMyStockAccount="{{isMyStockAccount}}"
 cashOfMyAccount="{{accountCash}}"
+canBondsAllClear="{{canBondsAllClear}}"
 bondsStockObj="{{bondsStockObj}}"
+bondsStockAry="{{bondsStockAry}}"
 bind:stockDataChanged="getStockDataChanged"
 bind:focusStock="getFocusStockId"
 bind:cancelFocusStock="getCancelFocusStockId"

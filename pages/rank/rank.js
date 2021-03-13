@@ -1,4 +1,6 @@
 const app = getApp()
+const getStockInfoFromNetEase = require("../../utils/stockApi.js")
+const getFundRankInfo = require("../../utils/fundRank.js")
 
 Page({
 
@@ -84,35 +86,28 @@ Page({
     let stockObj = {};
     const array = this.makeStockIdAry(dataAry);
     if(length>0){
-      const url = 'https://api.money.126.net/data/feed/'+array;
-      wx.request({
-        url: url,
-        success:res=>{
-          if(res.data.split('"').length>1){
-            stockObj = JSON.parse(res.data.split('_ntes_quote_callback(')[1].split(');')[0]);
-            for(let i=0;i<dataAry.length;i++){
-              dataAry[i].stockValue = 0;
-              if(dataAry[i].stock_bonds.length){
-                for(let j=0;j<dataAry[i].stock_bonds.length;j++){
-                  dataAry[i].stockValue += Number(dataAry[i].stock_bonds[j].bonds)*Number(stockObj[dataAry[i].stock_bonds[j].id].price);
-                }
+      getStockInfoFromNetEase.getChinaStockInfo(array).then(res=>{
+        if(res){
+          stockObj = res;
+          for(let i=0;i<dataAry.length;i++){
+            dataAry[i].stockValue = 0;
+            if(dataAry[i].stock_bonds.length){
+              for(let j=0;j<dataAry[i].stock_bonds.length;j++){
+                dataAry[i].stockValue += Number(dataAry[i].stock_bonds[j].bonds)*Number(stockObj[dataAry[i].stock_bonds[j].id].price);
               }
-              dataAry[i].stockValueStr = Number(dataAry[i].stockValue).toFixed(0);
-              dataAry[i].yieldsStr = this.getAccountYields(dataAry[i].stockValue,dataAry[i].cash,dataAry[i].capital);
-              dataAry[i].yields = (dataAry[i].stockValue+dataAry[i].cash-dataAry[i].capital)/dataAry[i].capital;
-              dataAry[i].position = this.getAccountPosition(dataAry[i].stockValue,dataAry[i].cash);
-              dataAry[i].totalValue = Number(dataAry[i].stockValue+dataAry[i].cash).toFixed(0);
-              dataAry[i].rankName = this.makeRankName(dataAry[i].contribution);
-              dataAry[i].win = dataAry[i].totalValue>dataAry[i].capital?true:false;
-              dataAry[i].isMyAccount = dataAry[i].userid == this.data.userId;
             }
-            this.makeDataAry(dataAry);
-          }else{
-            console.log('没有返回任何股票信息');
+            dataAry[i].stockValueStr = Number(dataAry[i].stockValue).toFixed(0);
+            dataAry[i].yieldsStr = this.getAccountYields(dataAry[i].stockValue,dataAry[i].cash,dataAry[i].capital);
+            dataAry[i].yields = (dataAry[i].stockValue+dataAry[i].cash-dataAry[i].capital)/dataAry[i].capital;
+            dataAry[i].position = this.getAccountPosition(dataAry[i].stockValue,dataAry[i].cash);
+            dataAry[i].totalValue = Number(dataAry[i].stockValue+dataAry[i].cash).toFixed(0);
+            dataAry[i].rankName = getFundRankInfo.getFundRankInfo(dataAry[i].contribution).rankName;
+            dataAry[i].win = dataAry[i].totalValue>dataAry[i].capital?true:false;
+            dataAry[i].isMyAccount = dataAry[i].userid == this.data.userId;
           }
-        },
-        fail:res=>{
-          console.log(res);
+          this.makeDataAry(dataAry);
+        }else{
+          console.log('没有返回任何股票信息');
         }
       })
     }else{
@@ -148,31 +143,6 @@ Page({
       return '满仓';
     }else{
       return Number(position*10).toFixed(0) + '成';
-    }
-  },
-
-  //通过捐赠值获取基金会位阶
-  makeRankName:function(contribution){
-    if(contribution<200){
-      return '实习生';
-    }else if(200<=contribution&&contribution<500){
-      return '干事';
-    }else if(500<=contribution&&contribution<1000){
-      return '操盘手';
-    }else if(1000<=contribution&&contribution<1500){
-      return '风控专员';
-    }else if(1500<=contribution&&contribution<2500){
-      return '秘书长';
-    }else if(2500<=contribution&&contribution<5000){
-      return '基金经理';
-    }else if(5000<=contribution&&contribution<10000){
-      return '副会长';
-    }else if(10000<=contribution&&contribution<20000){
-      return '会长';
-    }else if(contribution>=20000){
-      return '董事长';
-    }else{
-      return '保安';
     }
   },
 
@@ -214,10 +184,8 @@ Page({
       complete:res=>{
         if(res.result.data.length>0){
           this.setData({
-            // fundRankHistoryAry:res.result.data[0].stock_rank_history,
             fundRankHistoryAry:res.result.data
           })
-          // this.makeRankHistoryDateAry(res.result.data[0].stock_rank_history);
           this.makeRankHistoryDateAry(res.result.data);
         }else{
           console.log('获取基金会模拟盘历史排名信息失败');
@@ -235,6 +203,7 @@ Page({
     }
     this.setData({
       fundRankHistoryDateAry:dateAry,
+      gotRankHistory:true,
       showHistoryDatePicker:true
     })
     
@@ -270,7 +239,7 @@ Page({
       rankHisAry[i].avatarUrl = this.data.userInfoObj[rankHisAry[i].userid].avatarUrl;
       rankHisAry[i].stockValueStr = rankHisAry[i].stockValue;
       rankHisAry[i].position = this.getAccountPosition(rankHisAry[i].stockValue,rankHisAry[i].cash);
-      rankHisAry[i].rankName = this.makeRankName(this.data.userInfoObj[rankHisAry[i].userid].contribution);
+      rankHisAry[i].rankName = getFundRankInfo.getFundRankInfo(this.data.userInfoObj[rankHisAry[i].userid].contribution).rankName;
       rankHisAry[i].yieldsStr = this.getYieldsToString(rankHisAry[i].yields);
       rankHisAry[i].win = rankHisAry[i].yields>0;
       rankHisAry[i].isMyAccount = rankHisAry[i].userid == this.data.userId;
@@ -296,6 +265,20 @@ Page({
     if(!this.data.gotRankHistory){
       this.getFundRankHistoryInfo();
     }
+  },
+
+  //点击历史排名显示柱状图
+  clickCheckRankHistogram:function(){
+    const that = this;
+    wx.navigateTo({
+      url: '../rankhistory/rankhistory',
+      success: function(res) {
+        // 通过eventChannel向被打开页面传送数据
+        res.eventChannel.emit('userInfoObjFromRankPage', that.data.userInfoObj);
+        res.eventChannel.emit('fundRankHistoryAryFromRankPage', that.data.fundRankHistoryAry);
+        res.eventChannel.emit('userIdFromRankPage', that.data.userId);
+      }
+    })
   },
 
 })

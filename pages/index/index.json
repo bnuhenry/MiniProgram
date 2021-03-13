@@ -1,6 +1,6 @@
 {
   "usingComponents": {
     "rsSlider":"/component/slider/resourceSlider",
-    "userInfo":"/component/userinfo/userinfo"
+    "userbar":"/component/userbar/userbar"
   }
 }

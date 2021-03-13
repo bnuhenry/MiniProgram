@@ -105,25 +105,21 @@ function updateRankList(stockUserAry){
           time:Date.now()
       },
     }).then(res=>{
-        updateUserAward(rankAry,res);
+      updateUserAward(rankAry);
     })
 }
 
-function updateUserAward(rankAry,res){
-  if(res.stats.updated>0){
-    DB.collection('account').where(
-      _.or([
-        {_id:rankAry[0].userid},
-        {_id:rankAry[1].userid},
-        {_id:rankAry[2].userid}
-      ])).update({
-        data: {
-          contribution:_.inc(50),
-        },
-      }).then(res=>{
-        console.log(res);
-      })
-  }else{
-    console.log('更新云端排名失败');
-  }
+function updateUserAward(rankAry){
+  DB.collection('account').where(
+    _.or([
+      {_id:rankAry[0].userid},
+      {_id:rankAry[1].userid},
+      {_id:rankAry[2].userid}
+    ])).update({
+      data: {
+        contribution:_.inc(50),
+      },
+    }).then(res=>{
+      console.log(res);
+    })
 }

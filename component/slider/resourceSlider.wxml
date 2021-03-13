@@ -14,13 +14,13 @@
             <image class="header-optionbox-userimg" src="{{resGiveToUserObj.avatarUrl}}"></image>
           </view>
         </view>
-        <view class="{{contriType==1?'header-optionbox-option-selected':'header-optionbox-option'}}" bindtap="contriToFund">捐赠给基金会</view>
+        <view class="{{contriType==1?'header-optionbox-option-selected':'header-optionbox-option'}}" bindtap="contriToFund">捐赠给{{fundName}}</view>
       </view>
     </view>
     <view class="section">
       <view class="sectiontitle">
         <text class="section-title">捐献花生数量</text>
-        <image src="../../images/peanut.png"></image>
+        <image class="sectiontitle-image" src="../../images/peanut.png"></image>
       </view>
       <view class="body-view">
         <slider bindchange="peanutChange" min="0" max="{{peaNutMax}}" show-value/>
@@ -29,7 +29,7 @@
     <view class="section">
       <view class="sectiontitle">
         <text class="section-title">捐献小菜数量</text>
-        <image src="../../images/xiaocai.png"></image>
+        <image class="sectiontitle-image" src="../../images/xiaocai.png"></image>
       </view>
       <view class="body-view">
         <slider bindchange="xiaocaiChange" min="0" max="{{xiaoCaiMax}}" show-value/>
@@ -38,7 +38,7 @@
     <view class="section">
       <view class="sectiontitle">
         <text class="section-title">捐献贱男春数量</text>
-      <image src="../../images/wine.png"></image>
+      <image class="sectiontitle-image" src="../../images/wine_jnc.png"></image>
     </view>
       <view class="body-view">
         <slider bindchange="wine_jncChange" min="0" max="{{jianNanChunMax}}" show-value/>

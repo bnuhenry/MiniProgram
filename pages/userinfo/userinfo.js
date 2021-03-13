@@ -1,4 +1,5 @@
 const app = getApp()
+const getFundRankInfo = require("../../utils/fundRank.js")
 
 Page({
 
@@ -8,6 +9,7 @@ Page({
   data: {
     fundUserInfo:{},
     userName:'',
+    fundName:'',
     newUserName:'',
     userAvatar:'',
     userId:'',
@@ -51,8 +53,9 @@ Page({
         fundUserInfo:app.globalData.fundUserInfo,
         contribution:app.globalData.fundUserInfo.contribution,
         hasStockAccount:app.globalData.fundUserInfo.has_stock_account,
-        isMemberOfQKfund:app.globalData.fundUserInfo.fund == 'qkfund',
-        recentFundPolicy:app.globalData.fundSloganInfo.words
+        isMemberOfFund:app.globalData.fundUserInfo.fund != 'other',
+        recentFundPolicy:app.globalData.fundSloganInfo.words,
+        fundName:app.globalData.fundSloganInfo.fund_name,
       })
       this.makeRankName(app.globalData.fundUserInfo.contribution);
       this.getStockAccountInfo();
@@ -259,7 +262,6 @@ Page({
           this.setData({
             accountCash:res.data[0].cash,
             accountCapital:res.data[0].capital,
-            // stockDealReordsAry:res.data[0].stock_deal_records
           })
           this.checkCanStockAccountUpgrade(res.data[0].capital);
         }else{
@@ -375,85 +377,14 @@ Page({
 
   //通过捐赠值获取基金会位阶
   makeRankName:function(contribution){
-    let nextRankRequireContri;
-    let nextRankLevelNeed;
-    if(contribution<200){
-      this.setData({
-        recentRankName:'实习生',
-        nextRankName:'干事',
-      })
-     nextRankRequireContri = 200;
-     nextRankLevelNeed = 200;
-    }else if(200<=contribution&&contribution<500){
-      this.setData({
-        recentRankName:'干事',
-        nextRankName:'操盘手',
-      })
-      nextRankRequireContri = 500;
-      nextRankLevelNeed = 300;
-    }else if(500<=contribution&&contribution<1000){
-      this.setData({
-        recentRankName:'操盘手',
-        nextRankName:'风控专员',
-      })
-      nextRankRequireContri = 1000;
-      nextRankLevelNeed = 500;
-    }else if(1000<=contribution&&contribution<1500){
-      this.setData({
-        recentRankName:'风控专员',
-        nextRankName:'秘书长',
-      })
-      nextRankRequireContri = 1500;
-      nextRankLevelNeed = 500;
-    }else if(1500<=contribution&&contribution<2500){
-      this.setData({
-        recentRankName:'秘书长',
-        nextRankName:'基金经理',
-      })
-      nextRankRequireContri = 2500;
-      nextRankLevelNeed = 1000;
-    }else if(2500<=contribution&&contribution<5000){
-      this.setData({
-        recentRankName:'基金经理',
-        nextRankName:'副会长',
-      })
-      nextRankRequireContri = 5000;
-      nextRankLevelNeed = 2500;
-    }else if(5000<=contribution&&contribution<10000){
-      this.setData({
-        recentRankName:'副会长',
-        nextRankName:'会长',
-      })
-      nextRankRequireContri = 10000;
-      nextRankLevelNeed = 5000;
-    }else if(10000<=contribution&&contribution<20000){
-      this.setData({
-        recentRankName:'会长',
-        nextRankName:'董事长',
-      })
-      nextRankRequireContri = 20000;
-      nextRankLevelNeed = 10000;
-    }else if(contribution>=20000){
-      this.setData({
-        recentRankName:'董事长',
-        nextRankName:'没有更高位阶',
-        contriUntilNextRank:0,
-        contriNeedNextRank:0,
-      })
-    }else{
-      this.setData({
-        recentRankName:'保安',
-        nextRankName:'无法查询位阶',
-        contriUntilNextRank:0,
-        contriNeedNextRank:0,
-      })
-    }
+    const rankInfoObj = getFundRankInfo.getFundRankInfo(contribution);
     this.setData({
-      contriUntilNextRank:nextRankRequireContri-contribution,
-      contriNeedNextRank:nextRankRequireContri,
-      nextRankDoneRate:Math.floor((contribution-(nextRankRequireContri-nextRankLevelNeed))*100/nextRankLevelNeed)
+      recentRankName:rankInfoObj.rankName,
+      nextRankName:rankInfoObj.nextRankName,
+      contriUntilNextRank:rankInfoObj.nextRankRequireContri-contribution,
+      contriNeedNextRank:rankInfoObj.nextRankRequireContri,
     })
-    this.getContriRateBarStyle(Math.floor((contribution-(nextRankRequireContri-nextRankLevelNeed))*100/nextRankLevelNeed));
+    this.getContriRateBarStyle(Math.floor((contribution-(rankInfoObj.nextRankRequireContri-rankInfoObj.nextRankLevelNeed))*100/rankInfoObj.nextRankLevelNeed));
   },
 
   //根据传入数值获取进度条样式

@@ -14,18 +14,18 @@ exports.main = async (event, context) => {
   // 这里获取到的 openId、 appId 和 unionId 是可信的，注意 unionId 仅在满足 unionId 获取条件时返回
   // let { APPID, UNIONID } = cloud.getWXContext()
   // console.log(event);
-  // const OPENID = cloud.getWXContext().OPENID;
+  const OPENID = cloud.getWXContext().OPENID;
 
   switch (event.action) {
-    // case 'rank': {
-    //   return rank(event)
-    // }
+    //下个版本从case语句中删除，入口改为stockBondsTrade
     case 'stockbondsrenew': {
       return stockbondsrenew(event)
     }
+    //下个版本从case语句中删除，入口改为stockBondsTrade
     case 'stockbondspush': {
       return stockbondspush(event)
     }
+    //下个版本从case语句中删除，入口改为stockBondsTrade
     case 'stockbondspull': {
       return stockbondspull(event)
     }
@@ -35,44 +35,14 @@ exports.main = async (event, context) => {
     case 'otherStockAccount': {
       return otherStockAccount(event)
     }
-    // case 'fundstockrankhistory': {
-    //   return fundstockrankhistory(event)
-    // }
+    //下个版本从case语句中删除，入口改为stockBondsTrade
+    case 'stockbondsallclear': {
+      return stockbondsallclear(event)
+    }
+    case 'stockBondsTrade': {
+      return stockBondsTrade(event)
+    }
   }
-
-  //下个版本废弃
-  // function rank(event) {
-  //   return DB.collection('stock').aggregate()
-  //   .lookup({
-  //     from: 'account',
-  //     localField: 'userid',
-  //     foreignField: '_id',
-  //     as: 'userList',
-  //   })
-  //   .replaceRoot({
-  //     newRoot: $.mergeObjects([ $.arrayElemAt(['$userList', 0]), '$$ROOT' ])
-  //   })
-  //   .project({
-  //     _id:0,
-  //     userList: 0,
-  //     _openid: 0,
-  //     join_date: 0,
-  //     last_signin_time: 0,
-  //     has_stock_account: 0,
-  //     peanut: 0,
-  //     xiaocai: 0,
-  //     wine_1573: 0,
-  //     wine_jnc: 0,
-  //     stock_deal_records: 0,
-  //     stock_focus: 0,
-  //     create_date: 0,
-  //     reward_from_otheruser: 0
-  //   })
-  //   .sort({
-  //     contribution:-1
-  //   })
-  //   .end();
-  // }
 
   function otherStockUsers(event) {
     return DB.collection("account").where({
@@ -154,15 +124,96 @@ exports.main = async (event, context) => {
       })
   }
 
-  //下个版本废弃
-  // function fundstockrankhistory (event) {
-  //   return DB.collection('qkfund').where({
-  //     _id:'79550af26034a656069f61a01a8c5b3d',
-  //     }).field({
-  //       stock_rank:true,
-  //       stock_rank_history:true,
-  //     }).get();
-  // }
+  function stockbondsallclear(event){
+    return DB.collection('stock').where({
+      'userid':event.userId,
+      })
+      .update({
+        data: {
+          stock_bonds: _.set([]),
+          cash:_.inc(event.makeMoney),
+          stock_deal_records:_.push(event.dealRecordsAry)
+        }
+      })
+  }
 
+  //新版本上线查询股票账户信息方法
+  function checkStockAccount(event,OPENID){
+    return DB.collection('stock').where({
+      userid:event.userId,
+      _openid:OPENID
+    })
+    .limit(1)
+    .get()
+  }
+
+  //新版本上线的股票交易云函数
+  function stockBondsTrade(event){
+    return new Promise((resolve, reject) => {
+      checkStockAccount(event,OPENID).then(res=>{
+        const bondsAry = res.data[0].stock_bonds;
+        const cash = res.data[0].cash;
+        const clientBondsAry = event.stock_bonds_ary;
+        let bondsAryNoChange = true;
+        if(bondsAry.length == clientBondsAry.length){
+          for(let i = 0;i<bondsAry.length;i++){
+            if((bondsAry[i].id == clientBondsAry[i].id)&&(bondsAry[i].bonds == clientBondsAry[i].bonds)){
+              break;
+            }else{
+              bondsAryNoChange = false;
+            }
+          }
+        }else{
+          bondsAryNoChange = false;
+        }
+        if(bondsAryNoChange){
+          if(event.dealType == 1){
+            if(cash+event.makeMoney>=0){
+              let stockIndex = -1;
+              for(let i = 0;i<bondsAry.length;i++){
+                if(event.stockRequestId == bondsAry[i].id){
+                  stockIndex = i;
+                  break;
+                }
+              }
+              if(stockIndex >= 0){
+                resolve(stockbondsrenew(event));
+              }else{
+                resolve(stockbondspush(event));
+              }
+            }else{
+              reject('现金不够')
+            }
+          }else if(event.dealType == 2){
+            const bonds = Math.abs(event.bonds);
+            let stockIndex = -1;
+            for(let i = 0;i<bondsAry.length;i++){
+              if(event.stockRequestId == bondsAry[i].id){
+                stockIndex = i;
+                break;
+              }
+            }
+            if(stockIndex>=0){
+              if(bonds < bondsAry[stockIndex].bonds){
+                resolve(stockbondsrenew(event));
+              }else if(bonds == bondsAry[stockIndex].bonds){
+                resolve(stockbondspull(event));
+              }else{
+                reject('卖出数量有误，成交失败');
+              }
+            }
+          }else if(event.dealType == 3){
+            resolve(stockbondsallclear(event));
+          }else{
+            reject('交易类型错误');
+          }
+        }else{
+          reject('交易数据错误');
+        }
+      })
+    })
+    
+
+  }
 
 }

@@ -18,107 +18,55 @@ exports.main = async (event, context) => {
   const OPENID = cloud.getWXContext().OPENID;
 
   switch (event.action) {
-    case 'fundSchedule': {
-      return fundSchedule(event)
+    case 'login': {
+      return login()
     }
-    case 'otherFundUsers': {
-      return otherFundUsers(event)
+    //下个版本改为account云函数运行************************************
+    case 'rewardUsers': {
+      return rewardUsers(event)
     }
-    // 下个版本废弃***********
-    case 'contriToOtherFundUser': {
-      return contriToOtherFundUser(event)
-    }
-    case 'slogan': {
-      return slogan(event)
-    }
-    //下个版本废弃
-    case 'fundslogan': {
-      return fundslogan(event)
-    }
-    case 'updatefundslogan': {
-      return updatefundslogan(event)
-    }
+    //下个版本改为account云函数运行************************************
     case 'signUp': {
       return signUp(event)
     }
+    //下个版本改为account云函数运行************************************
     case 'contribution': {
       return contribution(event)
     }
+    //下个版本改为account云函数运行************************************
+    case 'createNewFundUser':{
+      return createNewFundUser(event)
+    }
+    // 下个版本即将改为stock云函数进入*******************************
+    case 'upgradeStockAccount':{
+      return upgradeStockAccount(event)
+    }
     default: {
-      return DB.collection("account").where({
-        _openid:OPENID
-      }).get();
+      return login()
     }
   }
 
-  function fundSchedule(event) {
-    return DB.collection('schedule').aggregate()
-    .match({
-      fund:event.fund
-    })
-    .lookup({
-      from: 'account',
-      localField: 'createrId',
-      foreignField: '_id',
-      as: 'userList',
-    })
-    .replaceRoot({
-      newRoot: $.mergeObjects([ $.arrayElemAt(['$userList', 0]), '$$ROOT' ])
-    })
-    .project({
-      userList: 0,
-      _openid: 0,
-      join_date: 0,
-      last_signin_time: 0,
-      has_stock_account: 0,
-      peanut: 0,
-      xiaocai: 0,
-      wine_1573: 0,
-      wine_jnc: 0,
-      rank: 0,
-      contribution: 0,
-      reward_from_otheruser: 0
-    })
-    .end()
+  //登录基金会账户函数
+  function login(){
+    return DB.collection("account").where({
+      _openid:OPENID
+    }).field({
+      _openid:false
+    }).get();
   }
 
-  //查询基金会其他成员信息
-  function otherFundUsers(event) {
+  //查询物资捐赠方用户信息,下个版本改为account云函数运行************************************
+  function rewardUsers(event){
     return DB.collection("account").where({
-      fund:event.fund,
-      _id:_.neq(event.userId)
+      _id:_.in(event.userIdAry)
     }).field({
       avatarUrl:true,
       name:true,
       _id:true,
-      rank:true,
-      contribution:true
-    }).orderBy('contribution','desc').get();
+    }).get();
   }
 
-  //捐赠物资给个人后更新被捐赠对象数据库，下个版本废弃***********
-  function contriToOtherFundUser(event) {
-    return DB.collection('account').where({
-      _id:event.userId
-      }).update({
-        data: {
-          peanut:_.inc(event.peanut),
-          xiaocai:_.inc(event.xiaocai),
-          wine_jnc:_.inc(event.wine_jnc),
-          reward_from_otheruser:_.unshift({
-            peanut:event.peanut,
-            xiaocai:event.xiaocai,
-            wine_jnc:event.wine_jnc,
-            from_userid:event.fromuserId,
-            from_system:false,
-            system_remarks:'个人赠送',
-            time:Date.now()
-          })
-        }
-      })
-  }
-
-  //捐赠物资给个人后更新被捐赠对象数据库
+  //捐赠物资给个人后更新被捐赠对象数据库,下个版本改为account云函数运行************************************
   function contriToOtherUser(event) {
     return DB.collection('account').where({
       _id:event.toUserId
@@ -140,7 +88,7 @@ exports.main = async (event, context) => {
       })
   }
 
-  //捐赠者扣除物资，根据捐赠类型决定是提高声望还是更新他人物资
+  //捐赠者扣除物资，根据捐赠类型决定是提高声望还是更新他人物资,下个版本改为account云函数运行************************************
   function renewUserResource(event) {
     const peanutscore = 1;
     const xiaocaiscore = 3;
@@ -162,7 +110,7 @@ exports.main = async (event, context) => {
       })
   }
 
-  //更新签到信息
+  //更新签到信息,下个版本改为account云函数运行************************************
   function updateSignInfo(event) {
     return DB.collection('account').where({
       _id:event.userId,
@@ -177,88 +125,7 @@ exports.main = async (event, context) => {
       })
   }
 
-  //下个版本废弃**************************************
-  function fundslogan(event) {
-    return DB.collection('qkfund').aggregate()
-    .match({
-      fund:event.fund
-    })
-    .lookup({
-      from: 'account',
-      localField: 'slogan.creator',
-      foreignField: '_id',
-      as: 'userList',
-    })
-    .replaceRoot({
-      newRoot: $.mergeObjects([ $.arrayElemAt(['$userList', 0]), '$slogan' ])
-    })
-    .project({
-      _openid: 0,
-      join_date: 0,
-      last_signin_time: 0,
-      has_stock_account: 0,
-      peanut: 0,
-      xiaocai: 0,
-      wine_1573: 0,
-      wine_jnc: 0,
-      rank: 0,
-      contribution: 0,
-      _id:0,
-      reward_from_otheruser: 0
-    })
-    .end()
-  }
-
-  //通过基金会代码查询到基金会口号及创作者信息
-  function slogan(event) {
-    return DB.collection('qkfund').aggregate()
-    .match({
-      fund:event.fund
-    })
-    .lookup({
-      from: 'account',
-      localField: 'slogan.creator',
-      foreignField: '_id',
-      as: 'userList',
-    })
-    .replaceRoot({
-      newRoot: $.mergeObjects([ $.arrayElemAt(['$userList', 0]),'$slogan', '$$ROOT' ])
-    })
-    .project({
-      _openid: 0,
-      join_date: 0,
-      last_signin_time: 0,
-      has_stock_account: 0,
-      peanut: 0,
-      xiaocai: 0,
-      wine_1573: 0,
-      wine_jnc: 0,
-      rank: 0,
-      contribution: 0,
-      _id:0,
-      reward_from_otheruser: 0,
-      slogan:0,
-      userList:0,
-    })
-    .end()
-  }
-
-  //已加入基金会名字参数event.fund
-  function updatefundslogan(event) {
-    return DB.collection('qkfund').where({
-      fund:event.fund,
-      }).update({
-        data: {
-          slogan:{
-            words:event.words,
-            creator:event.creator,
-            time:event.time
-          }
-        }
-      })
-  }
-
-  //获取用户签到时间以及资源
+  //获取用户签到时间以及资源,下个版本改为account云函数运行************************************
   function getUserSignTimeAndResource(event){
     return DB.collection("account").where({
       _id:event.userId,
@@ -271,7 +138,56 @@ exports.main = async (event, context) => {
     }).limit(1).get();
   }
 
-  //签到所用的云函数
+  //聚合查询两个集合用户股票账户本金以及基金会声望，即将改为stock云函数进入*******************************
+  function getStockCapitalAndContribution(event){
+    return DB.collection('stock').aggregate()
+    .match({
+      userid:event.userId
+    })
+    .lookup({
+      from: 'account',
+      localField: 'userid',
+      foreignField: '_id',
+      as: 'userList',
+    })
+    .replaceRoot({
+      newRoot: $.mergeObjects([ $.arrayElemAt(['$userList', 0]), '$$ROOT' ])
+    })
+    .project({
+      contribution:1,
+      capital:1,
+    })
+    .limit(1)
+    .end()
+  }
+
+  //升级模拟盘判断条件选择更新的本金多少以及加入多少现金，需要云函数应对双开客户端前后请求，即将改为stock云函数进入*******************************
+  function updateStockAccountCaptital(event,capital,contribution){
+    let canRewardCapital = 0;
+    if(contribution>=10000){
+      canRewardCapital = Math.floor(100000000 - capital);
+    }else if(contribution>=5000){
+      canRewardCapital = Math.floor(50000000 - capital);
+    }else if(contribution>=2500){
+      canRewardCapital = Math.floor(10000000 - capital);
+    }
+    if(canRewardCapital>0){
+      return DB.collection('stock').where({
+          userid:event.userId
+        }).update({
+          data:{
+            cash:_.inc(canRewardCapital),
+            capital:_.inc(canRewardCapital)
+          },
+        })
+    }else{
+      return new Promise((resolve,reject)=>{
+        reject('条件未达到，无法升级模拟盘账户')
+      })
+    }
+  }
+
+  //签到所用的云函数，由客户端负责随机生成数字，共有三种不同资源,下个版本改为account云函数运行************************************
   function signUp(event){
     return new Promise((resolve, reject) => {
       getUserSignTimeAndResource(event).then(res=>{
@@ -284,7 +200,42 @@ exports.main = async (event, context) => {
     })
   }
 
-  //捐赠物资所用的入口云函数
+  //升级模拟盘账户所用的云函数,首先判断客户端传递参数是否和数据库的一致，即将改为stock云函数进入*******************************
+  function upgradeStockAccount(event){
+    return new Promise((resolve, reject) => {
+      getStockCapitalAndContribution(event).then(res=>{
+        if(event.capital == res.list[0].capital){
+          resolve(updateStockAccountCaptital(event,res.list[0].capital,res.list[0].contribution));
+        }else{
+          reject('数据已过期');
+        }
+      })
+    })
+  }
+
+  //新增account集合记录,下个版本改为account云函数运行************************************
+  function addNewFundAccount(event){
+    return DB.collection("account").add({
+      data:{
+        _openid:OPENID,
+        name:event.name,
+        avatarUrl:event.avatarUrl,
+        peanut:0,
+        xiaocai:0,
+        wine_jnc:0,
+        wine_1573:0,
+        contribution:0,
+        rank:0,
+        fund:'other',
+        last_signin_time:0,
+        has_stock_account:false,
+        reward_from_otheruser:[],
+        join_date:Date.now()
+      },
+    })
+  }
+
+  //捐赠物资所用的入口云函数,下个版本改为account云函数运行************************************
   function contribution(event){
     return new Promise((resolve, reject) => {
       getUserSignTimeAndResource(event).then(res=>{
@@ -302,6 +253,19 @@ exports.main = async (event, context) => {
           }
         }else{
           reject('数据已过期');
+        }
+      })
+    })
+  }
+
+  //创建基金会用户入口,下个版本改为account云函数运行************************************
+  function createNewFundUser(event){
+    return new Promise((resolve,reject)=>{
+      login().then(res=>{
+        if(res.data.length == 0){
+          resolve(addNewFundAccount(event));
+        }else if(res.data.length > 0){
+          reject('您已有基金会账户');
         }
       })
     })

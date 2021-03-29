@@ -19,29 +19,41 @@
 }
 
   .userimage{
-    width: 120rpx;
-    height: 160rpx;
+    width: 20%;
+    height: 100%;
     display: flex;
     font-size:25rpx;
     flex-direction: column;
     justify-content: center;
-    align-items: center;
-    padding-left: 20rpx;
+    padding-left: 5rpx;
   }
+    .userimage-image{
+      width: 100%;
+      height: 75%;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+    }
 
-    .userimage image{
-      width: 120rpx;
-      height: 120rpx;
+    .userimage-image image{
+      width: 125rpx;
+      height: 125rpx;
+      border-radius: 20rpx;
     }
 
     .userinfo-username{
-      height: 40rpx;
+      width: 100%;
+      height: 25%;
       color:#303F9F;
       font-weight: 600;
+      line-height: 25rpx;
+      display: flex;
+      justify-content: center;
+      align-items: center;
     }
 
   .stockaccount-value{
-    width: 330rpx;
+    width: 40%;
     height: 100%;
     display: flex;
     font-size:28rpx;
@@ -52,7 +64,7 @@
   }
 
   .stockaccount-analyse{
-    width: 270rpx;
+    width: 40%;
     height: 100%;
     display: flex;
     font-size:28rpx;
@@ -245,6 +257,12 @@
       }
 
         .stock-buttonbox-button button{
+          height: 65rpx;
           font-size: 25rpx;
+          padding:0;
+          border-radius: 15rpx;
+          display: flex;
+          justify-content: center;
+          align-items: center;
         }
     

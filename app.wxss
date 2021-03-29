@@ -24,9 +24,9 @@
 }
 
 .long{
-  color:#FF3232
+  color:#FF3232;
 }
 
 .short{
-  color:#00E600
+  color:#00E600;
 }

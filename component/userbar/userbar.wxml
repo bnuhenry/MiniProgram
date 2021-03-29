@@ -1,18 +1,37 @@
 
   <view class="userinfo">
-    <!-- <button wx:if="{{!hasFundUserInfo}}" open-type="getUserInfo" bindgetuserinfo="getUserInfo"> 获取头像昵称 </button> -->
-    <button wx:if="{{(!hasFundUserInfo)&&canCreateNewFundUser}}" bindtap="createNewFundUser"> 创建基金会用户 </button>
+    <button wx:if="{{(!hasFundUserInfo)&&!canCreateNewFundUser}}" class="userinfo-button" type="default" bindtap="refreshUserInfoButton">刷新用户信息</button>
+    <button wx:if="{{(!hasFundUserInfo)&&canCreateNewFundUser}}" class="userinfo-button" type="primary" bindtap="createNewFundUser">创建基金会用户</button>
     <block wx:if="{{hasFundUserInfo}}">
       <view class="userimage">
         <image class="userinfo-avatar" src="{{fundUserInfo.avatarUrl}}" mode="cover" bindtap="renewFundUserAvatar"></image>
         <view class="userimage-button" bindtap="renewFundUserAvatar">更新头像</view>
       </view>
-      <view class="usertitle">
-        <view class="userinfo-username">{{fundUserInfo.name}}</view>
-        <view class="userrank">{{rankTitle}}</view>
-      </view>
-      <view class="user-discribe">
-        <text class="userinfo-nickname">{{rankTitleDiscrb}}</text>
+      <view class="userinfo-detail">
+        <view class="userinfo-detailTop">
+          <view class="userinfo-username">{{fundUserInfo.name}}</view>
+          <view class="userinfo-fundName">{{fundName}}</view>
+        </view>
+        <view class="userinfo-detailMiddle">
+          <view class="userinfo-fundrankimg">
+            <image class="userinfo-fundrankimg-image" src="{{rankImage}}"></image>
+          </view>
+          <view class="userinfo-usertitle">
+            {{rankTitle}}
+          </view>
+          <view class="userinfo-upgrade-rankbar">
+            <view wx:if="{{showRateBar}}" class="userinfo-upgrade-ratebar">
+              <view class="userinfo-upgrade-rate" style="{{rateBarStyle}}"></view>
+              <view class="userinfo-upgrade-ratebar-msg">
+                晋升{{nextRankName}}{{nextRankFinishPercent}}
+              </view>
+            </view>
+          </view>
+        </view>
+
+        <view class="userinfo-rankDiscribe">
+          <text class="userinfo-nickname">{{rankTitleDiscrb}}</text>
+        </view>
       </view>
     </block>
   </view>

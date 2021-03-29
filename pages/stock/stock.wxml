@@ -1,13 +1,15 @@
 <view class="accountform">
   <view class="userimage">
-    <image class="userinfo-avatar" src="{{userAvatar}}" mode="cover"></image>
+    <view class="userimage-image">
+      <image class="userinfo-avatar" src="{{userAvatar}}"></image>
+    </view>
     <view class="userinfo-username">{{userName}}</view>
   </view>
   <view class="stockaccount-value">
     <view class="stockaccount-title">股票持仓</view>
     <view class="stockaccount-title">可用资金：<text class="stockaccount-cash">{{accountCash}}</text></view>
     <view class="stockaccount-title">股票市值：<text class="stockaccount-cash">{{accountStockValue}}</text></view>
-    <view class="stockaccount-title">合计市值：<text class="stockaccount-cash">{{accountCash+accountStockValue}}</text></view>
+    <view class="stockaccount-title">合计市值：<text class="stockaccount-cash">{{accountTotalValue}}</text></view>
   </view>
   <view class="stockaccount-analyse">
     <view class="stockaccount-title">收益分析</view>
@@ -42,7 +44,7 @@
   </view>
   <scroll-view scroll-y="true" enable-flex="true" class="focus-detail">
     <view class="{{stock.percent>0?'focus-stock-up':'focus-stock-down'}}"
-      wx:for="{{focusStockObj}}"
+      wx:for="{{focusStockAry}}"
       wx:key="i"
       wx:for-item="stock"
       wx:for-index="sid"
@@ -70,12 +72,12 @@
   </view>
   <scroll-view scroll-y="true" enable-flex="true" class="focus-detail">
     <view class="{{stock.win?'focus-stock-up':'focus-stock-down'}}"
-      wx:for="{{bondsStockObj}}"
-      wx:key="i"
+      wx:for="{{bondsStockAry}}"
+      wx:key="id"
       wx:for-item="stock"
       wx:for-index="sid"
       data-id="{{sid}}"
-      bindtap="clickFocusStock">
+      bindtap="clickBondsStock">
       <view class="focus-stock-name">{{stock.symbol}}</view>
       <view class="focus-stock-price">{{stock.name}}</view>
       <view class="focus-stock-yields">{{stock.benefitRate}}</view>
@@ -92,7 +94,7 @@
       <button type="default" bindtap="clickCheckRank">查看排名</button>
     </view>
     <view class="stock-buttonbox-button">
-      <button wx:if="{{!hasstockaccount&&isMyStockAccount}}" type="primary" disabled="{{hasstockaccount}}" bindtap="clickCreateStockAccount">模拟盘开户</button>
+      <button wx:if="{{!hasstockaccount&&isMyStockAccount}}" type="primary" disabled="{{hasstockaccount||creatStockAccountButtonDisable}}" bindtap="clickCreateStockAccount">模拟盘开户</button>
       <button wx:if="{{hasstockaccount&&isMyStockAccount}}" type="primary" bindtap="showStockPickerPanel">查询股票</button>
       <button wx:if="{{hasstockaccount&&!isMyStockAccount}}" type="primary" bindtap="backToMyStockAccount">返回自己账户</button>
     </view>
@@ -108,7 +110,7 @@
       <button wx:if="{{hasstockaccount}}" type="primary" bindtap="clickCheckOtherStockUser">查询他人账户</button>
     </view>
     <view class="stock-buttonbox-button">
-      <!-- <button wx:if="{{hasstockaccount}}" type="default" bindtap="testCloudFunction">测试云函数</button> -->
+      <!-- <button wx:if="{{hasstockaccount}}" type="default" bindtap="">测试云函数</button> -->
     </view>
   </view>
 </view>
@@ -119,14 +121,13 @@
 wx:if="{{showStockPicker}}" 
 openType="{{openType}}"
 stockRequestIdFromFocus="{{stockRequestId}}"
-focusStockIdAry="{{focusStockIdAry}}"
+focusStockAry="{{focusStockAry}}"
 isMyStockAccount="{{isMyStockAccount}}"
 cashOfMyAccount="{{accountCash}}"
 canBondsAllClear="{{canBondsAllClear}}"
-bondsStockObj="{{bondsStockObj}}"
 bondsStockAry="{{bondsStockAry}}"
 bind:stockDataChanged="getStockDataChanged"
-bind:focusStock="getFocusStockId"
+bind:focusStock="getFocusStockObj"
 bind:cancelFocusStock="getCancelFocusStockId"
 bind:switchOff="getStockPickerOff">
 </stockpicker>
@@ -144,6 +145,7 @@ bind:switchOff="getStockUserPickerOff">
 wx:if="{{showStockDealRecords}}" 
 userName="{{userName}}"
 userAvatar="{{userAvatar}}"
+stockObj="{{stockObj}}"
 stockDealRecordsAry="{{stockDealRecordsAry}}"
 bind:switchOff="getStockDealRecordsOff">
 </stockDealRecords>

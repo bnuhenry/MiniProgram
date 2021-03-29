@@ -186,7 +186,7 @@ Component({
         title: '捐赠中',
       })
       wx.cloud.callFunction({
-        name:'login',
+        name:'account',
         data:{
           action:'contribution',
           peanut:peanut,
@@ -247,116 +247,6 @@ Component({
       })
     },
 
-    //捐赠者云端更新扣除捐赠物资，根据捐赠类型决定转换成声望还是捐赠对象物资,下版本废弃*************************
-    // updateContributorResData:function(peanut,xiaocai,wine_jnc){
-    //   wx.showLoading({
-    //     title: '加载中',
-    //   })
-    //   let score = 0;
-    //   const peanutscore = 1;
-    //   const xiaocaiscore = 3;
-    //   const wine_jncscore = 5;
-    //   if(this.data.contriType==1){
-    //     score = peanut*peanutscore + xiaocai*xiaocaiscore + wine_jnc*wine_jncscore;
-    //   }
-    //   const DB = wx.cloud.database();
-    //   const _ = DB.command;
-    //   DB.collection("account").doc(app.globalData.userId).update({
-    //     data:{
-    //       peanut:_.inc(-peanut),
-    //       xiaocai:_.inc(-xiaocai),
-    //       wine_jnc:_.inc(-wine_jnc),
-    //       contribution:_.inc(score)
-    //     },
-    //     success:res=>{
-    //       wx.hideLoading();
-    //       if(res.stats.updated>0){
-    //         console.log("捐献成功");
-    //         this.setData({
-    //           contributionResult:'已经捐出'
-    //         });
-    //         if(this.data.contriType==2){
-    //           this.updateUserObjResData(peanut,xiaocai,wine_jnc);
-    //         }else{
-    //           wx.showToast({
-    //             title: '捐赠成功',
-    //             icon: 'success',
-    //             duration: 2000
-    //           })
-    //         }
-    //         this.triggerEvent('contriResult',this.data.contributionResult);
-    //         this.triggerEvent('contriResultBool',true);
-    //       }else{
-    //         this.setData({
-    //           contributionResult:'捐献失败'
-    //         });
-    //         wx.showToast({
-    //           title: '捐献失败',
-    //           icon: 'error',
-    //           duration: 2000
-    //         })
-    //         console.log("捐献失败")
-    //         this.triggerEvent('contriResultBool',false);
-    //       }
-    //     },
-    //     fail:res=>{
-    //       wx.hideLoading();
-    //       this.setData({
-    //         contributionResult:'更新云数据失败'
-    //       });
-    //       wx.showToast({
-    //         title: '更新数据失败',
-    //         icon: 'error',
-    //         duration: 2000
-    //       })
-    //       console.log("更新云数据失败")
-    //       this.triggerEvent('contriResultBool',false);
-    //     }
-    //   })
-    // },
-
-    // //更新云端捐赠用户对象物资
-    // updateUserObjResData:function(peanut,xiaocai,wine_jnc){
-    //   wx.showLoading({
-    //     title: '加载中',
-    //   })
-    //   const DB = wx.cloud.database();
-    //   const _ = DB.command;
-    //   console.log(this.data.peaNutMax)
-    //   console.log(this.data.xiaoCaiMax)
-    //   console.log(this.data.jianNanChunMax)
-    //   wx.cloud.callFunction({
-    //     name:'login',
-    //     data: {
-    //       action: 'contriToOtherFundUser',
-    //       userId:this.data.resGiveToUserObj._id,
-    //       fromuserId:app.globalData.userId,
-    //       peanut:peanut,
-    //       xiaocai:xiaocai,
-    //       wine_jnc:wine_jnc,
-    //     },
-    //     complete:res=>{
-    //       if(res.result.stats.updated>0){
-    //         wx.hideLoading();
-    //         wx.showToast({
-    //           title: '已送给'+this.data.resGiveToUserObj.name,
-    //           icon: 'success',
-    //           duration: 2000
-    //         })
-    //         console.log('捐赠给'+this.data.resGiveToUserObj.name+'成功');
-    //       }else{
-    //         wx.hideLoading();
-    //         wx.showToast({
-    //           title: '赠送失败',
-    //           icon: 'error',
-    //           duration: 2000
-    //         })
-    //         console.log('赠送失败');
-    //       }
-    //     }
-    //   })
-    // },
-
     //传入参数获取此捐赠对象账户信息
     getOtherUserObj:function(e){
       const userObj = e.detail;
@@ -368,8 +258,8 @@ Component({
     },
 
     //接受用户选择列表组件回传的其他基金会用户数组
-    getOtherFundUserAry:function(e){
-      this.triggerEvent('otherFundUserAry',e.detail)
+    getOtherFundUsersAry:function(e){
+      this.triggerEvent('otherFundUsersAry',e.detail)
     },
 
     //接受其他用户选择组件回传关闭参数

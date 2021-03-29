@@ -23,8 +23,12 @@ exports.main = async (event, context) => {
     case 'stockrankhistory': {
       return stockrankhistory(event)
     }
+    case 'stockRankUserFund': {
+      return stockRankUserFund(event)
+    }
   }
 
+  //查询所有已开通模拟盘用户账户持仓
   function stockrank(event) {
     return DB.collection('stock').aggregate()
     .lookup({
@@ -58,12 +62,25 @@ exports.main = async (event, context) => {
     .end();
   }
 
+  //查询模拟盘排名记录
   function stockrankhistory (event) {
     return DB.collection('stock_rank_history').where({
       time:_.gte(event.start_time),
       }).field({
         _id:false,
       }).orderBy('time','desc').get();
+  }
+
+  //查询所有已开通模拟盘用户所在的基金会名字
+  function stockRankUserFund(event) {
+    return DB.collection('qkfund').where({
+      fund:_.in(event.fundAry)
+    })
+    .field({
+      _id:false,
+      slogan:false,
+      join_application:false
+    }).get();
   }
 
 

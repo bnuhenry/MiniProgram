@@ -1,5 +1,7 @@
 {
   "usingComponents": {
-    "userbar":"/component/userbar/userbar"
+    "userbar":"/component/userbar/userbar",
+    "editInputer":"/component/editInputer/editInputer",
+    "joinuserpicker":"/component/otheruserpicker/otheruserpicker"
   }
 }

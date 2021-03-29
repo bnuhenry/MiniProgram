@@ -1,38 +1,25 @@
 // pages/stock/stock.js
 const app = getApp()
 const getStockInfoFromNetEase = require("../../utils/stockApi.js")
+const fundUserApi = require("../../utils/loginApi.js")
 
 Page({
 
   data: {
-    userAvatar:String,
-    userName:String,
-    userId:String,
-    hasstockaccount:Boolean,
-    accountCash:0,
-    accountCapital:0,
-    accountStockValue:0,
     showStockPicker:false,
     showStockUserPicker:false,
     showStockDealRecords:false,
-    stockRequestId:String,
-    openType:Number,
-    accountPosition:String,
-    accountYields:String,
     accountWin:false,
-    stockMsg:String,
-    focusStockIdAry:Array,
-    bondsStockAry:Array,
-    focusStockObj:Object,
-    bondsStockObj:Object,
-    stockDealRecordsAry:Array,
     topOptionSelected:1,
     isMyStockAccount:false,
-    costSingleStock:Number,
+    isJoinedFundUser:false,
     firstLoadDone:false,
     refreshButtonDisalbe:false,
-    otherStockUserAry:[],
     canBondsAllClear:false,
+    creatStockAccountButtonDisable:false,
+    focusStockAry:[],
+    bondsStockAry:[],
+    stockDealRecordsAry:[],
   },
 
 
@@ -53,12 +40,14 @@ Page({
     this.setData({
       refreshButtonDisalbe:true
     })
+    // 模拟盘升级之后需要重新请求数据
+    if(app.globalData.needRecheckStockAccount&&app.globalData.gotFundInfo){
+      app.globalData.needRecheckStockAccount = false;
+      this.getMyStockAccountInfo();
+    }
     if(this.data.firstLoadDone&&this.data.hasstockaccount){
-      if(this.data.bondsStockAry.length>0){
-        this.makeBondsStockObj(this.data.bondsStockAry);
-      }
-      if(this.data.focusStockIdAry.length>0){
-        this.makeFocusStockAry(this.data.focusStockIdAry);
+      if(this.data.bondsStockAry.length>0 || this.data.focusStockAry.length>0 || this.data.stockDealRecordsAry.length>0){
+        this.makeStockObj(this.data.bondsStockAry,this.getIdAryFromFocusAry(this.data.focusStockAry),this.data.stockDealRecordsAry);
       }
     }else if(app.globalData.gotFundInfo&&!this.data.firstLoadDone){
       this.firstLoadUserInfo();
@@ -79,11 +68,13 @@ Page({
       hasstockaccount:app.globalData.fundUserInfo.has_stock_account,
       isMyStockAccount:true,
       firstLoadDone:true,
+      isJoinedFundUser:app.globalData.fundUserInfo.fund != 'other',
     })
     if(this.data.hasstockaccount){
       console.log('已开通股票账户');
-      this.getStockAccountInfo();
+      this.getMyStockAccountInfo();
     }else{
+      this.initData();
       console.log('还未开通股票账户');
     }
   },
@@ -92,15 +83,14 @@ Page({
   initData:function(){
     this.setData({
       accountStockValue:0,
+      accountTotalValue:0,
       accountPosition:'',
       accountYields:'',
       accountWin:false,
       accountCash:0,
       accountCapital:0,
-      focusStockIdAry:[],
+      focusStockAry:[],
       bondsStockAry:[],
-      focusStockObj:{},
-      bondsStockObj:{},
       stockDealRecordsAry:[],
       canBondsAllClear:false,
     })
@@ -108,110 +98,83 @@ Page({
 
   //点击模拟盘开户
   clickCreateStockAccount:function(){
-    wx.showModal({
-      title: '模拟盘开户',
-      content: '确定创建模拟盘账户？',
-      success:res=> {
-        if (res.confirm) {
-          if(app.globalData.gotFundInfo){
-            if(this.data.userId!=app.globalData.fundUserInfo._id){
-              this.setData({
-                userId:app.globalData.fundUserInfo._id
-              })
-              this.createNewStockAccount();
+    if(this.data.isJoinedFundUser){
+      wx.showModal({
+        title: '模拟盘开户',
+        content: '确定创建模拟盘账户？',
+        success:res=> {
+          if (res.confirm) {
+            if(app.globalData.gotFundInfo){
+              if(this.data.userId!=app.globalData.fundUserInfo._id){
+                this.setData({
+                  userId:app.globalData.fundUserInfo._id
+                })
+                this.createNewStockAccount();
+              }else{
+                this.createNewStockAccount();
+              }
             }else{
-              this.createNewStockAccount();
+              this.toast('未获取用户ID',false);
             }
-          }else{
-            wx.showToast({
-              title: '未获取用户ID',
-              icon:'error',
-              duration: 2000
-            })
+            console.log('确定');
+          } else if (res.cancel) {
+            console.log('我对模拟盘没兴趣')
           }
-          console.log('确定');
-        } else if (res.cancel) {
-          console.log('我再想想')
         }
-      }
-    })
+      })
+    }else{
+      this.toast('请先加入基金会',false);
+    }
   },
 
-  //ajax创建stock集合新记录
+  //云端创建stock集合新记录
   createNewStockAccount:function(){
     if(app.globalData.gotFundInfo){
       wx.showLoading({
         title: '开通账户中',
       })
-      const DB = wx.cloud.database().collection("stock");
-      DB.add({
+      this.setData({
+        creatStockAccountButtonDisable:true
+      })
+      wx.cloud.callFunction({
+        name:'stock',
         data:{
-          userid:app.globalData.fundUserInfo._id,
-          cash:1000000,
-          capital:1000000,
-          stock_bonds:[],
-          stock_focus:[],
-          stock_deal_records:[],
-          create_date:Date.now()
+          action:'createNewStockAccount',
+          userId:app.globalData.userId,
         },
         success:res=>{
           wx.hideLoading();
-          console.log('创建成功');
-          this.updateHasStockAccToAccount();
+          this.toast('开通成功',true);
+          fundUserApi.getFundUserInfo().then(res=>{
+            this.firstLoadUserInfo();
+          });
         },
         fail:res=>{
+          console.log(res);
           wx.hideLoading();
-          console.log("连接数据库失败");
+          this.toast('开通失败',false);
+          fundUserApi.getFundUserInfo().then(res=>{
+            this.firstLoadUserInfo();
+          });
         }
       })
     }else{
+      this.toast('未获取用户id',false);
+      this.setData({
+        creatStockAccountButtonDisable:false
+      })
       console.log('获取用户id失败');
     }
   },
 
-  //ajax更新account集合has_stock_account字段到云端
-  updateHasStockAccToAccount:function(){
+  //查询自己的股票账户信息
+  getMyStockAccountInfo:function(){
     wx.showLoading({
       title: '加载中',
     })
-    const DB = wx.cloud.database();
-    DB.collection("account").doc(this.data.userId).update({
-      data:{
-        has_stock_account:true
-      },
-      success:res=>{
-        wx.hideLoading();
-        if(res.stats.updated>0){
-          console.log("创建模拟盘账户成功!");
-          this.setData({
-            stockMsg:'创建模拟盘账户成功!',
-            hasstockaccount:true
-          })
-          app.getFundUserInfo();
-          this.getStockAccountInfo();
-        }else{
-          console.log("创建失败");
-        }
-      },
-      fail:res=>{
-        wx.hideLoading();
-        console.log("更新云数据失败!");
-        this.setData({
-          editMsg:'更新云数据失败!'
-        })
-      }
-    })
-  },
-
-  //查询股票账户信息
-  getStockAccountInfo:function(){
-    wx.showLoading({
-      title: '加载中',
-    })
-    this.initData();
     const DB = wx.cloud.database();
     DB.collection('stock').where({
-      userid:this.data.userId
+      userid:app.globalData.userId
     }).limit(1).get({
       success:res=>{
         wx.hideLoading();
@@ -219,121 +182,202 @@ Page({
           this.setData({
             accountCash:res.data[0].cash,
             accountCapital:res.data[0].capital,
-            focusStockIdAry:res.data[0].stock_focus,
             stockDealRecordsAry:res.data[0].stock_deal_records,
-            bondsStockAry:res.data[0].stock_bonds,
+            hasstockaccount:true
           })
-          this.makeBondsStockObj(res.data[0].stock_bonds);
-          this.makeFocusStockAry(res.data[0].stock_focus);
+          this.getCanAccountUpgrade(res.data[0].capital);
+          this.makeStockObj(res.data[0].stock_bonds,res.data[0].stock_focus,res.data[0].stock_deal_records);
         }else{
+          this.initData();
+          this.toast('未查到账户信息',false);
           console.log("查询不到模拟盘用户信息");
         }
-
       },
       fail:res=>{
+        this.initData();
+        this.toast('查询失败',false);
         console.log("获取云数据失败");
         wx.hideLoading();
       },
     })
   },
 
-  //根据股票账户持仓生成持有股票数组并计算市值
-  makeBondsStockObj:function(array){
-    const today = new Date().getDate();
-    const length = array.length;
-    const stockIdArray = [];
-    const stockDealRecordsAry = this.data.stockDealRecordsAry;
-    let stockObj = {};
-    let stockTotalValue = 0;
-    if(length>0){
-      let allClearDisable = false;
+  //根据股票账户持仓股票关注股票以及交易记录里包含的股票生成一个股票信息对象保存本地供查询
+  makeStockObj:function(bondsAry,focusAry,recordAry){
+    const allStockIdAry = [];
+    if(recordAry.length>0 || bondsAry.length>0 || focusAry.length>0){
+      if(recordAry.length>0){
+        for(let i=0;i<recordAry.length;i++){
+          if(allStockIdAry.includes(recordAry[i].id)){
+            continue;
+          }else{
+            allStockIdAry.push(recordAry[i].id);
+          }
+        }
+      }
+      if(bondsAry.length>0){
+        for(let i=0;i<bondsAry.length;i++){
+          if(allStockIdAry.includes(bondsAry[i].id)){
+            continue;
+          }else{
+            allStockIdAry.push(bondsAry[i].id);
+          }
+        }
+      }
+      if(focusAry.length>0){
+        for(let i=0;i<focusAry.length;i++){
+          if(allStockIdAry.includes(focusAry[i])){
+            continue;
+          }else{
+            allStockIdAry.push(focusAry[i]);
+          }
+        }
+      }
       wx.showLoading({
         title: '加载中',
       })
-      for(let i=0;i<length;i++){
-        stockIdArray.push(array[i].id);
-      }
-      getStockInfoFromNetEase.getChinaStockInfo(stockIdArray).then(res=>{
+      getStockInfoFromNetEase.getChinaStockInfo(allStockIdAry).then(res=>{
         if(res){
-          stockObj = res;
-          for(let i=0;i<length;i++){
-            stockObj[array[i].id].bonds = array[i].bonds;
-            stockObj[array[i].id].costTotal = 0;
-            stockObj[array[i].id].canNotSellAmount = 0;
-            for(let j=0;j<stockDealRecordsAry.length;j++){
-              if(stockDealRecordsAry[j].id == array[i].id){
-                const date = new Date(stockDealRecordsAry[j].time);
-                stockObj[array[i].id].costTotal += stockDealRecordsAry[j].price*stockDealRecordsAry[j].amount;
-                if(stockDealRecordsAry[j].buy&&date.getDate()==today){
-                  stockObj[array[i].id].canNotSellAmount += stockDealRecordsAry[j].amount;
-                  //只要当天有买入股票便不能使用一键清仓
-                  if(stockDealRecordsAry[j].amount>0){
-                    allClearDisable = true;
-                  }
-                }
-              }
-            }
-          }
-          for(let key in stockObj){
-            stockObj[key].rate = this.getIncreaseRate(stockObj[key].percent);
-            stockObj[key].value = Number(Number(stockObj[key].price)*Number(stockObj[key].bonds)).toFixed(0);
-            stockObj[key].cost = Number(stockObj[key].costTotal/stockObj[key].bonds).toFixed(2);
-            stockObj[key].canSell = Number(stockObj[key].bonds) - Number(stockObj[key].canNotSellAmount);
-            stockObj[key].benefit = Number(Number(stockObj[key].value) - stockObj[key].costTotal).toFixed(0);
-            stockObj[key].benefitRate = this.getIncreaseRate(Number((Number(stockObj[key].benefit)/stockObj[key].costTotal)));
-            stockObj[key].win = Number(stockObj[key].benefit)>0;
-            stockTotalValue += Number(stockObj[key].value);
-            if(stockObj[key].bid1==0){
-              allClearDisable = true;
-            }
-          }
           this.setData({
-            accountStockValue:Number(stockTotalValue.toFixed(0)),
-            accountPosition:this.getAccountPosition(stockTotalValue,this.data.accountCash),
-            accountYields:this.getAccountYields(stockTotalValue,this.data.accountCash,this.data.accountCapital),
-            accountWin:stockTotalValue+this.data.accountCash-this.data.accountCapital>0,
-            bondsStockObj:stockObj,
-            canBondsAllClear:!allClearDisable,
+            stockObj:res
           })
+          this.makeBondsStockObj(bondsAry);
+          this.makeFocusStockAry(focusAry);
         }else{
-          console.log('获取股票数据信息失败');
+          this.toast('获取数据失败',false);
+          console.log('获取网易股票实时数据失败');
         }
         wx.hideLoading();
       })
     }else{
       this.setData({
+        bondsStockAry:[],
+        focusStockAry:[],
+        stockDealRecordsAry:[],
+        accountStockValue:0,
+        accountTotalValue:this.data.accountCash,
+        accountPosition:'空仓',
+        accountYields:this.getAccountYields(0,this.data.accountCash,this.data.accountCapital),
+        accountWin:this.data.accountCash>this.data.accountCapital,
+        stockObj:{},
+        canBondsAllClear:false,
+      })
+    }
+  },
+
+  //根据股票账户持仓生成持有股票数组并计算市值
+  makeBondsStockObj:function(array){
+    const length = array.length;
+    const stockDealRecordsAry = this.data.stockDealRecordsAry;
+    const stockObj = this.data.stockObj;
+    let stockTotalValue = 0;
+    if(length>0){
+      let allClearDisable = false;
+      for(let i=0;i<length;i++){
+        array[i].costTotal = 0;
+        array[i].canNotSellAmount = 0;
+        for(let j=0;j<stockDealRecordsAry.length;j++){
+          if(stockDealRecordsAry[j].id == array[i].id){
+            const date = new Date(stockDealRecordsAry[j].time);
+            array[i].costTotal += stockDealRecordsAry[j].price*stockDealRecordsAry[j].amount;
+            if(stockDealRecordsAry[j].buy&&this.checkDateIsToday(date)){
+              array[i].canNotSellAmount += stockDealRecordsAry[j].amount;
+              //只要当天有买入股票便不能使用一键清仓
+              if(stockDealRecordsAry[j].amount>0){
+                allClearDisable = true;
+              }
+            }
+          }
+        }
+        array[i].symbol = stockObj[array[i].id].symbol;
+        array[i].name = stockObj[array[i].id].name;
+        array[i].price = stockObj[array[i].id].price;
+        array[i].rate = this.getIncreaseRate(stockObj[array[i].id].percent);
+        array[i].value = Number(Number(stockObj[array[i].id].price)*Number(array[i].bonds)).toFixed(0);
+        array[i].cost = Number(array[i].costTotal/array[i].bonds).toFixed(2);
+        array[i].canSell = Number(array[i].bonds) - Number(array[i].canNotSellAmount);
+        array[i].benefit = Number(Number(array[i].value) - array[i].costTotal).toFixed(0);
+        array[i].benefitRate = this.getIncreaseRate(Number((Number(array[i].benefit)/array[i].costTotal)));
+        array[i].win = Number(array[i].benefit)>0;
+        stockTotalValue += Number(array[i].value);
+        if(stockObj[array[i].id].bid1==0){
+          allClearDisable = true;
+        }
+      }
+      this.setData({
+        accountStockValue:Number(stockTotalValue.toFixed(0)),
+        accountTotalValue:Number(stockTotalValue.toFixed(0)) + this.data.accountCash,
+        accountPosition:this.getAccountPosition(stockTotalValue,this.data.accountCash),
+        accountYields:this.getAccountYields(stockTotalValue,this.data.accountCash,this.data.accountCapital),
+        accountWin:stockTotalValue+this.data.accountCash-this.data.accountCapital>0,
+        bondsStockAry:array,
+        canBondsAllClear:!allClearDisable,
+      })
+    }else{
+      this.setData({
+        accountStockValue:0,
+        accountTotalValue:this.data.accountCash,
         accountPosition:'空仓',
         accountYields:this.getAccountYields(stockTotalValue,this.data.accountCash,this.data.accountCapital),
+        accountWin:this.data.accountCash>this.data.accountCapital,
+        bondsStockAry:[],
         canBondsAllClear:false,
       })
       console.log('持仓股票代码数组为空');
     }
   },
 
-   //云端获取关注股票代码数组生成本地数组
-   makeFocusStockAry:function(array){
-    const length = array.length;
-    let stockObj = {};
-    if(length>0){
-      wx.showLoading({
-        title: '加载中',
-      })
-      getStockInfoFromNetEase.getChinaStockInfo(array).then(res=>{
-        if(res){
-          stockObj = res;
-          for(let key in stockObj){
-            stockObj[key].rate = this.getIncreaseRate(stockObj[key].percent);
-          }
-          this.setData({
-            focusStockObj:stockObj
-          })
-        }else{
-          console.log('没有返回任何股票信息');
-        }
-        wx.hideLoading();
+  //传入股票日期查询是否今日购买，是的话返回true
+  checkDateIsToday:function(date){
+    const today = new Date()
+    return (today.getDate()==date.getDate())&&(today.getMonth()==date.getMonth())&&(today.getFullYear()==date.getFullYear());
+  },
+
+  //根据网易数据接口生成的股票数据合成本地关注股票数组
+  makeFocusStockAry:function(array){
+    const stockObj = this.data.stockObj;
+    const focusStockAry = [];
+    if(array.length>0){
+      for(let i=0;i<array.length;i++){
+        focusStockAry.push({
+          id:array[i],
+          symbol:stockObj[array[i]].symbol,
+          name:stockObj[array[i]].name,
+          rate:this.getIncreaseRate(stockObj[array[i]].percent),
+          price:stockObj[array[i]].price,
+          open:stockObj[array[i]].open,
+          high:stockObj[array[i]].high,
+          low:stockObj[array[i]].low,
+          percent:stockObj[array[i]].percent,
+        })
+      }
+      this.setData({
+        focusStockAry:focusStockAry
       })
     }else{
-      console.log('股票代码数组为空');
+      this.setData({
+        focusStockAry:[],
+      })
+      console.log('关注股票代码数组为空');
+    }
+  },
+
+  //查询模拟盘账户是否可以升级，可以的话Tab个人页面弹出红点
+  getCanAccountUpgrade:function(capital){
+    const contribution = app.globalData.fundUserInfo.contribution;
+    let canUpgrade = false;
+    if(contribution>=10000&&capital<100000000){
+      canUpgrade = true;
+    }else if(contribution>=5000&&capital<50000000){
+      canUpgrade = true;
+    }else if(contribution>=2500&&capital<10000000){
+      canUpgrade = true;
+    }
+    if(canUpgrade){
+      wx.setTabBarBadge({
+        index:3,
+        text:'UP'
+      })
     }
   },
 
@@ -420,7 +464,17 @@ Page({
     const sid = e.currentTarget.dataset.id;
     this.setData({
       openType:1,
-      stockRequestId:sid,
+      stockRequestId:this.data.focusStockAry[sid].id,
+      showStockPicker:true
+    })
+  },
+
+  //点击关注股票列表进入股票筛选组件
+  clickBondsStock:function(e){
+    const sid = e.currentTarget.dataset.id;
+    this.setData({
+      openType:1,
+      stockRequestId:this.data.bondsStockAry[sid].id,
       showStockPicker:true
     })
   },
@@ -462,7 +516,6 @@ Page({
       hasstockaccount:true,
       isMyStockAccount:userObj._id==app.globalData.userId,
     })
-    this.initData();
     wx.cloud.callFunction({
       name:'stock',
       data: {
@@ -475,13 +528,11 @@ Page({
           this.setData({
             accountCash:res.result.data[0].cash,
             accountCapital:res.result.data[0].capital,
-            focusStockIdAry:res.result.data[0].stock_focus,
-            bondsStockAry:res.result.data[0].stock_bonds,
             stockDealRecordsAry:res.result.data[0].stock_deal_records
           })
-          this.makeBondsStockObj(res.result.data[0].stock_bonds);
-          this.makeFocusStockAry(res.result.data[0].stock_focus);
+          this.makeStockObj(res.result.data[0].stock_bonds,res.result.data[0].stock_focus,res.result.data[0].stock_deal_records);
         }else{
+          this.initData();
           console.log('查询他人模拟盘账户失败');
         }
       }
@@ -497,10 +548,10 @@ Page({
       hasstockaccount:app.globalData.fundUserInfo.has_stock_account,
       isMyStockAccount:true,
     })
-    this.initData();
     if(this.data.hasstockaccount){
-      this.getStockAccountInfo();
+      this.getMyStockAccountInfo();
     }else{
+      this.initData();
       console.log('还未开通股票账户');
     }
   },
@@ -515,13 +566,18 @@ Page({
         receiveUserObjFromRankPage: function(userObj) {
           that.getOtherStockAccountInfo(userObj);
         }
-      },
-      success: function(res) {
-        // 通过eventChannel向被打开页面传送数据
-        res.eventChannel.emit('requestUserId', { userId:app.globalData.userId, })
       }
     })
   },
+
+    //把股票对象数组变成只有股票id的数组
+    getIdAryFromFocusAry:function(array){
+      const idAry = [];
+      for(let i=0;i<array.length;i++){
+        idAry.push(array[i].id);
+      }
+      return idAry;
+    },
 
   //接受其他账户选择组件回传股票账户信息对象
   getOtherStockUserObj:function(e){
@@ -544,34 +600,46 @@ Page({
   //接受股票组件回传刷新股票数据信号
   getStockDataChanged:function(e){
     if(e.detail){
-      this.firstLoadUserInfo();
+      this.getMyStockAccountInfo();
     }
   },
 
   //接受股票组件回传添加关注股票
-  getFocusStockId:function(e){
-    const idAry = this.data.focusStockIdAry;
-    idAry.push(e.detail);
+  getFocusStockObj:function(e){
+    const idAry = this.getIdAryFromFocusAry(this.data.focusStockAry);
+    const stockObj = this.data.stockObj;
+    idAry.push(e.detail.code);
+    stockObj[e.detail.code] = e.detail;
     this.setData({
-      focusStockIdAry:idAry
+      stockObj:stockObj
     })
-    this.makeFocusStockAry(this.data.focusStockIdAry);
+    this.makeFocusStockAry(idAry);
   },
 
   //接受股票组件回传取消关注股票
   getCancelFocusStockId:function(e){
-    const idAry = this.data.focusStockIdAry;
-    let deleteIndex;
+    const idAry = this.getIdAryFromFocusAry(this.data.focusStockAry);
+    let deleteIndex = -1;
     for(let i=0;i<idAry.length;i++){
       if(e.detail == idAry[i]){
         deleteIndex = i;
+        break;
       }
     }
-    idAry.splice(deleteIndex,1);
-    this.setData({
-      focusStockIdAry:idAry
+    if(deleteIndex>=0){
+      idAry.splice(deleteIndex,1);
+      this.makeFocusStockAry(idAry);
+    }
+  },
+
+  //提示框方法
+  toast:function(title,isSuccess){
+    const icon = isSuccess?'success':'error';
+    wx.showToast({
+      title: title,
+      icon:icon,
+      duration:2000
     })
-    this.makeFocusStockAry(this.data.focusStockIdAry);
   },
 
   //接受股票组件回传关闭参数

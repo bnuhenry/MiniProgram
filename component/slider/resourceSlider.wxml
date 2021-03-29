@@ -56,7 +56,7 @@
 wx:if="{{showFundUserPicker}}" 
 checkUserType="fund"
 otherFundUsersAry="{{otherFundUsersAry}}"
-bind:otherFundUserAry="getOtherFundUserAry"
+bind:otherFundUsersAry="getOtherFundUsersAry"
 bind:otherUserObj="getOtherUserObj"
 bind:switchOff="getFundUserPickerOff">
 </funduserpicker>

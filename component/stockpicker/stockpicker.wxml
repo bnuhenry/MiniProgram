@@ -1,10 +1,21 @@
 <view class="background">
   <view class="rest" bindtap="cancel"></view>
-  <view class="stockbar" style="{{stockPickerStyle}}">
+  <view class="stockbar" style="{{stockPickerStyle}}" bindtap="cancelSearchStockBar">
     <view class="stockbar-title">
       <view class="stockbar-title-name">{{stockObj.name}}</view>
-      <view class="stockbar-title-stockid">{{stockObj.symbol}}</view>
+      <view class="stockbar-title-stockid" bindtap="test">{{stockObj.symbol}}</view>
       <view class="stockbar-title-cancel" bindtap="cancel">收起</view>
+    </view>
+    <view class="stockbar-kline">
+      <view class="stockbar-kline-side">
+        <view class="stockbar-kline-sidebtn{{kLineOption==3?'Active':''}}" data-id="3" bindtap="getKLineChange">周线</view>
+        <view class="stockbar-kline-sidebtn{{kLineOption==4?'Active':''}}" data-id="4" bindtap="getKLineChange">月线</view>
+      </view>
+      <image class="stockbar-kline-image" src="{{kLineImage}}"></image>
+      <view class="stockbar-kline-side">
+        <view class="stockbar-kline-sidebtn{{kLineOption==1?'Active':''}}" data-id="1" bindtap="getKLineChange">分时</view>
+        <view class="stockbar-kline-sidebtn{{kLineOption==2?'Active':''}}" data-id="2" bindtap="getKLineChange">日线</view>
+      </view>
     </view>
     <view class="stockbar-detail">
       <view class="stockbar-detail-main">
@@ -55,13 +66,27 @@
       </view>
     </view>
     <view class="stockbar-inputbar" wx:if="{{isMyStockAccount}}">
-      <view class="stockbar-inputstockid">
+      <view class="stockbar-emptyinput" wx:if="{{!showStockCodeInput}}"></view>
+      <view class="stockbar-inputstockid" wx:if="{{showStockCodeInput}}">
         <picker class="stockbar-picker" bindchange="bindHousePickerChange" value="{{index}}" range="{{exchangeHouseAry}}">{{exchangeHouse}}</picker>
-        <input class="stockbar-input" type="number" placeholder="请输入股票代码" value="{{inputStockId}}" bindchange="bindStockIdInput"/>
+        <input class="stockbar-input" type="text" placeholder="请输入股票代码或名字" value="{{inputStockId}}" bindinput="bindStockIdInput"/>
+        <scroll-view wx:if="{{searchCodeAry.length>0}}" class="stockbar-input-search" scroll-y="true">
+          <view class="stockbar-input-searchItem"
+            wx:for="{{searchCodeAry}}"
+            wx:key="sid"
+            wx:for-item="stock"
+            wx:for-index="sid"
+            data-id="{{stock.requestId}}"
+            data-symbol="{{stock.symbol}}"
+            bindtap="getSearchStockCode">
+            <view class="stockbar-input-searchItem-symbol">{{stock.symbol}}</view>
+            <view class="stockbar-input-searchItem-name">{{stock.name}}</view>
+          </view>
+        </scroll-view>
       </view>
       <view class="stockbar-buttonbox">
         <button type="primary" disabled="{{!canTrade}}" bindtap="clickWantToTrade">点击交易</button>
-        <button type="primary" bindtap="getSingleStockDetail">获取股票信息</button>
+        <button type="primary" bindtap="getSingleStockDetail">{{showStockCodeInput?'获取股票信息':'查询其他个股'}}</button>
         <button wx:if="{{!stockFocused}}" type="primary" disabled="{{!canFocus||focusLoading}}" loading="{{focusLoading}}" bindtap="clickFocusStock">点击关注</button>
         <button wx:if="{{stockFocused}}" type="warn" disabled="{{!canFocus||focusLoading}}" loading="{{focusLoading}}" bindtap="clickCancelFocus">取消关注</button>
       </view>

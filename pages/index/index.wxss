@@ -40,7 +40,6 @@
     width: 90%;
     padding:20rpx;
     justify-content: center;
-    text-align: center;
   }
 
     .fangzhen .title{
@@ -134,7 +133,6 @@
     margin:10rpx;
     background-color: #fff;
     display: flex;
-    flex-direction: column;
     justify-content: center;
     align-items: center;
     overflow: hidden;
@@ -150,9 +148,40 @@
       overflow: hidden;
     }
 
+  .optionbox{
+    width: 100%;
+    height: 80rpx;
+    margin:10rpx;
+    background-color: #fff;
+    display: flex;
+    justify-content: space-evenly;
+    overflow: hidden;
+  }
+
+    .optionbox-sidebar{
+      width: 25%;
+      height: 75rpx;
+      color:#2196F3;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+    }
+
+    .optionbox-sidebar-selected{
+      width: 25%;
+      height: 75rpx;
+      font-weight: 600;
+      color:#2196F3;
+      border-bottom:6rpx solid #2196F3;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+    }
+
   .buttonview-label{
     width:100%;
     height: 60rpx;
+    margin-bottom: 10rpx;
     display: flex;
     justify-content: flex-start;
     align-items: center;
@@ -192,13 +221,61 @@
       align-items: center;
     }
 
-      .buttonview-label-swiperitem{
-        position: relative;
-        width: 100%;
+    .buttonview-label-indexswiper{
+      width:100%;
+      height: 180rpx;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+    }
+
+      .buttonview-label-indexswiper-indexitem{
+        width:100%;
+        height: 160rpx;
         display: flex;
         justify-content: center;
         align-items: center;
       }
+    
+    .buttonview-label-newsswiper{
+      width:100%;
+      height: 60rpx;
+      padding-left: 20rpx;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+    }
+
+      .buttonview-label-swiperitem{
+        position: relative;
+        width: 100%;
+        display: flex;
+        justify-content: flex-start;
+        align-items: center;
+      }
+
+        .buttonview-label-swiperitem-news{
+          position: relative;
+          padding-right: 10rpx;
+          display: flex;
+          flex-wrap: wrap;
+          font-size:25rpx;
+          justify-content: center;
+          align-items: center;
+          color:blueviolet;
+        }
+
+        .buttonview-label-swiperitem-newsdate{
+          position: absolute;
+          bottom: 0;
+          right: 0;
+          padding-right: 10rpx;
+          display: flex;
+          font-size:16rpx;
+          justify-content: flex-end;
+          align-items: center;
+          color:#FF3232;
+        }
 
         .buttonview-label-swiperitem-msg{
           padding-right: 50rpx;
@@ -212,8 +289,8 @@
 
         .buttonview-label-swiperitem-avatar{
           position: absolute;
-          top:0;
-          right: 0;
+          top:5rpx;
+          right: 5rpx;
           width: 50rpx;
           height: 50rpx;
           border-radius: 25rpx;
@@ -224,9 +301,8 @@
 
   .buttonview-index{
     width:100%;
-    height: 80rpx;
-    font-size: 35rpx;
-    font-weight: 600;
+    height: 160rpx;
+    font-size: 30rpx;
     display: flex;
     justify-content: space-between;
     align-items: center;
@@ -237,21 +313,30 @@
       height: 100%;
     }
 
-      .buttonview-indexbar-title{
-        width:100%;
-        height: 50%;
-        display: flex;
-        justify-content: center;
-        align-items: center;
-      }
-      
       .buttonview-indexbar-index{
         width:100%;
-        height: 50%;
+        height: 25%;
+        font-weight: 600;
         display: flex;
         justify-content: center;
         align-items: center;
       }
+
+        .buttonview-indexbar-index-index{
+          width:60%;
+          height: 100%;
+          display: flex;
+          justify-content: center;
+          align-items: center;
+        }
+
+        .buttonview-indexbar-index-yields{
+          width:40%;
+          height: 100%;
+          display: flex;
+          justify-content: center;
+          align-items: center;
+        }
 
   .indexLong{
     color:#FF3232

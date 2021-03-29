@@ -1,12 +1,14 @@
 <view class="userform">
-  <userbar fundUserInfo="{{fundUserInfo}}"></userbar>
+  <userbar id="userinfoUserBar" fundName="{{fundName}}"></userbar>
 </view>
 <view class="fundUserInfo">
-  <view class="fundUserInfo-label">位阶晋升    {{fundName}}</view>
+  <view class="fundUserInfo-label">位阶晋升</view>
   <view class="fundUserInfo-contribution">
     <view class="fundUserInfo-contribution-title">
       <image class="fundUserInfo-contribution-image" src="../../images/contribution.png"></image>
-      <view class="fundUserInfo-contribution-titlecontent">你在{{fundName}}的声望值为:</view>
+      <view class="fundUserInfo-contribution-titlecontent">
+        你在<view class="fundUserInfo-contribution-rankname">{{fundName}}</view>的声望值为:
+      </view>
     </view>
     <view class="fundUserInfo-contribution-contribution">{{contribution}}</view>
   </view>
@@ -15,8 +17,8 @@
       <image class="fundUserInfo-upgrade-image" src="../../images/upgrade.png"></image>
       <view wx:if="{{contribution<20000}}" class="fundUserInfo-contribution-titlecontent">
         晋升下一位阶
-        <view class="fundUserInfo-contribution-rankname">{{nextRankName}}</view>
-        还差<view class="fundUserInfo-contribution-rankname">{{contriUntilNextRank}}</view>
+        <view class="fundUserInfo-contribution-bluecolor">{{nextRankName}}</view>
+        还差<view class="fundUserInfo-contribution-bluecolor">{{contriUntilNextRank}}</view>
       </view>
       <view wx:if="{{contribution>=20000}}" class="fundUserInfo-contribution-titlecontent">
         没有更高的位阶了老板
@@ -36,47 +38,77 @@
       <button type="primary" bindtap="editUserName">修改名字</button>
     </view>
     <view class="inputBox-button-side">
-      <button type="primary" bindtap="editFundPolicy">基金会方针政策</button>
+      <button type="primary" disabled="{{!isMemberOfFund}}" bindtap="editFundPolicy">基金会方针政策</button>
     </view>
-  </view>
-  <view class="inputBox" wx:if="{{showEidtNameInput}}">
-    <view class="inputBox-label">请输入一个新名字</view>
-    <input class="inputBox-input" placeholder="新名字不要太长" value="{{newUserName}}" bindchange="bindNameInput"/>
-    <view class="inputBox-msg">{{changeNameMsg}}</view>
-    <view class="inputBox-button">
-      <view class="inputBox-button-side">
-        <button disabled="{{changeNameLoading}}" type="primary" bindtap="changeUserName">确定修改</button>
-      </view>
-      <view class="inputBox-button-side">
-        <button type="default" bindtap="cancelEdit">取消</button>
-      </view>
-    </view>
-  </view>
-  <view class="inputBox" wx:if="{{showEditFundPolicyInput&&isMemberOfQKfund}}">
-    <view class="inputBox-label">请制定目前基金会口号</view>
-    <input class="inputBox-input" auto-focus placeholder="将在首页显示" value="{{newFundPolicy}}" bindchange="bindPolicyInput"/>
-    <view class="inputBox-msg">{{changeFundPolicyMsg}}</view>
-    <view class="inputBox-button">
-      <view class="inputBox-button-side">
-        <button type="primary" disabled="{{!isMemberOfQKfund||changeFundPolicyLoading}}" bindtap="changeFundPolicy">喊出口号</button>
-      </view>
-      <view class="inputBox-button-side">
-        <button type="default" bindtap="cancelEdit">取消</button>
-      </view>
-    </view> 
   </view>
 </view>
 
+<editInputer
+  wx:if="{{showEidtInputer}}"
+  editInputerType="{{editInputerType}}"
+  userName="{{userName}}"
+  recentFundPolicy="{{recentFundPolicy}}"
+  canJoinFundAry="{{canJoinFundAry}}"
+  userId="{{userId}}"
+  userFund="{{userFund}}"
+  bind:changeUserName="getChangeUserName"
+  bind:changeFundSlogan="getChangeFundSlogan"
+  bind:cancelInputer="getInputerCancel"
+  bind:joinFundCode="getJoinFundCode"
+  bind:councilMemberJoinFundCode="getCouncilMemberJoinFundCode"
+  bind:renewCanJoinFundAry="getCanJoinFundAry">
+</editInputer>
+
 <view class="operateBox">
-  <view class="operateBox-label">基金会服务</view>
+  <view class="operateBox-label">模拟盘服务</view>
   <view class="inputBox-button">
     <view class="inputBox-button-side">
-      <button type="primary" disabled="{{!hasStockAccount||!canStockAccountUpgrade}}" bindtap="upgradeStockAccount">升级模拟盘账户</button>
+      <button type="primary" class="{{canStockAccountUpgrade?'upgradeStockAccount-button':''}}" disabled="{{!hasStockAccount||!canStockAccountUpgrade||upgradeButtonDisable}}" bindtap="upgradeStockAccount" animation="{{upgradeButtonAnimation}}">升级模拟盘账户</button>
     </view>
     <view class="inputBox-button-side">
-      <button disabled="true" type="primary" bindtap="">其他服务待开发</button>
+      <button type="primary" disabled="true" bindtap="">其他服务待开发</button>
     </view>
   </view>
 </view>
+
+<view class="operateBox" wx:if="{{isNoFundUser}}">
+  <view class="operateBox-label">基金会服务</view>
+  <view class="inputBox-button">
+    <view class="inputBox-button-side">
+      <button type="primary" bindtap="clickJoinFund">申请加入基金会</button>
+    </view>
+  </view>
+</view>
+
+<view class="operateBox" wx:if="{{isManagerOfFund}}">
+  <view class="operateBox-label">基金会管理</view>
+  <view class="inputBox-button">
+    <view class="inputBox-button-side">
+      <button type="primary" bindtap="checkJoinApplication">查看入会申请</button>
+    </view>
+    <view class="inputBox-button-side">
+      <button type="default" bindtap="removeFundUser">会内开除成员</button>
+    </view>
+  </view>
+</view>
+
+<view class="operateBox" wx:if="{{isMemberOfFundCouncil}}">
+  <view class="operateBox-label">基金业监督管理委员会</view>
+  <view class="inputBox-button">
+    <view class="inputBox-button-side">
+      <button type="primary" bindtap="councilMemberJoinFund">进入基金会巡视</button>
+    </view>
+  </view>
+</view>
+
+<joinuserpicker 
+wx:if="{{showJoinUserPicker}}" 
+checkUserType="{{otherUserPickType}}"
+bind:deleteUserApplication="getDeleteUserApplication"
+bind:joinUserId="getJoinUserId"
+bind:removeFundUserObj="getRemoveFundUserObj"
+bind:switchOff="getJoinUserPickerOff">
+</joinuserpicker>
+
 
 

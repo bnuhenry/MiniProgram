@@ -1,11 +1,19 @@
 
 <view class="rankhead">
-  <view class="rankhead-slogan">{{fundSlogan}}</view>
+  <view class="rankhead-bossDetect">
+    <view class="rankhead-bossDetect-side">主力动向</view>
+    <swiper class="rankhead-bossDetect-swiper" autoplay="true" circular="true" duration="500" interval="5000" vertical="true">
+      <block wx:for="{{bossPositionChangeAry}}" wx:key="key" wx:for-item ="item" wx:for-index ="i">
+        <swiper-item class="rankhead-bossDetect-swiperitem">
+          <view class="rankhead-bossDetect-swiperitem-msg" style="{{item.sell?'color:#FF3232':'color:#00E600'}}">{{item.bossName}}{{item.dealTime}}{{item.change}}</view>
+          <image class="rankhead-bossDetect-swiperitem-avatar" src="{{item.bossAvatar}}"></image>
+        </swiper-item>
+      </block>
+    </swiper>
+  </view>
   <view class="rankhead-buttonbar">
     <view class="rankhead-buttonbar-side">
-      <!-- <picker mode="selector" bindchange="bindRankHisDateChange" value="{{index}}" range="{{fundRankHistoryDateAry}}"> -->
-        <view class="rankhead-buttonbar-picker" bindtap="clickCheckRankHistogram">历史排名</view>
-      <!-- </picker> -->
+      <view class="rankhead-buttonbar-picker" bindtap="clickCheckRankHistogram">历史排名</view>
     </view>
     <view class="rankhead-buttonbar-side">
       <button type="primary" disabled="{{refreshRankDisable}}" bindtap="refreshStockRank">刷新排名</button>
@@ -16,51 +24,48 @@
   </picker>
 </view>
 <scroll-view scroll-y="true" enable-flex="true" class="ranklist">
-  <view class="ranklist-userinfo"
+  <view class="ranklist-useritem"
     wx:for="{{showDataAry}}"
     wx:key="uid"
     wx:for-item="user"
     wx:for-index="i"
     data-uid="{{i}}"
     bindtap="checkThisStockAccount">
-    <view class="userinfo">
+    <view class="rank-userinfo">
       <view class="userimage">
         <image class="userinfo-avatar" src="{{user.avatarUrl}}" mode="cover"></image>
       </view>
       <text class="{{user.isMyAccount?'userinfo-myusername':'userinfo-username'}}">{{user.name}}</text>
     </view>
       <view class="user-discribe">
-        <view class="resource">
+        <view class="user-discribe-value">
           <view class="resource-title">持仓市值</view>
           <view class="{{user.isMyAccount?'resource-myvalue':'resource-value'}}">{{user.stockValueStr}}</view>
           <view class="resource-title">总市值</view>
           <view class="{{user.isMyAccount?'resource-myvalue':'resource-value'}}">{{user.totalValue}}</view>
         </view>
-        <view class="resource">
+        <view class="user-discribe-value">
           <view class="resource-title">目前仓位</view>
           <view class="{{user.isMyAccount?'resource-myvalue':'resource-value'}}">{{user.position}}</view>
-          <view class="resource-title">会内位阶</view>
-          <view class="{{user.isMyAccount?'resource-myvalue':'resource-value'}}">{{user.rankName}}</view>
+          <view class="resource-fundname">{{user.fundName}}</view>
+          <view class="{{user.isMyAccount?'resource-myranknamebar':'resource-ranknamebar'}}">
+            <image class="resource-rankImage" src="{{user.rankImage}}"></image>
+            <view class="resource-ranknamebar-rankname">{{user.rankName}}</view>
+          </view>
         </view>
-        <view class="resource">
+        <view class="user-discribe-rank">
           <view class="resource-title"><text class="{{user.win?'long':'short'}}">账户收益</text></view>
           <view class="resource-value"><text class="{{user.win?'long':'short'}}">{{user.yieldsStr}}</text></view>
         </view>
-        <view class="resource">
+        <view class="user-discribe-rank">
           <view class="resimage">
             <image src="../../images/manager-{{user.isMyAccount?'red':'blue'}}.png"></image>
           </view>
-          <view class="{{user.isMyAccount?'resource-myrank':'resource-rank'}}">第{{i+1}}名</view>
+          <view class="{{user.isMyAccount?'resource-myrankIndex':'resource-rankIndex'}}">第{{i+1}}名</view>
         </view>
       </view>
   </view>
 </scroll-view>
-
-<!-- <picker wx:if="{{showHistoryDatePicker}}" mode="selector" bindchange="bindRankHisDateChange" value="{{index}}" range="{{fundRankHistoryDateAry}}">
-  <view class="picker">
-    日程日期: {{selectedDate}}
-  </view>
-</picker> -->
 
   
 

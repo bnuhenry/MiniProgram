@@ -1,10 +1,5 @@
-// component/stockDealRecords/stockDealRecords.js
-const getStockInfoFromNetEase = require("../../utils/stockApi.js")
-
 Component({
-  /**
-   * 组件的属性列表
-   */
+  // 组件的属性列表
   properties: {
     stockDealRecordsAry:{
       type:Array
@@ -14,6 +9,9 @@ Component({
     },
     userAvatar:{
       type:String
+    },
+    stockObj:{
+      type:Object
     }
   },
 
@@ -30,7 +28,7 @@ Component({
         stockDealRecordsStyle:'transform:translateY(0);',
       })
       if(this.data.stockDealRecordsAry.length>0){
-        this.makeStockRequestIdAry();
+        this.makeStockDealRecordsAry();
       }
     }
   },
@@ -38,43 +36,18 @@ Component({
   
   //  组件的方法列表
   methods: {
-    //根据传入的交易记录生成股票请求id数组
-    makeStockRequestIdAry:function(){
-      const idAry = [];
-      const recordsAry = this.data.stockDealRecordsAry;
-      for(let i = 0;i<recordsAry.length;i++){
-        if(idAry.includes(recordsAry[i].id)){
-          continue;
-        }else{
-          idAry.push(recordsAry[i].id);
-        }
-      }
-      this.getStockInfo(idAry);
-    },
-
-    //根据股票id数组请求网易数据接口
-    getStockInfo:function(array){
-      wx.showLoading({
-        title: '加载中',
-      })
-      let stockObj = {};
+    //根据传入的交易记录数组和股票数据对象直接生成交易记录
+    makeStockDealRecordsAry:function(){
       const stockDealRecordsAry = this.data.stockDealRecordsAry;
-      getStockInfoFromNetEase.getChinaStockInfo(array).then(res=>{
-        if(res){
-          stockObj = res;
-          for(let i = 0;i<stockDealRecordsAry.length;i++){
-            stockDealRecordsAry[i].name = stockObj[stockDealRecordsAry[i].id].name
-            stockDealRecordsAry[i].dealTime = this.getDealTime(stockDealRecordsAry[i].time);
-            stockDealRecordsAry[i].amountAbs = Math.abs(stockDealRecordsAry[i].amount);
-          }
-          stockDealRecordsAry.sort((a,b)=>b.time-a.time);
-          this.setData({
-            showDealRecordsAry:stockDealRecordsAry
-          })
-        }else{
-          console.log('网易股票数据接口返回空值');
-        }
-        wx.hideLoading();
+      const stockObj = this.data.stockObj;
+      for(let i = 0;i<stockDealRecordsAry.length;i++){
+        stockDealRecordsAry[i].name = stockObj[stockDealRecordsAry[i].id].name
+        stockDealRecordsAry[i].dealTime = this.getDealTime(stockDealRecordsAry[i].time);
+        stockDealRecordsAry[i].amountAbs = Math.abs(stockDealRecordsAry[i].amount);
+      }
+      stockDealRecordsAry.sort((a,b)=>b.time-a.time);
+      this.setData({
+        showDealRecordsAry:stockDealRecordsAry
       })
     },
 

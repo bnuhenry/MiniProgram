@@ -113,3 +113,31 @@
         justify-content: center;
         align-items: center;
       }
+
+      .stockuser-userlist-listitem-operate{
+        width: 40%;
+        height: 50rpx;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+      }
+
+        .stockuser-userlist-listitem-operate button{
+          width: 45%;
+          height: 50rpx;
+          font-size: 20rpx;
+          padding:0;
+          display: flex;
+          justify-content: center;
+          align-items: center;
+        }
+
+        .stockuser-userlist-listitem-confirmButton{
+          background-color: red;
+          color:#ffffff;
+          font-weight: 600;
+        }
+
+        .stockuser-userlist-listitem-deleteButton{
+          color:red;
+        }

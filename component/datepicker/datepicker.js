@@ -12,9 +12,8 @@ Component({
     }
   },
 
-  /**
-   * 组件的初始数据
-   */
+
+  // 组件的初始数据
   data: {
     years:[],
     year: new Date().getFullYear(),
@@ -48,9 +47,9 @@ Component({
       })
     }
   },
-  /**
-   * 组件的方法列表
-   */
+
+  // 组件的方法列表
+
   methods: {
     bindChange(e) {
       const val = e.detail.value

@@ -1,16 +1,12 @@
 const app = getApp()
 const getStockInfoFromNetEase = require("../../utils/stockApi.js")
+const stockDB = require("../../utils/stockCodeDB.js")
 
 Component({
-  /**
-   * 组件的属性列表
-   */
+  // 组件的属性列表
   properties: {
-    focusStockIdAry:{
+    focusStockAry:{
       type:Array
-    },
-    bondsStockObj:{
-      type:Object
     },
     bondsStockAry:{
       type:Array
@@ -34,81 +30,100 @@ Component({
     },
   },
 
-  /**
-   * 组件的初始数据
-   */
+  // 组件的初始数据
   data: {
     stockPickerStyle:'',
-    inputStockId:Number,
-    stockName:String,
-    stockId:Number,
-    stockRequestId:String,
-    stockObj:Object,
-    buy_1_amount:String,
-    buy_2_amount:String,
-    buy_3_amount:String,
-    buy_4_amount:String,
-    buy_5_amount:String,
-    sell_1_amount:String,
-    sell_2_amount:String,
-    sell_3_amount:String,
-    sell_4_amount:String,
-    sell_5_amount:String,
-    dealHandAmount:String,
-    turnOver:String,
-    increaseRate:String,
     exchangeHouseAry:['不选择','上证','深证'],
     exchangeHouse:'选择交易所',
-    exchangeHouseSelected:Number,
     canFocus:false,
     canTrade:false,
     stockFocused:false,
-    stockFocusedMsg:String,
     focusLoading:false,
     bonds:0,
     showStockTradeBar:0,
     howManyCanBuy:0,
-    buy_price:Number,
-    buy_amount:Number,
     howManyCanSell:0,
-    sell_price:Number,
-    sell_amount:Number,
     tradeButtonDisable:false,
     stockTradeMsg:'',
     allClearDealType:false,
+    kLineOption:1,
+    searchCodeAry:[],
+    inputStockId:'',
+    showStockCodeInput:true,
   },
 
   //生命周期函数
   lifetimes: {
     attached: function() {
       this.setData({
-        localFocusIdAry:this.data.focusStockIdAry,
         stockPickerStyle:'transform:translateY(0);',
       })
       if(this.data.openType==1){
         this.getStockInfo(this.data.stockRequestIdFromFocus);
+        this.setData({
+          kLineOption:1,
+          kLineImage:"http://img1.money.126.net/chart/hs/time/540x360/"+this.data.stockRequestIdFromFocus+".png",
+        })
       }
     }
   },
-  /**
-   * 组件的方法列表
-   */
+
+  //组件的方法列表
   methods: {
     //点击获取股票信息按钮
     getSingleStockDetail:function(){
-      const idLength = this.data.inputStockId.toString().length;
-      if(idLength!=6){
-        console.log('股票代码错误，应该是6位数字')
+      const showStockCodeInput = this.data.showStockCodeInput;
+      if(showStockCodeInput){
+        const idLength = this.data.inputStockId.toString().length;
+        if(idLength!=6){
+          console.log('股票代码错误，应该是6位数字')
+        }else{
+          const requestId = this.getStockRequestId(this.data.inputStockId);
+          this.setData({
+            kLineOption:1,
+            kLineImage:"http://img1.money.126.net/chart/hs/time/540x360/"+requestId+".png",
+          })
+          this.getStockInfo(requestId);
+        }
       }else{
-        const requestId = this.getStockRequestId(this.data.inputStockId);
-        this.getStockInfo(requestId);
+        this.setData({
+          showStockCodeInput:true
+        })
       }
     },
 
     //获取股票代码输入框参数
     bindStockIdInput:function(e){
+      const inputString = e.detail.value;
+      this.data.inputStockId = inputString;
+      if(inputString.toString().length>=2){
+        const resultAry = stockDB.searchStock(inputString);
+        this.setData({
+          searchCodeAry:resultAry
+        })
+      }else{
+        this.setData({
+          searchCodeAry:[]
+        })
+      }
+    },
+
+    //股票代码输入框搜索到的股票点击获取股票请求代码
+    getSearchStockCode:function(e){
+      const requestId = e.currentTarget.dataset.id;
+      const symbol = e.currentTarget.dataset.symbol;
+      this.getStockInfo(requestId);
       this.setData({
-        inputStockId: e.detail.value
+        inputStockId:symbol,
+        kLineOption:1,
+        kLineImage:"http://img1.money.126.net/chart/hs/time/540x360/"+requestId+".png",
+        searchCodeAry:[]
+      })
+    },
+
+    cancelSearchStockBar:function(){
+      this.setData({
+        searchCodeAry:[]
       })
     },
 
@@ -141,13 +156,14 @@ Component({
 
     //根据股票代码查询持仓头寸
     getStockBonds:function(id){
-      for(let key in this.data.bondsStockObj){
-        if(id == key){
+      for(let i=0;i<this.data.bondsStockAry.length;i++){
+        if(id == this.data.bondsStockAry[i].id){
           this.setData({
-            bonds:this.data.bondsStockObj[key].bonds,
-            howManyCanSell:this.data.bondsStockObj[key].canSell,
-            canTrade:(this.data.buy_price>0||(this.data.bondsStockObj[key].bonds>0&&this.data.sell_price>0))?true:false,
+            bonds:this.data.bondsStockAry[i].bonds,
+            howManyCanSell:this.data.bondsStockAry[i].canSell,
+            canTrade:(this.data.buy_price>0||(this.data.bondsStockAry[i].bonds>0&&this.data.sell_price>0))?true:false,
           })
+          break;
         }
       }
     },
@@ -226,6 +242,7 @@ Component({
             increaseRate:this.getIncreaseRate(stockObj.percent),
             canTrade:stockObj.ask1>0?true:false,
             canFocus:true,
+            showStockCodeInput:false,
           })
           this.getStockBonds(stockObj.code);
           this.getStockCanFocus(stockRequestId);
@@ -276,125 +293,7 @@ Component({
       })
     },
 
-    //*********交易成功回调，交易数据上传至云端,下个版本废弃*********
-    dealStockDone:function(){
-      const stockRequestId = this.data.stockRequestId;
-      const dealType = this.data.showStockTradeBar;
-      const bonds = this.data.bonds;
-      const DB = wx.cloud.database();
-      const _ = DB.command;
-      //先是买入的情况
-      if(dealType==1){
-        const makeMoney = Math.floor(-(this.data.buy_amount * this.data.buy_price));
-        console.log('花费'+makeMoney);
-        if(bonds>0){
-          wx.cloud.callFunction({
-            name:'stock',
-            data: {
-              action: 'stockbondsrenew',
-              userId:app.globalData.userId,
-              stockRequestId:stockRequestId,
-              price:this.data.buy_price,
-              bonds:this.data.buy_amount,
-              makeMoney:makeMoney,
-            },
-            complete:res=>{
-              if(res.result.stats.updated>0){
-                this.refreshStockData();
-                console.log("成功买入"+this.data.stockObj.name+this.data.buy_amount+'股');
-              }else{
-                this.failDealStock('买入失败');
-                console.log('买入失败');
-              }
-            }
-          })
-        }else if(bonds == 0){
-          wx.cloud.callFunction({
-            name:'stock',
-            data: {
-              action: 'stockbondspush',
-              userId:app.globalData.userId,
-              stockRequestId:stockRequestId,
-              price:this.data.buy_price,
-              bonds:this.data.buy_amount,
-              makeMoney:makeMoney,
-            },
-            complete:res=>{
-              if(res.result.stats.updated>0){
-                this.refreshStockData();
-                console.log("成功买入"+this.data.stockObj.name+this.data.buy_amount+'股');
-              }else{
-                this.failDealStock('买入失败');
-                console.log('买入失败');
-              }
-            }
-          })
-        }else{
-          wx.showToast({
-            title: '交易失败',
-            icon:'error',
-            duration:2000
-          })
-          console.log('数据错误，买入失败');
-        }
-      }else if(dealType==2){
-        const makeMoney = Math.floor(this.data.sell_amount * this.data.sell_price);
-        console.log('套现'+makeMoney);
-        const amount = - this.data.sell_amount;
-        if(bonds>this.data.sell_amount){
-          wx.cloud.callFunction({
-            name:'stock',
-            data: {
-              action: 'stockbondsrenew',
-              userId:app.globalData.userId,
-              stockRequestId:stockRequestId,
-              price:this.data.sell_price,
-              bonds:amount,
-              makeMoney:makeMoney,
-            },
-            complete:res=>{
-              if(res.result.stats.updated>0){
-                this.refreshStockData();
-                console.log("成功卖出"+this.data.stockObj.name+this.data.sell_amount+'股');
-              }else{
-                this.failDealStock('卖出失败');
-                console.log('卖出失败');
-              }
-            }
-          })
-        }else if(bonds == this.data.sell_amount){
-          wx.cloud.callFunction({
-            name:'stock',
-            data: {
-              action: 'stockbondspull',
-              userId:app.globalData.userId,
-              stockRequestId:stockRequestId,
-              price:this.data.sell_price,
-              bonds:this.data.sell_amount,
-              makeMoney:makeMoney,
-            },
-            complete:res=>{
-              if(res.result.stats.updated>0){
-                this.refreshStockData();
-                console.log("成功卖出"+this.data.stockObj.name+this.data.sell_amount+'股');
-              }else{
-                this.failDealStock('卖出失败');
-                console.log('卖出失败');
-              }
-            }
-          })
-        }else{
-          wx.showToast({
-            title: '交易失败',
-            icon:'error',
-            duration:2000
-          })
-          console.log('数据错误，卖出失败');
-        }
-      }
-    },
-
-    //交易成功回调，交易数据上传至云端，新版本上线,dealType分组1是买2是卖3是全部清仓
+    //交易成功回调，交易数据上传至云端，dealType分组1是买2是卖3是全部清仓
     stockTradeDone:function(){
       const stockRequestId = this.data.stockRequestId;
       const dealType = this.data.showStockTradeBar;
@@ -403,9 +302,8 @@ Component({
         const makeMoney = Math.floor(-(this.data.buy_amount * this.data.buy_price));
         console.log('花费'+makeMoney);
         wx.cloud.callFunction({
-          name:'stock',
+          name:'stock_trade',
           data: {
-            action: 'stockBondsTrade',
             dealType:1,
             stockRequestId:stockRequestId,
             price:this.data.buy_price,
@@ -436,9 +334,8 @@ Component({
         const amount = - this.data.sell_amount;
         console.log('套现'+makeMoney);
         wx.cloud.callFunction({
-          name:'stock',
+          name:'stock_trade',
           data: {
-            action: 'stockBondsTrade',
             dealType:2,
             stockRequestId:stockRequestId,
             price:this.data.sell_price,
@@ -591,7 +488,7 @@ Component({
       if(this.data.buy_amount>0&&this.data.buy_price>0){
         wx.showModal({
           title:' 确认买入',
-          content: '以'+this.data.buy_price+'买入'+this.data.buy_amount+'股？',
+          content: '以'+this.data.buy_price+'元买入'+this.data.buy_amount+'股？',
           success:res=> {
             if (res.confirm) {
               this.getStockDeal();
@@ -616,7 +513,7 @@ Component({
         })
         wx.showModal({
           title:' 确认买入',
-          content: '以'+this.data.buy_price+'买入'+this.data.buy_amount+'股？',
+          content: '以'+this.data.buy_price+'元买入'+this.data.buy_amount+'股？',
           success:res=> {
             if (res.confirm) {
               this.getStockDeal();
@@ -673,7 +570,7 @@ Component({
       if(this.data.sell_amount>0&&this.data.sell_price>0){
         wx.showModal({
           title:' 确认卖出',
-          content: '以'+this.data.sell_price+'卖出'+this.data.sell_amount+'股？',
+          content: '以'+this.data.sell_price+'元卖出'+this.data.sell_amount+'股？',
           success:res=> {
             if (res.confirm) {
               this.getStockDeal();
@@ -698,7 +595,7 @@ Component({
         })
         wx.showModal({
           title:' 确认卖出',
-          content: '以'+this.data.sell_price+'卖出'+this.data.sell_amount+'股？',
+          content: '以'+this.data.sell_price+'元卖出'+this.data.sell_amount+'股？',
           success:res=> {
             if (res.confirm) {
               this.getStockDeal();
@@ -810,9 +707,8 @@ Component({
     updateAllClearStockToDB:function(dealRecordsAry,makeMoney){
       const totalMakeMoney = Math.floor(makeMoney);
       wx.cloud.callFunction({
-        name:'stock',
+        name:'stock_trade',
         data: {
-          action: 'stockBondsTrade',
           dealType:3,
           userId:app.globalData.userId,
           stock_bonds_ary:this.data.bondsStockAry,
@@ -857,7 +753,7 @@ Component({
       this.setData({
         focusLoading:true
       })
-      setTimeout(()=>this.focusSingleStock(),1500);
+      this.focusSingleStock();
     },
     
     //增加关注股票
@@ -874,7 +770,7 @@ Component({
           success:res=>{
             if(res.stats.updated>0){
               console.log("关注成功");
-              this.triggerEvent('focusStock',this.data.stockRequestId);
+              this.triggerEvent('focusStock',this.data.stockObj);
             }else{
               console.log("关注失败")
             }
@@ -883,9 +779,11 @@ Component({
             console.log("更新云数据失败")
           },
           complete: () => {
-            this.setData({
-              focusLoading:false
-            })
+            setTimeout(()=>{
+              this.setData({
+                focusLoading:false
+              })
+            },1500);
             this.getStockCanFocus(this.data.stockRequestId);
           }
         })
@@ -935,8 +833,8 @@ Component({
     //获取股票代码选择关注还是取消关注
     getStockCanFocus:function(id){
       let focused = false;
-      for(let i=0;i<this.data.focusStockIdAry.length;i++){
-        if(id == this.data.focusStockIdAry[i]){
+      for(let i=0;i<this.data.focusStockAry.length;i++){
+        if(id == this.data.focusStockAry[i].id){
           focused = true;
           break;
         }
@@ -944,6 +842,56 @@ Component({
       this.setData({
         stockFocused:focused,
         stockFocusedMsg:focused?'是':'否'
+      })
+    },
+
+    //点击K线图旁的周期指标跳转K线图
+    getKLineChange:function(e){
+      const cycle = Number(e.currentTarget.dataset.id);
+      if((cycle != this.data.kLineOption)&&this.data.stockRequestId){
+        switch(cycle){
+          case(1):{
+            this.setData({
+              kLineOption:1,
+              kLineImage:"http://img1.money.126.net/chart/hs/time/540x360/"+this.data.stockRequestId+".png",
+            })
+            break;
+          }
+          case(2):{
+            this.setData({
+              kLineOption:2,
+              kLineImage:"http://img1.money.126.net/chart/hs/kline/day/90/"+this.data.stockRequestId+".png",
+            })
+            break;
+          }
+          case(3):{
+            this.setData({
+              kLineOption:3,
+              kLineImage:"http://img1.money.126.net/chart/hs/kline/week/"+this.data.stockRequestId+".png",
+            })
+            break;
+          }
+          case(4):{
+            this.setData({
+              kLineOption:4,
+              kLineImage:"http://img1.money.126.net/chart/hs/kline/month/"+this.data.stockRequestId+".png",
+            })
+            break;
+          }
+        }
+      }
+    },
+
+    test(){
+      const USStockId = ['US_AAPL','US_JCP']
+      wx.request({
+        url: 'https://hq.sinajs.cn/?list=gb_aapl',
+        success:res=>{
+          console.log(res.data.split('"')[1]);
+        },
+        fail:res=>{
+          console.log(res);
+        }
       })
     },
 

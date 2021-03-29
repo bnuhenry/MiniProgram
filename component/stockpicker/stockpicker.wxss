@@ -40,7 +40,7 @@
   position: fixed;
   top:0;
   width: 100%;
-  height: 20%;
+  height: 15%;
 }
 
 .stockbar{
@@ -48,7 +48,7 @@
   bottom:0;
   left: 0;
   width: 100%;
-  height: 80%;
+  height: 85%;
   border-radius: 30rpx 30rpx 0 0;
   background-color: #fff;
   border-top:2px solid #f8f8f8;
@@ -64,16 +64,19 @@
 
   .stockbar-title{
     width: 100%;
-    height: 10%;
+    height: 8%;
     font:35rpx;
+    color:#1976D2;
     display: flex;
-    border-bottom:2px solid #f8f8f8;
+    align-items: center;
+    border-bottom:2rpx solid #f8f8f8;
   }
 
       .stockbar-title-name{
         width: 30%;
         height: 100rpx;
         font:35rpx;
+        font-weight: 600;
         padding-left: 50rpx;
         display: flex;
         justify-content: flex-start;
@@ -84,6 +87,7 @@
         width: 40%;
         height: 100rpx;
         font:35rpx;
+        font-weight: 600;
         display: flex;
         justify-content: center;
         align-items: center;
@@ -100,9 +104,54 @@
         align-items: center;
       }
 
+  .stockbar-kline{
+    width: 100%;
+    height: 22%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+  }
+
+    .stockbar-kline-side{
+      width: 15%;
+      height: 100%;
+      display: flex;
+      flex-direction: column;
+      justify-content: space-evenly;
+      align-items: center;
+    }
+
+      .stockbar-kline-sidebtn{
+        width: 100%;
+        height: 50%;
+        font-size: 30rpx;
+        color:#2196F3;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+      }
+
+      .stockbar-kline-sidebtnActive{
+        width: 100%;
+        height: 50%;
+        font-size: 30rpx;
+        font-weight: 600;
+        background-color:#BBDEFB;
+        color:#2196F3;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+      }
+
+    .stockbar-kline-image{
+      width: 70%;
+      height: 100%;
+      display: flex;
+    }
+
   .stockbar-detail{
     width: 100%;
-    height: 60%;
+    height: 50%;
     font:35rpx;
     display: flex;
     flex-direction: column;
@@ -153,7 +202,7 @@
 
   .stockbar-inputbar{
     width: 90%;
-    height: 30%;
+    height: 20%;
     font:35rpx;
     display: flex;
     justify-content: center;
@@ -161,12 +210,19 @@
   }
 
     .stockbar-inputstockid{
+      position: relative;
       width: 100%;
       height: 30%;
       display: flex;
       justify-content: center;
       align-items: center;
       background-color: #eeeeee;
+    }
+
+    .stockbar-emptyinput{
+      position: relative;
+      width: 100%;
+      height: 30%;
     }
 
       .stockbar-picker{
@@ -183,8 +239,44 @@
         background-color: #ffffff;
       }
 
+      .stockbar-input-search{
+        position: absolute;
+        right: 0;
+        top:-350rpx;
+        border:1rpx solid #dddddd;
+        height: 350rpx;
+        width: 300rpx;
+        background-color: #ffffff;
+      }
+
+        .stockbar-input-searchItem{
+          width: 100%;
+          height: 15%;
+          display: flex;
+          margin: 5rpx;
+          color:#1976D2;
+        }
+
+          .stockbar-input-searchItem-symbol{
+            width: 40%;
+            height: 100%;
+            border-bottom:1rpx solid #cccccc;
+            display: flex;
+            justify-content: flex-start;
+            align-items: center;
+          }
+
+          .stockbar-input-searchItem-name{
+            width: 60%;
+            height: 100%;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+          }
+
     .stockbar-buttonbox{
-      margin-top:15rpx;
+      width: 100%;
+      height: 70%;
       display:flex ;
       justify-content: space-between;
       align-items: center;

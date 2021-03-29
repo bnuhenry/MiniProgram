@@ -1,4 +1,3 @@
-// pages/rankhistory/rankhistory.js
 Page({
   // 页面的初始数据
   data: {
@@ -101,9 +100,11 @@ Page({
     for(let i=0;i<dataAry.length;i++){
       let index = i;
       let rankIndexChange = 0;
+      let capitalChange = false;
       if(this.data.userInfoObj[dataAry[i].userid].startShow){
         rankIndexChange = i - this.data.userInfoObj[dataAry[i].userid].lastIndex
         index = this.data.userInfoObj[dataAry[i].userid].lastIndex;
+        capitalChange = dataAry[i].capital != this.data.userInfoObj[dataAry[i].userid].lastCapital;
       }else if(dataAry.length>this.data.showDataAry.length&&this.data.showDataAry.length>0){
         needToPushIndex.push(i);
       }
@@ -118,9 +119,11 @@ Page({
         tiktok:this.getRankHistoryAnimation(rankIndexChange,dataAry[i].yields),
         userId:dataAry[i].userid,
         isNewFish:false,
+        capitalChange:capitalChange,
       }
       this.data.userInfoObj[dataAry[i].userid].indexChange = rankIndexChange;
       this.data.userInfoObj[dataAry[i].userid].lastIndex = index;
+      this.data.userInfoObj[dataAry[i].userid].lastCapital = dataAry[i].capital;
       this.data.userInfoObj[dataAry[i].userid].startShow = true; 
     }
     //若排名历史有新增成员则先推入数组末尾
@@ -138,6 +141,7 @@ Page({
           tiktok:this.getRankHistoryAnimation(rankIndexChange,dataAry[item].yields),
           userId:dataAry[item].userid,
           isNewFish:true,
+          capitalChange:false,
         })
         this.data.userInfoObj[dataAry[item].userid].indexChange = rankIndexChange;
         this.data.userInfoObj[dataAry[item].userid].lastIndex = showDataAry.length - 1;

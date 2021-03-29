@@ -1,0 +1,25 @@
+<view class="background">
+  <view class="rest" bindtap="cancel"></view>
+  <view class="inputForm" style="{{inputFormStyle}}">
+    <view class="inputForm-title">{{editTitle}}</view>
+    <view class="inputForm-inputBox">
+      <input wx:if="{{editInputerType == 'name'||editInputerType == 'slogan'}}" class="inputForm-inputBox-input" placeholder="{{placeholder}}" value="{{newResult}}" bindchange="bindEditInput"/>
+      <picker class="inputForm-inputBox-fundNamePicker" wx:if="{{editInputerType == 'joinFund'}}" mode="selector" bindchange="bindCanJoinFundChange" value="{{index}}" range="{{fundNameAry}}">
+        <view>想要加入：{{wantToJoinFundName}}</view>
+      </picker>
+      <picker class="inputForm-inputBox-fundNamePicker" wx:if="{{editInputerType == 'councilMemberJoinFund'}}" mode="selector" bindchange="bindMemberCouncilCanJoinFundChange" value="{{index}}" range="{{fundNameAry}}">
+        <view>想要加入：{{wantToJoinFundName}}</view>
+      </picker>
+      <view class="inputForm-inputBox-msg">{{editMsg}}</view>
+    </view>
+    <view class="inputForm-buttonBar">
+      <view class="inputForm-buttonBar-side">
+        <button type="primary" class="inputForm-buttonBar-button" disabled="{{submieButtonDisable}}" bindtap="changeConfirm">{{submitButtonTitle}}</button>
+      </view>
+      <view class="inputForm-buttonBar-side">
+        <button type="default" class="inputForm-buttonBar-button" bindtap="cancel">取消</button>
+      </view>
+    </view>
+  </view>
+  <view class="rest" bindtap="cancel"></view>
+</view>

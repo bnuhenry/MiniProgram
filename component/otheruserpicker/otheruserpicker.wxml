@@ -6,7 +6,7 @@
       <view class="stockuser-title-middle">{{otherUserPickerTitle}}</view>
       <view class="stockuser-title-side" bindtap="cancel">取消</view>
     </view>
-    <scroll-view scroll-y="true" enable-flex="true" class="stockuser-userlist">
+    <scroll-view wx:if="{{checkUserType=='stock'||checkUserType == 'fund'}}" scroll-y="true" enable-flex="true" class="stockuser-userlist">
       <view class="stockuser-userlist-listitem"
       wx:for="{{otherUsersAry}}"
       wx:key="i"
@@ -14,6 +14,34 @@
       wx:for-index="uid"
       data-uid="{{uid}}"
       bindtap="clickOtherUserDetail">
+        <image class="stockuser-userlist-listitem-avatar" src="{{user.avatarUrl}}"></image>
+        <view class="stockuser-userlist-listitem-name">{{user.name}}</view>
+        <view class="stockuser-userlist-listitem-rankname">{{user.rankName}}</view>
+      </view>
+    </scroll-view>
+    <scroll-view  wx:if="{{checkUserType=='join'}}" scroll-y="true" enable-flex="true" class="stockuser-userlist">
+      <view class="stockuser-userlist-listitem"
+      wx:for="{{applicationUsersAry}}"
+      wx:key="i"
+      wx:for-item="user"
+      wx:for-index="uid">
+        <image class="stockuser-userlist-listitem-avatar" src="{{user.avatarUrl}}"></image>
+        <view class="stockuser-userlist-listitem-name">{{user.name}}</view>
+        <view class="stockuser-userlist-listitem-operate">
+          <button wx:if="{{user.canJoin}}" class="stockuser-userlist-listitem-confirmButton" data-uid="{{uid}}" bindtap="confirmUserJoin">接受</button>
+          <button wx:if="{{!user.canJoin}}" disabled="true" class="stockuser-userlist-listitem-deleteButton">{{user.states}}</button>
+          <button class="stockuser-userlist-listitem-deleteButton" data-uid="{{uid}}" bindtap="deleteUserApplication">删除</button>
+          {{user.rankName}}</view>
+      </view>
+    </scroll-view>
+    <scroll-view wx:if="{{checkUserType=='removeFundUser'}}" scroll-y="true" enable-flex="true" class="stockuser-userlist">
+      <view class="stockuser-userlist-listitem"
+      wx:for="{{otherUsersAry}}"
+      wx:key="i"
+      wx:for-item="user"
+      wx:for-index="uid"
+      data-uid="{{uid}}"
+      bindtap="removeOtherUserConfirm">
         <image class="stockuser-userlist-listitem-avatar" src="{{user.avatarUrl}}"></image>
         <view class="stockuser-userlist-listitem-name">{{user.name}}</view>
         <view class="stockuser-userlist-listitem-rankname">{{user.rankName}}</view>

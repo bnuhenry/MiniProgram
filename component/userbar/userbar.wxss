@@ -3,6 +3,12 @@
   height: 200rpx;
 }
 
+::-webkit-scrollbar{
+  width: 0;
+  height: 0;
+  color: transparent;
+}
+
 .userinfo {
   width: 100%;
   height: 100%;
@@ -13,13 +19,23 @@
 }
 
 .userimage {
-  width: 180rpx;
-  height: 180rpx;
+  width: 25%;
+  height: 95%;
   display: flex;
   flex-direction: column;
   justify-content: center;
   align-items: center;
-  margin: 10rpx auto;
+  margin: 5rpx;
+}
+
+.userinfo-detail{
+  width: 75%;
+  height: 95%;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  margin: 5rpx;
 }
 
 .userimage-button{
@@ -32,42 +48,129 @@
   color:#2DB7F5;
 }
 
-.usertitle{
-  width: 30%;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-}
+  .userinfo-detailTop{
+    width: 100%;
+    height: 35%;
+    display: flex;
+    align-items: center;
+  }
 
-.user-discribe{
-  width: 50%;
+    .userinfo-username {
+      width: 60%;
+      height: 100%;
+      font-size: 45rpx;
+      display: flex;
+      align-items: center;
+      flex-wrap: wrap;
+      color: #000;
+      overflow: scroll;
+    }
+
+    .userinfo-fundName {
+      width: 40%;
+      height: 100%;
+      font-size: 30rpx;
+      display: flex;
+      padding-left: 20rpx;
+      align-items: center;
+      overflow-x: scroll;
+      color: #1976D2;
+      white-space: nowrap;
+    }
+
+  .userinfo-detailMiddle{
+    width: 100%;
+    height: 30%;
+    display: flex;
+    align-items: center;
+  }
+
+    .userinfo-fundrankimg{
+      width: 55rpx;
+      height: 100%;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+    }
+
+      .userinfo-fundrankimg-image{
+        width: 50rpx;
+        height: 50rpx;
+      }
+
+    .userinfo-usertitle{
+      width: 30%;
+      height: 100%;
+      display: flex;
+      align-items: center;
+      font-size:30rpx;
+      color:blue;
+      margin:0 10rpx;
+    }
+
+    .userinfo-upgrade-rankbar{
+      width: 55%;
+      height: 100%;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+    }
+
+      .userinfo-upgrade-ratebar{
+        position: relative;
+        width: 95%;
+        height: 80%;
+        border-radius: 15rpx;
+        background-color: #eeeeee;
+        display: flex;
+        align-items: center;
+        overflow: hidden;
+      }
+
+        .userinfo-upgrade-ratebar-msg{
+          position: absolute;
+          width: 100%;
+          height: 100%;
+          left: 0;
+          font-size: 25rpx;
+          color:#2196F3;
+          display: flex;
+          justify-content: center;
+          align-items: center;
+        }
+      
+        .userinfo-upgrade-rate{
+          height: 100%;
+          border-radius: 15rpx;
+          background-color: #BBDEFB;
+        }
+
+.userinfo-rankDiscribe{
+  width: 100%;
+  height: 35%;
+  font-size: 28rpx;
   display: flex;
+  align-items: center;
   flex-wrap: wrap;
-  margin:auto 20rpx;
 }
 
 .userinfo-avatar {
   width: 145rpx;
   height: 145rpx;
   margin: 5rpx;
-  border-radius: 50%;
-}
-
-.userinfo-username {
-  font-size: 50rpx;
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  flex-wrap: wrap;
-  color: #000;
-  margin:0 10rpx;
-}
-
-.userrank{
-  font-size:35rpx;
-  color:blue;
+  border-radius: 30rpx;
 }
 
 .userinfo-nickname {
   color: #aaa;
 }
+
+  .userinfo-button{
+    width: 50%;
+    height: 35%;
+    border-radius: 20rpx;
+    padding: 0;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+  }

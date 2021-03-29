@@ -20,43 +20,124 @@
   </swiper>
 
   <view class="userform">
-    <userbar fundUserInfo="{{fundUserInfo}}"></userbar>
+    <userbar id="indexUserBar" fundName="{{fundName}}" bind:emitFundUserInfo="getFundUserObjFromUserBar"></userbar>
   </view>
 
   <view class="miningview">
     <view class="buttonview-label">
       <view class="buttonview-label-signtitle">每日签到，随机派送礼品</view>
     </view>
-    <view class="buttonview-index">
-      <view class="buttonview-indexbar">
-        <view class="buttonview-indexbar-index">
-          <text class="{{SHIndexUp?'long':'short'}}">上证指数</text>
-        </view>
-        <view class="buttonview-indexbar-index">
-          <text class="{{SHIndexUp?'long':'short'}}">{{SHStockIndex}}</text>
-        </view>
-      </view>
-      <view class="buttonview-indexbar">
-        <view class="buttonview-indexbar-index">
-          <text class="{{SZIndexUp?'long':'short'}}">深证成指</text>
-        </view>
-        <view class="buttonview-indexbar-index">
-          <text class="{{SZIndexUp?'long':'short'}}">{{SZStockIndex}}</text>
-        </view>
-      </view>
-      <view class="buttonview-indexbar">
-        <view class="buttonview-indexbar-index">
-          <text class="{{CYBIndexUp?'long':'short'}}">创业板指</text>
-        </view>
-        <view class="buttonview-indexbar-index">
-          <text class="{{CYBIndexUp?'long':'short'}}">{{CYBStockIndex}}</text>
-        </view>
-      </view>
-    </view>
     <view class="buttonbox">
       <button bindtap="getMining" type="primary" disabled="{{!canSign}}">{{signUpMsg}}</button>
     </view>
     <view class="msgbox">{{miningResult}}</view>
+  </view>
+
+  <view wx:if="{{hasStockAccount}}" class="miningview">
+    <view class="buttonview-label">
+      <swiper class="buttonview-label-newsswiper" autoplay="true" circular="true" duration="500" interval="5000" vertical="true">
+        <block wx:for="{{sinaNewsAry}}" wx:key="key" wx:for-item ="item" wx:for-index ="i">
+          <swiper-item class="buttonview-label-swiperitem">
+            <view class="buttonview-label-swiperitem-news">{{item.title}}</view>
+            <view class="buttonview-label-swiperitem-newsdate">{{item.date}}</view>
+          </swiper-item>
+        </block>
+      </swiper>
+    </view>
+    <swiper class="buttonview-label-indexswiper" circular="true" duration="500" interval="5000" current="{{indexSwiperIndex}}" bindchange="getIndexSwiperChange">
+      <swiper-item class="buttonview-index">
+        <view class="buttonview-indexbar" style="{{SHIndexUp?'color:#FF3232':'color:#00E600'}}">
+          <view class="buttonview-indexbar-index">
+            <text>上证指数</text>
+          </view>
+          <view class="buttonview-indexbar-index">
+            {{SHStockIndex}}
+          </view>
+          <view class="buttonview-indexbar-index">
+          {{SHIndexRate}}
+          </view>
+          <view class="buttonview-indexbar-index">
+            <text>成交{{SHIndexTurnOver}}</text>
+          </view>
+        </view>
+        <view class="buttonview-indexbar" style="{{SZIndexUp?'color:#FF3232':'color:#00E600'}}">
+          <view class="buttonview-indexbar-index">
+            <text>深证成指</text>
+          </view>
+          <view class="buttonview-indexbar-index">
+            {{SZStockIndex}}
+          </view>
+          <view class="buttonview-indexbar-index">
+          {{SZIndexRate}}
+          </view>
+          <view class="buttonview-indexbar-index">
+            <text>成交{{SZIndexTurnOver}}</text>
+          </view>
+        </view>
+        <view class="buttonview-indexbar" style="{{CYBIndexUp?'color:#FF3232':'color:#00E600'}}">
+          <view class="buttonview-indexbar-index">
+            <text>创业板指</text>
+          </view>
+          <view class="buttonview-indexbar-index">
+            {{CYBStockIndex}}
+          </view>
+          <view class="buttonview-indexbar-index">
+          {{CYBIndexRate}}
+          </view>
+          <view class="buttonview-indexbar-index">
+            <text>成交{{CYBIndexTurnOver}}</text>
+          </view>
+        </view>
+      </swiper-item>
+      <swiper-item class="buttonview-index">
+        <view class="buttonview-indexbar" style="{{USIndexAry[0].upOrDown?'color:#FF3232':'color:#00E600'}}">
+          <view class="buttonview-indexbar-index">
+            <text>道琼斯</text>
+          </view>
+          <view class="buttonview-indexbar-index">
+            {{USIndexAry[0].recentIndex}}
+          </view>
+          <view class="buttonview-indexbar-index">
+            {{USIndexAry[0].increaseRate}}
+          </view>
+          <view class="buttonview-indexbar-index">
+            <text>成交{{USIndexAry[0].dealAmount}}股</text>
+          </view>
+        </view>
+        <view class="buttonview-indexbar" style="{{USIndexAry[1].upOrDown?'color:#FF3232':'color:#00E600'}}">
+          <view class="buttonview-indexbar-index">
+            <text>纳斯达克</text>
+          </view>
+          <view class="buttonview-indexbar-index">
+            {{USIndexAry[1].recentIndex}}
+          </view>
+          <view class="buttonview-indexbar-index">
+            {{USIndexAry[1].increaseRate}}
+          </view>
+          <view class="buttonview-indexbar-index">
+            <text>成交{{USIndexAry[1].dealAmount}}股</text>
+          </view>
+        </view>
+        <view class="buttonview-indexbar" style="{{USIndexAry[2].upOrDown?'color:#FF3232':'color:#00E600'}}">
+          <view class="buttonview-indexbar-index">
+            <text>标普500指数</text>
+          </view>
+          <view class="buttonview-indexbar-index">
+            {{USIndexAry[2].recentIndex}}
+          </view>
+          <view class="buttonview-indexbar-index">
+            {{USIndexAry[2].increaseRate}}
+          </view>
+          <view class="buttonview-indexbar-index">
+            <text>成交{{USIndexAry[2].dealAmount}}股</text>
+          </view>
+        </view>
+      </swiper-item>
+    </swiper>
+    <view class="optionbox">
+      <view class="{{stockIndexOption==0?'optionbox-sidebar-selected':'optionbox-sidebar'}}" bindtap="stockIndexChinaOpition">A股指数</view>
+      <view class="{{stockIndexOption==1?'optionbox-sidebar-selected':'optionbox-sidebar'}}" bindtap="stockIndexUSOpition">美股指数</view>
+    </view>
   </view>
 
   <view class="miningview">
@@ -97,7 +178,7 @@
   bind:sliderShow="getSliderShow"
   bind:contriResult="getContriResult"
   bind:contriResultBool="getContriResultBool"
-  bind:otherFundUserAry="getOtherFundUserAry"
+  bind:otherFundUsersAry="getOtherFundUsersAry"
   fundName="{{fundName}}"
   peaNutMax="{{peaNut}}"
   xiaoCaiMax="{{xiaoCai}}"

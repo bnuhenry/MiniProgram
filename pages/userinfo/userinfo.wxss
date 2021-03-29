@@ -39,21 +39,26 @@
   }
 
     .fundUserInfo-contribution-title{
-      width: 70%;
+      position: relative;
+      width: 65%;
       height: 60rpx;
       display: flex;
+      padding-left: 60rpx;
       justify-content: flex-start;
       align-items: center;
     }
 
       .fundUserInfo-contribution-image{
-        width: 60rpx;
+        position: absolute;
+        left: 5rpx;
+        width: 50rpx;
         height: 50rpx;
       }
 
       .fundUserInfo-contribution-titlecontent{
+        width: 95%;
         height: 60rpx;
-        padding-left: 20rpx;
+        padding-left: 10rpx;
         color:#aaaaaa;
         display: flex;
         justify-content: flex-start;
@@ -61,16 +66,26 @@
       }
 
         .fundUserInfo-contribution-rankname{
-          color:blue
+          width: 40%;
+          height: 100%;
+          margin:0 10rpx;
+          display: flex;
+          align-items: center;
+          overflow-x: scroll;
+          white-space: nowrap;
         }
 
         .fundUserInfo-contribution-contribution{
-          width: 30%;
+          width: 20%;
           height: 60rpx;
           display: flex;
           color:blue;
           justify-content: flex-start;
           align-items: center;
+        }
+
+        .fundUserInfo-contribution-bluecolor{
+          color:blue;
         }
 
   .fundUserInfo-upgrade{
@@ -88,15 +103,6 @@
       .fundUserInfo-upgrade-image{
         width: 60rpx;
         height: 50rpx;
-      }
-
-      .fundUserInfo-contribution-titlecontent{
-        width: 100%;
-        height: 50rpx;
-        padding-left: 20rpx;
-        display: flex;
-        color:#aaaaaa;
-        align-items: center;
       }
 
     .fundUserInfo-upgrade-rankbar{
@@ -124,15 +130,26 @@
           background-color: #2DB7F5;
         }
 
-.operateBox{
+.operateInputBox{
   width: 95%;
-  /* height: 300rpx; */
   margin:10rpx auto;
   border-radius: 30rpx;
   background-color: #fff;
   display: flex;
   flex-direction: column;
-  justify-content: center;
+  /* justify-content: center; */
+  align-items: center;
+  overflow: hidden;
+}
+
+.operateBox{
+  width: 95%;
+  height: 180rpx;
+  margin:10rpx auto;
+  border-radius: 30rpx;
+  background-color: #fff;
+  display: flex;
+  flex-direction: column;
   align-items: center;
   overflow: hidden;
 }
@@ -157,33 +174,12 @@
     align-items: center;
   }
 
-.inputBox{
-  width: 90%;
-  height: 300rpx;
-  margin:10rpx auto;
-  padding-bottom:10rpx;
-  border-radius: 30rpx;
-  background-color: #fff;
-  display: flex;
-  flex-direction: column;
-  justify-content: center;
-  align-items: center;
-  overflow: hidden;
-}
-
   .inputBox-label{
     width: 70%;
     height: 50rpx;
     display: flex;
     margin: 15rpx auto;
     color:blue;
-  }
-
-  .inputBox-input{
-    width: 70%;
-    height: 50rpx;
-    margin: 15rpx;
-    border-bottom: 2rpx solid #aaaaaa;
   }
 
   .inputBox-button{
@@ -203,6 +199,10 @@
       align-items: center;
     }
 
+      .upgradeStockAccount-button{
+        box-shadow: 5rpx 5rpx 10rpx blue;
+      }
+
       .inputBox-button-side button{
         width: 80%;
         height: 60rpx;
@@ -219,4 +219,8 @@
     justify-content: center;
     align-items: center;
     color: red;
+  }
+
+  .inputBox-fundNamePicker{
+    color:#E040FB;
   }

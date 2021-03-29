@@ -17,18 +17,63 @@
   background-color: #ffffff;
 }
 
-  .rankhead-slogan{
+  .rankhead-bossDetect{
+    position: relative;
     width: 95%;
     height: 50%;
     font-size: 30rpx;
     font-weight: 600;
-    color:red;
     display: flex;
     flex-wrap: wrap;
     justify-content: center;
     align-items: center;
     overflow: hidden;
   }
+
+    .rankhead-bossDetect-side{
+      width: 25%;
+      height: 100%;
+      color:red;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+    }
+
+    .rankhead-bossDetect-swiper{
+      width: 75%;
+      height: 100%;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+    }
+
+      .rankhead-bossDetect-swiperitem{
+        width: 95%;
+        height: 100%;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+      }
+
+        .rankhead-bossDetect-swiperitem-msg{
+          width: 100%;
+          height: 100%;
+          display: flex;
+          color:#FF3232;
+          justify-content: flex-start;
+          align-items: center;
+        }
+
+        .rankhead-bossDetect-swiperitem-avatar{
+          position: absolute;
+          right: 10rpx;
+          width: 50rpx;
+          height: 50rpx;
+          border-radius: 25rpx;
+          display: flex;
+          justify-content: center;
+          align-items: center;
+        }
 
   .rankhead-buttonbar{
     width: 95%;
@@ -85,7 +130,7 @@
   flex-direction: column;
 }
 
-.ranklist-userinfo{
+.ranklist-useritem{
   width: 95%;
   margin:5rpx auto;
   border-radius: 30rpx;
@@ -105,7 +150,7 @@
   overflow: hidden;
 }
 
-.userinfo {
+.rank-userinfo {
   width: 25%;
   height: 160rpx;
   display: flex;
@@ -133,19 +178,45 @@
   justify-content: space-around;
 }
 
-.resource{
-  display: flex;
-  flex-direction: column;
-  justify-content: center;
-  align-items: flex-start;
-  font-size: 25rpx;
-}
+  .user-discribe-value{
+    width: 28%;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: flex-start;
+    font-size: 25rpx;
+    overflow: hidden;
+  }
+
+  .user-discribe-rank{
+    width: 22%;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    font-size: 25rpx;
+  }
 
   .resource-title{
     display: flex;
     justify-content: center;
     align-items: center;
     color:#aaa;
+  }
+
+  .resource-fundname{
+    width: 100%;
+    display: flex;
+    align-items: center;
+    color:#E040FB;
+    overflow-x: scroll;
+    white-space: nowrap;
+  }
+
+  .resource-fundname::-webkit-scrollbar{
+    width: 0;
+    height: 0;
+    color: transparent;
   }
 
   .resource-value{
@@ -162,13 +233,33 @@
     color:red;
   }
 
-  .resource-rank{
-    font-size: 30rpx;
+  .resource-ranknamebar{
+    display: flex;
+    align-items: center;
     color:blue;
   }
 
-  .resource-myrank{
-    font-size: 30rpx;
+  .resource-myranknamebar{
+    display: flex;
+    align-items: center;
+    color:red;
+  }
+
+    .resource-rankImage{
+      width: 30rpx;
+      height: 30rpx;
+    }
+
+    .resource-ranknamebar-rankname{
+      margin-left: 5rpx;
+      font-size: 23rpx;
+    }
+
+  .resource-rankIndex{
+    color:blue;
+  }
+
+  .resource-myrankIndex{
     color:red;
   }
 

@@ -1,8 +1,6 @@
 // component/scheduleeditor/scheduleeditor.js
 Component({
-  /**
-   * 组件的属性列表
-   */
+  // 组件的属性列表
   properties: {
     editType:{
       type:Number
@@ -29,7 +27,7 @@ Component({
     userAvatar:{
       type:String
     },
-    userFundName:{
+    userFund:{
       type:String
     },
     scheduleObj:{
@@ -61,9 +59,8 @@ Component({
       }
     }
   },
-  /**
-   * 组件的初始数据
-   */
+
+  // 组件的初始数据
   data: {
     scheduleEditorStyle:'',
     selectedDate:'2020-01-01',
@@ -74,9 +71,7 @@ Component({
     showRenewDate:false,
   },
 
-  /**
-   * 组件的方法列表
-   */
+  // 组件的方法列表
   methods: {
     bindDateChange:function(e){
       this.setData({
@@ -172,7 +167,7 @@ Component({
             createrId:this.data.userId,
             date:new Date(this.data.selectedDate),
             detail:this.data.scheduleDetail,
-            fund:this.data.userFundName,
+            fund:this.data.userFund,
             renew_date:Date.now()
           },
           success:res=>{
@@ -202,7 +197,7 @@ Component({
       const DB = wx.cloud.database();
       DB.collection("schedule").where({
         _id:this.data.scheduleObj._id,
-        fund:this.data.userFundName
+        fund:this.data.userFund
         }).update({
         data:{
           date:new Date(this.data.selectedDate),
@@ -255,7 +250,7 @@ Component({
       const DB = wx.cloud.database();
       DB.collection("schedule").where({
         _id:this.data.scheduleObj._id,
-        fund:this.data.userFundName
+        fund:this.data.userFund
         }).remove({
         success:res=>{
           wx.hideLoading();

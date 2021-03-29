@@ -2,17 +2,10 @@
 const app = getApp()
 
 Page({
-
-  /**
-   * 页面的初始数据
-   */
+  // 页面的初始数据
   data: {
-    userName:String,
-    userAvatar:String,
-    userId:String,
-    userFundName:String,
+    userFund:'other',
     showDateAry:[],
-    noDateAry:[],
     scheduleAry:[],
     showScheduleAry:[],
     year:new Date().getFullYear(),
@@ -28,9 +21,8 @@ Page({
     touchPointX:Number,
   },
 
-  /**
-   * 生命周期函数--监听页面加载
-   */
+
+  // 生命周期函数--监听页面加载
   onLoad: function (options) {
     this.makeDaysAry(this.data.month,this.data.year);
   },
@@ -38,7 +30,6 @@ Page({
   onShow:function(){
     if (app.globalData.gotFundInfo){
       this.getUserInfo();
-      this.getSchedule();
     }else{
       wx.showToast({
         title: '请登录',
@@ -68,14 +59,15 @@ Page({
       }
     },
 
-  //拿到用户信息包括name和id
+  //拿到用户信息包括name和id，然后请求云端日程数据
   getUserInfo:function(){
     this.setData({
       userId: app.globalData.userId,
       userName: app.globalData.fundUserInfo.name,
       userAvatar: app.globalData.fundUserInfo.avatarUrl,
-      userFundName:app.globalData.fundUserInfo.fund,
+      userFund: app.globalData.fundUserInfo.fund,
     })
+    this.getSchedule();
   },
 
   //日期选定后生成渲染二维数组
@@ -132,7 +124,6 @@ Page({
     }
     this.setData({
       showDateAry:monthAry,
-      noDateAry:monthAry,
       showScheduleDetail:false
     })
     this.injectScheduleToAry();
@@ -194,18 +185,17 @@ Page({
       title: '加载中',
     })
     wx.cloud.callFunction({
-      name:'login',
+      name:'fund',
       data: {
         action: 'fundSchedule',
-        fund:this.data.userFundName
+        fund:app.globalData.fundUserInfo.fund
       },
       complete:res=>{
         wx.hideLoading();
         if(res.result.list.length>0){
-          this.setData({
-            scheduleAry:res.result.list
-          })
+          this.data.scheduleAry = res.result.list;
         }else{
+          this.data.scheduleAry = [];
           console.log('没有日程数据');
         }
         this.injectScheduleToAry();
@@ -247,12 +237,11 @@ Page({
           showDateAry[x][y].scheduleAry.push(scheduleAry[i]);
         }
       }
-
-      //注入完成，替换当前二维数组
-      this.setData({
-        showDateAry:showDateAry
-      })
     }
+    //注入完成，替换当前二维数组
+    this.setData({
+      showDateAry:showDateAry
+    })
   },
 
   //重置二维数组上所有日程数组为空数组
@@ -318,11 +307,19 @@ Page({
 
   //点击创建按钮打开日程表编辑组件
   createSchedule:function(){
-    this.setData({
-      userId:app.globalData.userId,
-      editType:1,
-      showEditor:true
-    })
+    if(this.data.userFund!='other'){
+      this.setData({
+        userId:app.globalData.userId,
+        editType:1,
+        showEditor:true
+      })
+    }else{
+      wx.showToast({
+        title: '请先加入基金会',
+        icon:'error',
+        duration:1500
+      })
+    }
   },
 
   //点击日程详情打开日程表编辑组件

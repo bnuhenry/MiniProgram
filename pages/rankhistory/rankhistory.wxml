@@ -21,12 +21,12 @@
     wx:key="uid"
     wx:for-item="user"
     wx:for-index="i">
-    <!-- <view class="histogramRank-userlist-histogram" style="{{user.style}}"> -->
     <view class="histogramRank-userlist-histogram" style="{{user.style}}" animation="{{user.tiktok}}">
       <image class="histogramRank-userlist-avatar"  src="{{user.avatarUrl}}"></image>
       <view class="histogramRank-userlist-yields" style="{{user.yields>0?'color:#FF3232':'color:#00E600'}}">{{user.yieldsStr}}</view>
       <image wx:if="{{user.isMyAccount}}" class="histogramRank-userlist-myaccount" src="../../images/manager-red.png"></image>
       <view wx:if="{{user.isNewFish}}" class="histogramRank-userlist-newfish">新进韭菜</view>
+      <view wx:if="{{user.capitalChange}}" class="histogramRank-userlist-newfish">账户升级</view>
     </view>
   </view>
 </scroll-view>
